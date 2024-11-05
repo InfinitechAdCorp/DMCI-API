@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Question extends Model
+class Article extends Model
 {
     use HasFactory;
 
@@ -14,13 +14,14 @@ class Question extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'question',
-        'answer',
-        'status',
+        'headline',
+        'content',
+        'date',
+        'image',
     ];
 
     public static function booted() {
-        static::creating(function (Question $record) {
+        static::creating(function (Article $record) {
             $record->id = Str::ulid();
         });
     }
