@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\PropertyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +22,12 @@ Route::prefix('categories')->group(function () {
     Route::post('', [CategoryController::class, 'add']);     
     Route::put('{id}', [CategoryController::class, 'update']);        
     Route::delete('{id}', [CategoryController::class, 'delete']);
+});
+
+Route::prefix('properties')->group(function () {   
+    Route::get('', [PropertyController::class, 'getAll']);        
+    Route::get('{id}', [PropertyController::class, 'get']);   
+    Route::post('', [PropertyController::class, 'add']);     
+    Route::put('{id}', [PropertyController::class, 'update']);        
+    Route::delete('{id}', [PropertyController::class, 'delete']);
 });
