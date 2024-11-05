@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('features', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid("property_id"); 
+            $table->foreignUlid("property_id");
             $table->string("name");
             $table->timestamps();
         });
