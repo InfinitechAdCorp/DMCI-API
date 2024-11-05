@@ -9,7 +9,7 @@ use App\Models\Category as Model;
 
 class CategoryController extends Controller
 {
-    public $model = "Property Category";
+    public $model = "Category";
 
     public function getAll()
     {
@@ -47,8 +47,6 @@ class CategoryController extends Controller
 
         return response(['code' => 200, 'message' => "Updated $this->model"]);
     }
-
-    
 
     public function delete($id)
     {

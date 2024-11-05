@@ -9,7 +9,7 @@ use App\Models\Property as Model;
 
 class PropertyController extends Controller
 {
-    public $model = "Property Category";
+    public $model = "Property";
 
     public function getAll()
     {
@@ -28,27 +28,56 @@ class PropertyController extends Controller
     public function add(Request $request)
     {
         $request->validate([
+            'category_id' => 'required',
             'name' => 'required',
+            'logo' => 'required|file',
             'description' => 'required',
+            'slogan' => 'required',
+            'location'  => 'required',
+            'min_price'  => 'required',
+            'max_price'  => 'required',
+            'status'  => 'required',
+            'percent' => 'required',
         ]);
-        Model::create($request->all());
+
+        $keys = [
+            'category_id',
+            'name',
+            'description',
+            'slogan',
+            'location',
+            'min_price',
+            'max_price',
+            'status',
+            'percent'
+        ];
+
+        foreach ($keys as $key) {
+            $new[$key] = $request->$key;
+        }
+
+        if ($file = $request->file("logo")) {
+            $name = mt_rand() . '.'.$file->clientExtension();
+            $file->move('uploads/properties/logos', $name);
+            $new["logo"] = $name;
+        }
+
+        Model::create($new);
         return response(['code' => 200, 'message' => "Added $this->model"]);
     }
     
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-        ]);
+    // public function update(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'name' => 'required',
+    //         'description' => 'required',
+    //     ]);
 
-        $record = Model::find($id);
-        $record->update($request->all());
+    //     $record = Model::find($id);
+    //     $record->update($request->all());
 
-        return response(['code' => 200, 'message' => "Updated $this->model"]);
-    }
-
-    
+    //     return response(['code' => 200, 'message' => "Updated $this->model"]);
+    // }
 
     public function delete($id)
     {

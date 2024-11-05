@@ -19,6 +19,7 @@ class Property extends Model
         'min_price',
         'max_price',
         'status',
+        'percent',
         'media',
     ];
 }
