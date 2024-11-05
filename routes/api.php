@@ -6,6 +6,7 @@ use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\PropertyController;
 use App\Http\Controllers\API\QuestionController;
 use App\Http\Controllers\API\ArticleController;
+use App\Http\Controllers\API\CareerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,4 +49,12 @@ Route::prefix('articles')->group(function () {
     Route::post('', [ArticleController::class, 'add']);     
     // Route::put('{id}', [ArticleController::class, 'update']);        
     Route::delete('{id}', [ArticleController::class, 'delete']);
+});
+
+Route::prefix('careers')->group(function () {   
+    Route::get('', [CareerController::class, 'getAll']);        
+    Route::get('{id}', [CareerController::class, 'get']);   
+    Route::post('', [CareerController::class, 'add']);     
+    // Route::put('{id}', [CareerController::class, 'update']);        
+    Route::delete('{id}', [CareerController::class, 'delete']);
 });
