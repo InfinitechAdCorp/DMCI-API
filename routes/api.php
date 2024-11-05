@@ -33,7 +33,7 @@ Route::prefix('properties')->group(function () {
     Route::delete('{id}', [PropertyController::class, 'delete']);
 });
 
-Route::prefix('categories')->group(function () {   
+Route::prefix('questions')->group(function () {   
     Route::get('', [QuestionController::class, 'getAll']);        
     Route::get('{id}', [QuestionController::class, 'get']);   
     Route::post('', [QuestionController::class, 'add']);     
