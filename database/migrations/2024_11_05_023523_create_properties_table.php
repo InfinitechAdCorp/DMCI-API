@@ -23,7 +23,7 @@ return new class extends Migration
             $table->double('max_price', 10, 2);
             $table->string('status');
             $table->integer('percent');
-            $table->json('media')->nullable();
+            $table->json('images')->nullable();
             $table->timestamps();
         });
     }

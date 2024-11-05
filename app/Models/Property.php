@@ -25,7 +25,7 @@ class Property extends Model
         'max_price',
         'status',
         'percent',
-        'media',
+        'images',
     ];
 
     public static function booted()
