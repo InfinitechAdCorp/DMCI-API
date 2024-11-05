@@ -7,6 +7,7 @@ use App\Http\Controllers\API\PropertyController;
 use App\Http\Controllers\API\QuestionController;
 use App\Http\Controllers\API\ArticleController;
 use App\Http\Controllers\API\CareerController;
+use App\Http\Controllers\API\FacilityController;
 use App\Http\Controllers\API\FeatureController;
 
 /*
@@ -66,4 +67,12 @@ Route::prefix('features')->group(function () {
     Route::post('', [FeatureController::class, 'add']);     
     Route::put('{id}', [FeatureController::class, 'update']);        
     Route::delete('{id}', [FeatureController::class, 'delete']);
+});
+
+Route::prefix('facilities')->group(function () {   
+    Route::get('', [FacilityController::class, 'getAll']);        
+    Route::get('{id}', [FacilityController::class, 'get']);   
+    Route::post('', [FacilityController::class, 'add']);     
+    // Route::put('{id}', [FacilityController::class, 'update']);        
+    Route::delete('{id}', [FacilityController::class, 'delete']);
 });
