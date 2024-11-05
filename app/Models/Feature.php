@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Property extends Model
+class Feature extends Model
 {
     use HasFactory;
 
@@ -15,28 +15,19 @@ class Property extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'category_id',
+        'property_id',
         'name',
-        'logo',
-        'slogan',
-        'description',
-        'location',
-        'min_price',
-        'max_price',
-        'status',
-        'percent',
-        'media',
     ];
 
     public static function booted()
     {
-        static::creating(function (Property $record) {
+        static::creating(function (Feature $record) {
             $record->id = Str::ulid();
         });
     }
 
-    public function category(): BelongsTo
+    public function property(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Property::class);
     }
 }
