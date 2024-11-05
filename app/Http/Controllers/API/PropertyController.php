@@ -13,7 +13,7 @@ class PropertyController extends Controller
 
     public function getAll()
     {
-        $records = Model::all();
+        $records = Model::with("category")->get();
         $data = ['records' => $records];
         return response($data);
     }

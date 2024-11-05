@@ -4,8 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-use App\Models\Category;
-
 return new class extends Migration
 {
     /**
@@ -14,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('properties', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Category::class); 
+            $table->ulid('id')->primary();
+            $table->foreignUlid("category_id"); 
             $table->string('name');
             $table->string('logo');
             $table->string('slogan');
