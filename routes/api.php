@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\PropertyController;
+use App\Http\Controllers\API\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +31,12 @@ Route::prefix('properties')->group(function () {
     Route::post('', [PropertyController::class, 'add']);     
     // Route::put('{id}', [PropertyController::class, 'update']);        
     Route::delete('{id}', [PropertyController::class, 'delete']);
+});
+
+Route::prefix('categories')->group(function () {   
+    Route::get('', [QuestionController::class, 'getAll']);        
+    Route::get('{id}', [QuestionController::class, 'get']);   
+    Route::post('', [QuestionController::class, 'add']);     
+    Route::put('{id}', [QuestionController::class, 'update']);        
+    Route::delete('{id}', [QuestionController::class, 'delete']);
 });
