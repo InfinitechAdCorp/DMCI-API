@@ -45,6 +45,7 @@ class CategoryController extends Controller
         $record = Model::find($id);
         $record->update($request->all());
 
+        
         return response(['code' => 200, 'message' => "Updated $this->model"]);
     }
 
