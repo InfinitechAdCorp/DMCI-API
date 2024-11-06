@@ -15,8 +15,8 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid("property_id"); 
             $table->string('name');
-            $table->string('floors');
-            $table->string('parking');
+            $table->integer('floors');
+            $table->integer('parking');
             $table->string('image');
             $table->timestamps();
         });

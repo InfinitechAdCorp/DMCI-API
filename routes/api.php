@@ -10,6 +10,7 @@ use App\Http\Controllers\API\CareerController;
 use App\Http\Controllers\API\FacilityController;
 use App\Http\Controllers\API\FeatureController;
 use App\Http\Controllers\API\ApplicationController;
+use App\Http\Controllers\API\BuildingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,4 +85,12 @@ Route::prefix('applications')->group(function () {
     Route::post('', [ApplicationController::class, 'add']);     
     // Route::put('{id}', [ApplicationController::class, 'update']);        
     Route::delete('{id}', [ApplicationController::class, 'delete']);
+});
+
+Route::prefix('buildings')->group(function () {   
+    Route::get('', [BuildingController::class, 'getAll']);        
+    Route::get('{id}', [BuildingController::class, 'get']);   
+    Route::post('', [BuildingController::class, 'add']);     
+    // Route::put('{id}', [BuildingController::class, 'update']);        
+    Route::delete('{id}', [BuildingController::class, 'delete']);
 });
