@@ -11,6 +11,7 @@ use App\Http\Controllers\API\FacilityController;
 use App\Http\Controllers\API\FeatureController;
 use App\Http\Controllers\API\ApplicationController;
 use App\Http\Controllers\API\BuildingController;
+use App\Http\Controllers\API\PlanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,4 +94,12 @@ Route::prefix('buildings')->group(function () {
     Route::post('', [BuildingController::class, 'add']);     
     // Route::put('{id}', [BuildingController::class, 'update']);        
     Route::delete('{id}', [BuildingController::class, 'delete']);
+});
+
+Route::prefix('plans')->group(function () {   
+    Route::get('', [PlanController::class, 'getAll']);        
+    Route::get('{id}', [PlanController::class, 'get']);   
+    Route::post('', [PlanController::class, 'add']);     
+    // Route::put('{id}', [PlanController::class, 'update']);        
+    Route::delete('{id}', [PlanController::class, 'delete']);
 });
