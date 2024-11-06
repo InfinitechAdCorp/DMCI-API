@@ -12,6 +12,7 @@ use App\Http\Controllers\API\FeatureController;
 use App\Http\Controllers\API\ApplicationController;
 use App\Http\Controllers\API\BuildingController;
 use App\Http\Controllers\API\PlanController;
+use App\Http\Controllers\API\UnitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,4 +103,12 @@ Route::prefix('plans')->group(function () {
     Route::post('', [PlanController::class, 'add']);     
     // Route::put('{id}', [PlanController::class, 'update']);        
     Route::delete('{id}', [PlanController::class, 'delete']);
+});
+
+Route::prefix('units')->group(function () {   
+    Route::get('', [UnitController::class, 'getAll']);        
+    Route::get('{id}', [UnitController::class, 'get']);   
+    Route::post('', [UnitController::class, 'add']);     
+    Route::put('{id}', [UnitController::class, 'update']);        
+    Route::delete('{id}', [UnitController::class, 'delete']);
 });
