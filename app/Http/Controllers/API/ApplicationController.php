@@ -5,15 +5,15 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Career as Model;
+use App\Models\Application as Model;
 
-class CareerController extends Controller
+class ApplicationController extends Controller
 {
-    public $model = "Career";
+    public $model = "Application";
 
     public function getAll()
     {
-        $records = Model::all();
+        $records = Model::with("career")->get();
         $data = ['records' => $records];
         return response($data);
     }
@@ -28,30 +28,30 @@ class CareerController extends Controller
     public function add(Request $request)
     {
         $request->validate([
-            'referrer' => 'required',
-            'sub_agent' => 'required',
-            'broker' => 'required',
-            'partner' => 'required',
-            'position' => 'required',
-            'image' => 'required|file',
+            'career_id' => 'required',
+            'name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'resume'  => 'required|file',
         ]);
 
         $keys = [
-            'referrer',
-            'sub_agent',
-            'broker',
-            'partner',
-            'position',
+            'career_id',
+            'name',
+            'email',
+            'phone',
+            'address',
         ];
 
         foreach ($keys as $key) {
             $new[$key] = $request->$key;
         }
 
-        if ($file = $request->file("image")) {
+        if ($file = $request->file("resume")) {
             $name = mt_rand() . '.'.$file->clientExtension();
-            $file->move('uploads/careers/images', $name);
-            $new["image"] = $name;
+            $file->move('uploads/careers/applications', $name);
+            $new["resume"] = $name;
         }
 
         Model::create($new);

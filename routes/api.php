@@ -9,6 +9,7 @@ use App\Http\Controllers\API\ArticleController;
 use App\Http\Controllers\API\CareerController;
 use App\Http\Controllers\API\FacilityController;
 use App\Http\Controllers\API\FeatureController;
+use App\Http\Controllers\API\ApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,4 +76,12 @@ Route::prefix('facilities')->group(function () {
     Route::post('', [FacilityController::class, 'add']);     
     // Route::put('{id}', [FacilityController::class, 'update']);        
     Route::delete('{id}', [FacilityController::class, 'delete']);
+});
+
+Route::prefix('applications')->group(function () {   
+    Route::get('', [ApplicationController::class, 'getAll']);        
+    Route::get('{id}', [ApplicationController::class, 'get']);   
+    Route::post('', [ApplicationController::class, 'add']);     
+    // Route::put('{id}', [ApplicationController::class, 'update']);        
+    Route::delete('{id}', [ApplicationController::class, 'delete']);
 });
