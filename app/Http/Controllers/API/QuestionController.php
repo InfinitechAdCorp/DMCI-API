@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Validator;
 use App\Models\Question as Model;
 
 class QuestionController extends Controller
@@ -32,27 +33,39 @@ class QuestionController extends Controller
 
     public function add(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'question' => 'required',
             'answer' => 'required',
             'status' => 'required',
         ]);
-        Model::create($request->all());
-        return response(['code' => 200]);
+
+        if ($validator->passes()) {
+            Model::create($validator->validated());
+            $data = ['code' => 200];
+        } else {
+            $data = ['code' => 422, 'errors' => $validator->errors()];
+        }
+
+        return response($data);
     }
     
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'question' => 'required',
             'answer' => 'required',
             'status' => 'required',
         ]);
 
-        $record = Model::find($id);
-        $record->update($request->all());
+        if ($validator->passes()) {
+            $record = Model::find($id);
+            $record->update($validator->validated());
+            $data = ['code' => 200];
+        } else {
+            $data = ['code' => 422, 'errors' => $validator->errors()];
+        }
 
-        return response(['code' => 200]);
+        return response($data);
     }
 
     public function delete($id)

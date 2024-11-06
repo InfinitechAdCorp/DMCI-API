@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
+use Validator;
 use App\Models\Article as Model;
 
 class ArticleController extends Controller
@@ -34,31 +35,39 @@ class ArticleController extends Controller
 
     public function add(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'headline' => 'required',
             'content' => 'required',
             'date' => 'required',
             'image' => 'required|file',
         ]);
 
-        $keys = [
-            'headline',
-            'content',
-            'date',
-            'image',
-        ];
+        if ($validator->passes()) {
+            $validated = $validator->validated();
 
-        foreach ($keys as $key) {
-            if ($key == 'image') {
-                $new[$key] = $this->upload($request->file($key), 'uploads/articles');
-            }
-            else {
-                $new[$key] = $request->$key;
-            }
+            $keys = [
+                'headline',
+                'content',
+                'date',
+                'image',
+            ];
+
+            foreach ($keys as $key) {
+                if ($key == 'image') {
+                    $new[$key] = $this->upload($validated[$key], 'uploads/articles');
+                }
+                else {
+                    $new[$key] = $validated[$key];
+                }
+            }    
+
+            Model::create($new);
+            $data = ['code' => 200];
+        } else {
+            $data = ['code' => 422, 'errors' => $validator->errors()];
         }
 
-        Model::create($new);
-        return response(['code' => 200]);
+        return response($data);
     }
     
     // public function update(Request $request, $id)

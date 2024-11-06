@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Validator;
 use App\Models\File as Model;
 
 class FileController extends Controller
@@ -21,8 +22,7 @@ class FileController extends Controller
 
         if ($record) {
             $data = ['code' => 200, 'record' => $record];
-        }
-        else {
+        } else {
             $data = ['code' => 404];
         }
 
@@ -31,27 +31,39 @@ class FileController extends Controller
 
     public function add(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'folder_id' => 'required',
             'name' => 'required',
             'links' => 'required',
         ]);
-        Model::create($request->all());
-        return response(['code' => 200]);
+
+        if ($validator->passes()) {
+            Model::create($validator->validated());
+            $data = ['code' => 200];
+        } else {
+            $data = ['code' => 422, 'errors' => $validator->errors()];
+        }
+
+        return response($data);
     }
-    
+
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'folder_id' => 'required',
             'name' => 'required',
             'links' => 'required',
         ]);
 
-        $record = Model::find($id);
-        $record->update($request->all());
+        if ($validator->passes()) {
+            $record = Model::find($id);
+            $record->update($validator->validated());
+            $data = ['code' => 200];
+        } else {
+            $data = ['code' => 422, 'errors' => $validator->errors()];
+        }
 
-        return response(['code' => 200]);
+        return response($data);
     }
 
     public function delete($id)
@@ -61,8 +73,7 @@ class FileController extends Controller
         if ($record) {
             $record->delete();
             $code = 200;
-        }
-        else {
+        } else {
             $code = 404;
         }
 

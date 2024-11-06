@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
+use Validator;
 use App\Models\Application as Model;
 
 class ApplicationController extends Controller
@@ -24,8 +25,7 @@ class ApplicationController extends Controller
 
         if ($record) {
             $data = ['code' => 200, 'record' => $record];
-        }
-        else {
+        } else {
             $data = ['code' => 404];
         }
 
@@ -34,7 +34,7 @@ class ApplicationController extends Controller
 
     public function add(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'career_id' => 'required',
             'name' => 'required',
             'email' => 'required',
@@ -43,28 +43,35 @@ class ApplicationController extends Controller
             'resume'  => 'required|file',
         ]);
 
-        $keys = [
-            'career_id',
-            'name',
-            'email',
-            'phone',
-            'address',
-            'resume',
-        ];
+        if ($validator->passes()) {
+            $validated = $validator->validated();
 
-        foreach ($keys as $key) {
-            if ($key == 'resume') {
-                $new[$key] = $this->upload($request->file($key), 'uploads/careers/applications');
+            $keys = [
+                'career_id',
+                'name',
+                'email',
+                'phone',
+                'address',
+                'resume',
+            ];
+
+            foreach ($keys as $key) {
+                if ($key == 'resume') {
+                    $new[$key] = $this->upload($validated[$key], 'uploads/careers/applications');
+                } else {
+                    $new[$key] = $validated[$key];
+                }
             }
-            else {
-                $new[$key] = $request->$key;
-            }
+
+            Model::create($new);
+            $data = ['code' => 200];
+        } else {
+            $data = ['code' => 422, 'errors' => $validator->errors()];
         }
 
-        Model::create($new);
-        return response(['code' => 200]);
+        return response($data);
     }
-    
+
     // public function update(Request $request, $id)
     // {
     //     $request->validate([
@@ -85,8 +92,7 @@ class ApplicationController extends Controller
         if ($record) {
             $record->delete();
             $code = 200;
-        }
-        else {
+        } else {
             $code = 404;
         }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
+use Validator;
 use App\Models\Property as Model;
 
 class PropertyController extends Controller
@@ -34,7 +35,7 @@ class PropertyController extends Controller
 
     public function add(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'category_id' => 'required',
             'name' => 'required',
             'logo' => 'required|file',
@@ -47,30 +48,38 @@ class PropertyController extends Controller
             'percent' => 'required',
         ]);
 
-        $keys = [
-            'category_id',
-            'name',
-            'logo',
-            'description',
-            'slogan',
-            'location',
-            'min_price',
-            'max_price',
-            'status',
-            'percent',
-        ];
+        if ($validator->passes()) {
+            $validated = $validator->validated();
 
-        foreach ($keys as $key) {
-            if ($key == 'logo') {
-                $new[$key] = $this->upload($request->file($key), 'uploads/properties/logos');
+            $keys = [
+                'category_id',
+                'name',
+                'logo',
+                'description',
+                'slogan',
+                'location',
+                'min_price',
+                'max_price',
+                'status',
+                'percent',
+            ];
+    
+            foreach ($keys as $key) {
+                if ($key == 'logo') {
+                    $new[$key] = $this->upload($validated[$key], 'uploads/properties/logos');
+                }
+                else {
+                    $new[$key] = $validated[$key];
+                }
             }
-            else {
-                $new[$key] = $request->$key;
-            }
+
+            Model::create($new);
+            $data = ['code' => 200];
+        } else {
+            $data = ['code' => 422, 'errors' => $validator->errors()];
         }
 
-        Model::create($new);
-        return response(['code' => 200]);
+        return response($data);
     }
     
     // public function update(Request $request, $id)
