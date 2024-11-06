@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Property as Model;
+use App\Models\Plan as Model;
 
 class PlanController extends Controller
 {
