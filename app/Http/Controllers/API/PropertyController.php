@@ -4,11 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Traits\Uploadable;
 
 use App\Models\Property as Model;
 
 class PropertyController extends Controller
 {
+    use Uploadable;
 
     public function getAll()
     {
@@ -42,23 +44,23 @@ class PropertyController extends Controller
         $keys = [
             'category_id',
             'name',
+            'logo',
             'description',
             'slogan',
             'location',
             'min_price',
             'max_price',
             'status',
-            'percent'
+            'percent',
         ];
 
         foreach ($keys as $key) {
-            $new[$key] = $request->$key;
-        }
-
-        if ($file = $request->file("logo")) {
-            $name = mt_rand() . '.'.$file->clientExtension();
-            $file->move('uploads/properties/logos', $name);
-            $new["logo"] = $name;
+            if ($key == 'logo') {
+                $new[$key] = $this->upload($request->file($key), 'uploads/properties/logos');
+            }
+            else {
+                $new[$key] = $request->$key;
+            }
         }
 
         Model::create($new);
