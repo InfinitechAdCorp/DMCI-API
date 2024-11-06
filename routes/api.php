@@ -11,6 +11,7 @@ use App\Http\Controllers\API\FacilityController;
 use App\Http\Controllers\API\FeatureController;
 use App\Http\Controllers\API\ApplicationController;
 use App\Http\Controllers\API\BuildingController;
+use App\Http\Controllers\API\FileController;
 use App\Http\Controllers\API\FolderController;
 use App\Http\Controllers\API\PlanController;
 use App\Http\Controllers\API\UnitController;
@@ -120,4 +121,12 @@ Route::prefix('folders')->group(function () {
     Route::post('', [FolderController::class, 'add']);     
     Route::put('{id}', [FolderController::class, 'update']);        
     Route::delete('{id}', [FolderController::class, 'delete']);
+});
+
+Route::prefix('files')->group(function () {   
+    Route::get('', [FileController::class, 'getAll']);        
+    Route::get('{id}', [FileController::class, 'get']);   
+    Route::post('', [FileController::class, 'add']);     
+    Route::put('{id}', [FileController::class, 'update']);        
+    Route::delete('{id}', [FileController::class, 'delete']);
 });
