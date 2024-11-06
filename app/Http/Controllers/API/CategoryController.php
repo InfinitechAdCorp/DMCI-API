@@ -19,7 +19,14 @@ class CategoryController extends Controller
     public function get($id)
     {
         $record = Model::find($id);
-        $data = ['record' => $record];
+
+        if ($record) {
+            $data = ['code' => 200, 'record' => $record];
+        }
+        else {
+            $data = ['code' => 404];
+        }
+
         return response($data);
     }
 
