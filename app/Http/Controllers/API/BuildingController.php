@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Property as Model;
+use App\Models\Building as Model;
 
 class BuildingController extends Controller
 {
@@ -13,7 +13,7 @@ class BuildingController extends Controller
 
     public function getAll()
     {
-        $records = Model::with("category")->get();
+        $records = Model::with("property")->get();
         $data = ['records' => $records];
         return response($data);
     }
