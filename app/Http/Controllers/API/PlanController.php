@@ -4,11 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Traits\Uploadable;
 
 use App\Models\Plan as Model;
 
 class PlanController extends Controller
 {
+    use Uploadable;
 
     public function getAll()
     {
@@ -37,16 +39,16 @@ class PlanController extends Controller
             'property_id',
             'area',
             'theme',
+            'image',
         ];
 
         foreach ($keys as $key) {
-            $new[$key] = $request->$key;
-        }
-
-        if ($file = $request->file("image")) {
-            $name = mt_rand() . '.' . $file->clientExtension();
-            $file->move('uploads/properties/plans', $name);
-            $new["image"] = $name;
+            if ($key == 'logo') {
+                $new[$key] = $this->upload($request->file($key), 'uploads/properties/plans');
+            }
+            else {
+                $new[$key] = $request->$key;
+            }
         }
 
         Model::create($new);

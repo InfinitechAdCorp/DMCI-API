@@ -4,11 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Traits\Uploadable;
 
 use App\Models\Building as Model;
 
 class BuildingController extends Controller
 {
+    use Uploadable;
 
     public function getAll()
     {
@@ -39,16 +41,16 @@ class BuildingController extends Controller
             'name',
             'floors',
             'parking',
+            'image',
         ];
 
         foreach ($keys as $key) {
-            $new[$key] = $request->$key;
-        }
-
-        if ($file = $request->file("image")) {
-            $name = mt_rand() . '.'.$file->clientExtension();
-            $file->move('uploads/properties/buildings', $name);
-            $new["image"] = $name;
+            if ($key == 'image') {
+                $new[$key] = $this->upload($request->file($key), 'uploads/properties/buildings');
+            }
+            else {
+                $new[$key] = $request->$key;
+            }
         }
 
         Model::create($new);

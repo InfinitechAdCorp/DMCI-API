@@ -4,11 +4,14 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Traits\Uploadable;
 
 use App\Models\Facility as Model;
 
 class FacilityController extends Controller
 {
+    use Uploadable;
+
     public function getAll()
     {
         $records = Model::all();
@@ -34,16 +37,16 @@ class FacilityController extends Controller
         $keys = [
             'property_id',
             'name',
+            'image',
         ];
 
         foreach ($keys as $key) {
-            $new[$key] = $request->$key;
-        }
-
-        if ($file = $request->file("image")) {
-            $name = mt_rand() . '.'.$file->clientExtension();
-            $file->move('uploads/properties/facilities', $name);
-            $new["image"] = $name;
+            if ($key == 'logo') {
+                $new[$key] = $this->upload($request->file($key), 'uploads/properties/facilities');
+            }
+            else {
+                $new[$key] = $request->$key;
+            }
         }
 
         Model::create($new);

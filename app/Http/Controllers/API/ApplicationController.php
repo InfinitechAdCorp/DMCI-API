@@ -4,11 +4,14 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Traits\Uploadable;
 
 use App\Models\Application as Model;
 
 class ApplicationController extends Controller
 {
+    use Uploadable;
+
     public function getAll()
     {
         $records = Model::with("career")->get();
@@ -40,16 +43,16 @@ class ApplicationController extends Controller
             'email',
             'phone',
             'address',
+            'resume',
         ];
 
         foreach ($keys as $key) {
-            $new[$key] = $request->$key;
-        }
-
-        if ($file = $request->file("resume")) {
-            $name = mt_rand() . '.'.$file->clientExtension();
-            $file->move('uploads/careers/applications', $name);
-            $new["resume"] = $name;
+            if ($key == 'resume') {
+                $new[$key] = $this->upload($request->file($key), 'uploads/careers/applications');
+            }
+            else {
+                $new[$key] = $request->$key;
+            }
         }
 
         Model::create($new);

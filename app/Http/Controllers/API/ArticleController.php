@@ -4,11 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Traits\Uploadable;
 
 use App\Models\Article as Model;
 
 class ArticleController extends Controller
 {
+    use Uploadable;
 
     public function getAll()
     {
@@ -37,16 +39,16 @@ class ArticleController extends Controller
             'headline',
             'content',
             'date',
+            'image',
         ];
 
         foreach ($keys as $key) {
-            $new[$key] = $request->$key;
-        }
-
-        if ($file = $request->file("image")) {
-            $name = mt_rand() . '.'.$file->clientExtension();
-            $file->move('uploads/articles', $name);
-            $new["image"] = $name;
+            if ($key == 'image') {
+                $new[$key] = $this->upload($request->file($key), 'uploads/articles');
+            }
+            else {
+                $new[$key] = $request->$key;
+            }
         }
 
         Model::create($new);
