@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
-
 use App\Models\Facility as Model;
 
 class FacilityController extends Controller

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
-
 use App\Models\Property as Model;
 
 class PropertyController extends Controller
