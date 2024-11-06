@@ -50,7 +50,16 @@ class FileController extends Controller
 
     public function delete($id)
     {
-        Model::find($id)->delete();
-        return response(['code' => 200]);
+        $record = Model::find($id);
+
+        if ($record) {
+            $record->delete();
+            $code = 200;
+        }
+        else {
+            $code = 404;
+        }
+
+        return response(['code' => $code]);
     }
 }
