@@ -9,7 +9,6 @@ use App\Models\Property as Model;
 
 class PropertyController extends Controller
 {
-    public $model = "Property";
 
     public function getAll()
     {
@@ -63,7 +62,7 @@ class PropertyController extends Controller
         }
 
         Model::create($new);
-        return response(['code' => 200, 'message' => "Added $this->model"]);
+        return response(['code' => 200]);
     }
     
     // public function update(Request $request, $id)
@@ -76,12 +75,12 @@ class PropertyController extends Controller
     //     $record = Model::find($id);
     //     $record->update($request->all());
 
-    //     return response(['code' => 200, 'message' => "Updated $this->model"]);
+    //     return response(['code' => 200]);
     // }
 
     public function delete($id)
     {
         Model::find($id)->delete();
-        return response(['code' => 200, 'message' => "Deleted $this->model"]);
+        return response(['code' => 200]);
     }
 }

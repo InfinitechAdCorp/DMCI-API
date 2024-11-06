@@ -9,7 +9,6 @@ use App\Models\Career as Model;
 
 class CareerController extends Controller
 {
-    public $model = "Career";
 
     public function getAll()
     {
@@ -55,7 +54,7 @@ class CareerController extends Controller
         }
 
         Model::create($new);
-        return response(['code' => 200, 'message' => "Added $this->model"]);
+        return response(['code' => 200]);
     }
     
     // public function update(Request $request, $id)
@@ -68,12 +67,12 @@ class CareerController extends Controller
     //     $record = Model::find($id);
     //     $record->update($request->all());
 
-    //     return response(['code' => 200, 'message' => "Updated $this->model"]);
+    //     return response(['code' => 200]);
     // }
 
     public function delete($id)
     {
         Model::find($id)->delete();
-        return response(['code' => 200, 'message' => "Deleted $this->model"]);
+        return response(['code' => 200]);
     }
 }

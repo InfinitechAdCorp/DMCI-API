@@ -9,7 +9,6 @@ use App\Models\Folder as Model;
 
 class FolderController extends Controller
 {
-    public $model = "Folder";
 
     public function getAll()
     {
@@ -31,7 +30,7 @@ class FolderController extends Controller
             'name' => 'required',
         ]);
         Model::create($request->all());
-        return response(['code' => 200, 'message' => "Added $this->model"]);
+        return response(['code' => 200]);
     }
     
     public function update(Request $request, $id)
@@ -43,12 +42,12 @@ class FolderController extends Controller
         $record = Model::find($id);
         $record->update($request->all());
 
-        return response(['code' => 200, 'message' => "Updated $this->model"]);
+        return response(['code' => 200]);
     }
 
     public function delete($id)
     {
         Model::find($id)->delete();
-        return response(['code' => 200, 'message' => "Deleted $this->model"]);
+        return response(['code' => 200]);
     }
 }

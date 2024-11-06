@@ -9,8 +9,6 @@ use App\Models\Application as Model;
 
 class ApplicationController extends Controller
 {
-    public $model = "Application";
-
     public function getAll()
     {
         $records = Model::with("career")->get();
@@ -55,7 +53,7 @@ class ApplicationController extends Controller
         }
 
         Model::create($new);
-        return response(['code' => 200, 'message' => "Added $this->model"]);
+        return response(['code' => 200]);
     }
     
     // public function update(Request $request, $id)
@@ -68,12 +66,12 @@ class ApplicationController extends Controller
     //     $record = Model::find($id);
     //     $record->update($request->all());
 
-    //     return response(['code' => 200, 'message' => "Updated $this->model"]);
+    //     return response(['code' => 200]);
     // }
 
     public function delete($id)
     {
         Model::find($id)->delete();
-        return response(['code' => 200, 'message' => "Deleted $this->model"]);
+        return response(['code' => 200]);
     }
 }
