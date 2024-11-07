@@ -13,6 +13,7 @@ use App\Http\Controllers\API\ApplicationController;
 use App\Http\Controllers\API\BuildingController;
 use App\Http\Controllers\API\FileController;
 use App\Http\Controllers\API\FolderController;
+use App\Http\Controllers\API\ItemController;
 use App\Http\Controllers\API\PlanController;
 use App\Http\Controllers\API\UnitController;
 
@@ -129,4 +130,12 @@ Route::prefix('files')->group(function () {
     Route::post('', [FileController::class, 'add']);     
     Route::put('', [FileController::class, 'update']);        
     Route::delete('{id}', [FileController::class, 'delete']);
+});
+
+Route::prefix('items')->group(function () {   
+    Route::get('', [ItemController::class, 'getAll']);        
+    Route::get('{id}', [ItemController::class, 'get']);   
+    Route::post('', [ItemController::class, 'add']);     
+    // Route::put('', [ItemController::class, 'update']);        
+    Route::delete('{id}', [ItemController::class, 'delete']);
 });
