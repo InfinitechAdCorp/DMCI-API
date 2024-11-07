@@ -36,15 +36,16 @@ class FileController extends Controller
         return response($data);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $validated = $request->validate([
+            'id' => 'required|exists:files,id',
             'folder_id' => 'required',
             'name' => 'required',
             'links' => 'required',
         ]);
 
-        $record = Model::find($id);
+        $record = Model::find($validated['id']);
         $record->update($validated);
         $data = ['code' => 200];
 

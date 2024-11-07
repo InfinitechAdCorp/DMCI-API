@@ -36,14 +36,15 @@ class FeatureController extends Controller
         return response($data);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $validated = $request->validate([
+            'id' => 'required|exists:features,id',
             'property_id' => 'required',
             'name' => 'required',
         ]);
 
-        $record = Model::find($id);
+        $record = Model::find($validated['id']);
         $record->update($validated);
         $data = ['code' => 200];
 

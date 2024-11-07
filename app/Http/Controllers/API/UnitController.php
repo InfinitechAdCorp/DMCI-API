@@ -39,9 +39,10 @@ class UnitController extends Controller
         return response($data);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $validated = $request->validate([
+            'id' => 'required|exists:units,id',
             'property_id' => 'required',
             'type' => 'required',
             'area' => 'required',
@@ -49,7 +50,7 @@ class UnitController extends Controller
             'status' => 'required',
         ]);
 
-        $record = Model::find($id);
+        $record = Model::find($validated["id"]);
         $record->update($validated);
         $data = ['code' => 200];
 

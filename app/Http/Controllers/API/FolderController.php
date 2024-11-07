@@ -25,8 +25,8 @@ class FolderController extends Controller
 
     public function add(Request $request)
     {
-        $validated = $request->validate( [
-           'name' => 'required',
+        $validated = $request->validate([
+            'name' => 'required',
         ]);
 
         Model::create($validated);
@@ -34,14 +34,15 @@ class FolderController extends Controller
 
         return response($data);
     }
-    
-    public function update(Request $request, $id)
+
+    public function update(Request $request)
     {
         $validated = $request->validate([
-           'name' => 'required',
+            'id' => 'required|exists:folders,id',
+            'name' => 'required',
         ]);
 
-        $record = Model::find($id);
+        $record = Model::find($validated["id"]);
         $record->update($validated);
         $data = ['code' => 200];
 

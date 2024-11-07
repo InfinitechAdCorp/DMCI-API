@@ -35,14 +35,15 @@ class CategoryController extends Controller
         return response($data);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $validated = $request->validate([
+            'id' => 'required|exists:categories,id',
             'name' => 'required',
             'description' => 'required',
         ]);
 
-        $record = Model::find($id);
+        $record = Model::find($validated['id']);
         $record->update($validated);
         $data = ['code' => 200];
 

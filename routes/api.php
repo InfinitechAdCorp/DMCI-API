@@ -31,7 +31,7 @@ Route::prefix('categories')->group(function () {
     Route::get('', [CategoryController::class, 'getAll']);        
     Route::get('{id}', [CategoryController::class, 'get']);   
     Route::post('', [CategoryController::class, 'add']);     
-    Route::put('{id}', [CategoryController::class, 'update']);        
+    Route::put('', [CategoryController::class, 'update']);        
     Route::delete('{id}', [CategoryController::class, 'delete']);
 });
 
@@ -39,7 +39,7 @@ Route::prefix('properties')->group(function () {
     Route::get('', [PropertyController::class, 'getAll']);        
     Route::get('{id}', [PropertyController::class, 'get']);   
     Route::post('', [PropertyController::class, 'add']);     
-    // Route::put('{id}', [PropertyController::class, 'update']);        
+    // Route::put('', [PropertyController::class, 'update']);        
     Route::delete('{id}', [PropertyController::class, 'delete']);
 });
 
@@ -47,7 +47,7 @@ Route::prefix('questions')->group(function () {
     Route::get('', [QuestionController::class, 'getAll']);        
     Route::get('{id}', [QuestionController::class, 'get']);   
     Route::post('', [QuestionController::class, 'add']);     
-    Route::put('{id}', [QuestionController::class, 'update']);        
+    Route::put('', [QuestionController::class, 'update']);        
     Route::delete('{id}', [QuestionController::class, 'delete']);
 });
 
@@ -55,7 +55,7 @@ Route::prefix('articles')->group(function () {
     Route::get('', [ArticleController::class, 'getAll']);        
     Route::get('{id}', [ArticleController::class, 'get']);   
     Route::post('', [ArticleController::class, 'add']);     
-    // Route::put('{id}', [ArticleController::class, 'update']);        
+    // Route::put('', [ArticleController::class, 'update']);        
     Route::delete('{id}', [ArticleController::class, 'delete']);
 });
 
@@ -63,7 +63,7 @@ Route::prefix('careers')->group(function () {
     Route::get('', [CareerController::class, 'getAll']);        
     Route::get('{id}', [CareerController::class, 'get']);   
     Route::post('', [CareerController::class, 'add']);     
-    // Route::put('{id}', [CareerController::class, 'update']);        
+    // Route::put('', [CareerController::class, 'update']);        
     Route::delete('{id}', [CareerController::class, 'delete']);
 });
 
@@ -71,7 +71,7 @@ Route::prefix('features')->group(function () {
     Route::get('', [FeatureController::class, 'getAll']);        
     Route::get('{id}', [FeatureController::class, 'get']);   
     Route::post('', [FeatureController::class, 'add']);     
-    Route::put('{id}', [FeatureController::class, 'update']);        
+    Route::put('', [FeatureController::class, 'update']);        
     Route::delete('{id}', [FeatureController::class, 'delete']);
 });
 
@@ -79,7 +79,7 @@ Route::prefix('facilities')->group(function () {
     Route::get('', [FacilityController::class, 'getAll']);        
     Route::get('{id}', [FacilityController::class, 'get']);   
     Route::post('', [FacilityController::class, 'add']);     
-    // Route::put('{id}', [FacilityController::class, 'update']);        
+    // Route::put('', [FacilityController::class, 'update']);        
     Route::delete('{id}', [FacilityController::class, 'delete']);
 });
 
@@ -87,7 +87,7 @@ Route::prefix('applications')->group(function () {
     Route::get('', [ApplicationController::class, 'getAll']);        
     Route::get('{id}', [ApplicationController::class, 'get']);   
     Route::post('', [ApplicationController::class, 'add']);     
-    // Route::put('{id}', [ApplicationController::class, 'update']);        
+    // Route::put('', [ApplicationController::class, 'update']);        
     Route::delete('{id}', [ApplicationController::class, 'delete']);
 });
 
@@ -95,7 +95,7 @@ Route::prefix('buildings')->group(function () {
     Route::get('', [BuildingController::class, 'getAll']);        
     Route::get('{id}', [BuildingController::class, 'get']);   
     Route::post('', [BuildingController::class, 'add']);     
-    // Route::put('{id}', [BuildingController::class, 'update']);        
+    // Route::put('', [BuildingController::class, 'update']);        
     Route::delete('{id}', [BuildingController::class, 'delete']);
 });
 
@@ -103,7 +103,7 @@ Route::prefix('plans')->group(function () {
     Route::get('', [PlanController::class, 'getAll']);        
     Route::get('{id}', [PlanController::class, 'get']);   
     Route::post('', [PlanController::class, 'add']);     
-    // Route::put('{id}', [PlanController::class, 'update']);        
+    // Route::put('', [PlanController::class, 'update']);        
     Route::delete('{id}', [PlanController::class, 'delete']);
 });
 
@@ -111,7 +111,7 @@ Route::prefix('units')->group(function () {
     Route::get('', [UnitController::class, 'getAll']);        
     Route::get('{id}', [UnitController::class, 'get']);   
     Route::post('', [UnitController::class, 'add']);     
-    Route::put('{id}', [UnitController::class, 'update']);        
+    Route::put('', [UnitController::class, 'update']);        
     Route::delete('{id}', [UnitController::class, 'delete']);
 });
 
@@ -119,7 +119,7 @@ Route::prefix('folders')->group(function () {
     Route::get('', [FolderController::class, 'getAll']);        
     Route::get('{id}', [FolderController::class, 'get']);   
     Route::post('', [FolderController::class, 'add']);     
-    Route::put('{id}', [FolderController::class, 'update']);        
+    Route::put('', [FolderController::class, 'update']);        
     Route::delete('{id}', [FolderController::class, 'delete']);
 });
 
@@ -127,6 +127,6 @@ Route::prefix('files')->group(function () {
     Route::get('', [FileController::class, 'getAll']);        
     Route::get('{id}', [FileController::class, 'get']);   
     Route::post('', [FileController::class, 'add']);     
-    Route::put('{id}', [FileController::class, 'update']);        
+    Route::put('', [FileController::class, 'update']);        
     Route::delete('{id}', [FileController::class, 'delete']);
 });
