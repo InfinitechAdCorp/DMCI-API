@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
-use Validator;
 use App\Models\Application as Model;
 
 class ApplicationController extends Controller
@@ -34,7 +33,7 @@ class ApplicationController extends Controller
 
     public function add(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $validated = $request->validate([
             'career_id' => 'required',
             'name' => 'required',
             'email' => 'required',
@@ -43,31 +42,25 @@ class ApplicationController extends Controller
             'resume'  => 'required|file',
         ]);
 
-        if ($validator->passes()) {
-            $validated = $validator->validated();
+        $keys = [
+            'career_id',
+            'name',
+            'email',
+            'phone',
+            'address',
+            'resume',
+        ];
 
-            $keys = [
-                'career_id',
-                'name',
-                'email',
-                'phone',
-                'address',
-                'resume',
-            ];
-
-            foreach ($keys as $key) {
-                if ($key == 'resume') {
-                    $new[$key] = $this->upload($validated[$key], 'uploads/careers/applications');
-                } else {
-                    $new[$key] = $validated[$key];
-                }
+        foreach ($keys as $key) {
+            if ($key == 'resume') {
+                $new[$key] = $this->upload($validated[$key], 'uploads/careers/applications');
+            } else {
+                $new[$key] = $validated[$key];
             }
-
-            Model::create($new);
-            $data = ['code' => 200];
-        } else {
-            $data = ['code' => 422, 'errors' => $validator->errors()];
         }
+
+        Model::create($new);
+        $data = ['code' => 200];
 
         return response($data);
     }

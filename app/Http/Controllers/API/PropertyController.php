@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
-use Validator;
 use App\Models\Property as Model;
 
 class PropertyController extends Controller
@@ -35,7 +34,7 @@ class PropertyController extends Controller
 
     public function add(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $validated = $request->validate( [
             'category_id' => 'required',
             'name' => 'required',
             'logo' => 'required|file',
@@ -48,36 +47,30 @@ class PropertyController extends Controller
             'percent' => 'required',
         ]);
 
-        if ($validator->passes()) {
-            $validated = $validator->validated();
+        $keys = [
+            'category_id',
+            'name',
+            'logo',
+            'description',
+            'slogan',
+            'location',
+            'min_price',
+            'max_price',
+            'status',
+            'percent',
+        ];
 
-            $keys = [
-                'category_id',
-                'name',
-                'logo',
-                'description',
-                'slogan',
-                'location',
-                'min_price',
-                'max_price',
-                'status',
-                'percent',
-            ];
-    
-            foreach ($keys as $key) {
-                if ($key == 'logo') {
-                    $new[$key] = $this->upload($validated[$key], 'uploads/properties/logos');
-                }
-                else {
-                    $new[$key] = $validated[$key];
-                }
+        foreach ($keys as $key) {
+            if ($key == 'logo') {
+                $new[$key] = $this->upload($validated[$key], 'uploads/properties/logos');
             }
-
-            Model::create($new);
-            $data = ['code' => 200];
-        } else {
-            $data = ['code' => 422, 'errors' => $validator->errors()];
+            else {
+                $new[$key] = $validated[$key];
+            }
         }
+
+        Model::create($new);
+        $data = ['code' => 200];
 
         return response($data);
     }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
-use Validator;
 use App\Models\Building as Model;
 
 class BuildingController extends Controller
@@ -35,7 +34,7 @@ class BuildingController extends Controller
 
     public function add(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $validated = $request->validate([
             'property_id' => 'required',
             'name' => 'required',
             'floors' => 'required',
@@ -43,31 +42,25 @@ class BuildingController extends Controller
             'image' => 'required|file',
         ]);
 
-        if ($validator->passes()) {
-            $validated = $validator->validated();
+        $keys = [
+            'property_id',
+            'name',
+            'floors',
+            'parking',
+            'image',
+        ];
 
-            $keys = [
-                'property_id',
-                'name',
-                'floors',
-                'parking',
-                'image',
-            ];
-
-            foreach ($keys as $key) {
-                if ($key == 'image') {
-                    $new[$key] = $this->upload($validated[$key], 'uploads/properties/buildings');
-                }
-                else {
-                    $new[$key] = $validated[$key];
-                }
+        foreach ($keys as $key) {
+            if ($key == 'image') {
+                $new[$key] = $this->upload($validated[$key], 'uploads/properties/buildings');
             }
-
-            Model::create($new);
-            $data = ['code' => 200];
-        } else {
-            $data = ['code' => 422, 'errors' => $validator->errors()];
+            else {
+                $new[$key] = $validated[$key];
+            }
         }
+
+        Model::create($new);
+        $data = ['code' => 200];
 
         return response($data);
     }

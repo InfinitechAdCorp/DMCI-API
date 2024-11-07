@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
-use Validator;
 use App\Models\Plan as Model;
 
 class PlanController extends Controller
@@ -35,37 +34,31 @@ class PlanController extends Controller
 
     public function add(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $validated = $request->validate([
             'property_id' => 'required',
             'area' => 'required',
             'theme' => 'required',
             'image' => 'required|file',
         ]);
 
-        if ($validator->passes()) {
-            $validated = $validator->validated();
+        $keys = [
+            'property_id',
+            'area',
+            'theme',
+            'image',
+        ];
 
-            $keys = [
-                'property_id',
-                'area',
-                'theme',
-                'image',
-            ];
-    
-            foreach ($keys as $key) {
-                if ($key == 'logo') {
-                    $new[$key] = $this->upload($validated[$key], 'uploads/properties/plans');
-                }
-                else {
-                    $new[$key] = $validated[$key];
-                }
+        foreach ($keys as $key) {
+            if ($key == 'logo') {
+                $new[$key] = $this->upload($validated[$key], 'uploads/properties/plans');
             }
-
-            Model::create($new);
-            $data = ['code' => 200];
-        } else {
-            $data = ['code' => 422, 'errors' => $validator->errors()];
+            else {
+                $new[$key] = $validated[$key];
+            }
         }
+
+        Model::create($new);
+        $data = ['code' => 200];
 
         return response($data);
     }
