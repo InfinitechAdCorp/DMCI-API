@@ -37,6 +37,7 @@ class ApplicationController extends Controller
             'resume'  => 'required|mimes:pdf|max:2048',
         ]);
 
+        
         $key = 'resume';
         $validated[$key] = $this->upload($validated[$key], 'uploads/careers/applications');
 
