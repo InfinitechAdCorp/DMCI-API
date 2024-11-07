@@ -19,6 +19,7 @@ class ApplicationController extends Controller
         return response($data);
     }
 
+    
     public function get($id)
     {
         $record = Model::findOrFail($id);
