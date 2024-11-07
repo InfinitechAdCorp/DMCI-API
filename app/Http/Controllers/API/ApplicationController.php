@@ -28,12 +28,12 @@ class ApplicationController extends Controller
     public function add(Request $request)
     {
         $validated = $request->validate([
-            'career_id' => 'required',
+            'career_id' => 'required|exists:careers,id',
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required|email',
             'phone' => 'required',
             'address' => 'required',
-            'resume'  => 'required|file',
+            'resume'  => 'required|mimes:pdf|max:2048',
         ]);
 
         $keys = [

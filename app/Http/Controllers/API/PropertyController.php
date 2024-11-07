@@ -28,16 +28,16 @@ class PropertyController extends Controller
     public function add(Request $request)
     {
         $validated = $request->validate( [
-            'category_id' => 'required',
+            'category_id' => 'required|exists:categories,id',
             'name' => 'required',
-            'logo' => 'required|file',
+            'logo' => 'required|image|max:2048',
             'description' => 'required',
             'slogan' => 'required',
             'location'  => 'required',
-            'min_price'  => 'required',
-            'max_price'  => 'required',
+            'min_price'  => 'required|decimal:0,2',
+            'max_price'  => 'required|decimal:0,2',
             'status'  => 'required',
-            'percent' => 'required',
+            'percent' => 'required|numeric',
         ]);
 
         $keys = [

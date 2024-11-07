@@ -28,10 +28,10 @@ class PlanController extends Controller
     public function add(Request $request)
     {
         $validated = $request->validate([
-            'property_id' => 'required',
-            'area' => 'required',
+            'property_id' => 'required|exists:properties,id',
+            'area' => 'required|decimal:0,2',
             'theme' => 'required',
-            'image' => 'required|file',
+            'image' => 'required|image|max:2048',
         ]);
 
         $keys = [

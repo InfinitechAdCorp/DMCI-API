@@ -26,7 +26,7 @@ class FeatureController extends Controller
     public function add(Request $request)
     {
         $validated = $request->validate([
-            'property_id' => 'required',
+            'property_id' => 'required|exists:properties,id',
             'name' => 'required',
         ]);
 
@@ -40,7 +40,7 @@ class FeatureController extends Controller
     {
         $validated = $request->validate([
             'id' => 'required|exists:features,id',
-            'property_id' => 'required',
+            'property_id' => 'required|exists:properties,id',
             'name' => 'required',
         ]);
 

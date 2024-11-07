@@ -33,7 +33,7 @@ class CareerController extends Controller
             'broker' => 'required',
             'partner' => 'required',
             'position' => 'required',
-            'image' => 'required|file',
+            'image' => 'required|image|max:2048',
         ]);
 
         $keys = [

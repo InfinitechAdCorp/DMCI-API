@@ -28,11 +28,11 @@ class BuildingController extends Controller
     public function add(Request $request)
     {
         $validated = $request->validate([
-            'property_id' => 'required',
+            'property_id' => 'required|exists:properties,id',
             'name' => 'required',
-            'floors' => 'required',
-            'parking' => 'required',
-            'image' => 'required|file',
+            'floors' => 'required|numeric',
+            'parking' => 'required|numeric',
+            'image' => 'required|image|max:2048',
         ]);
 
         $keys = [

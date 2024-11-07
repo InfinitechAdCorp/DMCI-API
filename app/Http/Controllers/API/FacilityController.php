@@ -27,10 +27,10 @@ class FacilityController extends Controller
 
     public function add(Request $request)
     {
-        $validated = $request->validate( [
-           'property_id' => 'required',
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
             'name' => 'required',
-            'image' => 'required|file',
+            'image' => 'required|image|max:2048',
         ]);
 
         $keys = [
@@ -42,8 +42,7 @@ class FacilityController extends Controller
         foreach ($keys as $key) {
             if ($key == 'logo') {
                 $new[$key] = $this->upload($validated[$key], 'uploads/properties/facilities');
-            }
-            else {
+            } else {
                 $new[$key] = $validated[$key];
             }
         }
@@ -53,7 +52,7 @@ class FacilityController extends Controller
 
         return response($data);
     }
-    
+
     // public function update(Request $request, $id)
     // {
     //     $request->validate([

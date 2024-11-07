@@ -30,8 +30,8 @@ class ArticleController extends Controller
         $validated = $request->validate([
             'headline' => 'required',
             'content' => 'required',
-            'date' => 'required',
-            'image' => 'required|file',
+            'date' => 'required|date',
+            'image' => 'required|image|max:2048',
         ]);
 
         $keys = [

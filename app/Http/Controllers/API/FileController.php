@@ -25,7 +25,7 @@ class FileController extends Controller
     public function add(Request $request)
     {
         $validated = $request->validate([
-            'folder_id' => 'required',
+            'folder_id' => 'required|exists:folders,id',
             'name' => 'required',
             'links' => 'required',
         ]);
@@ -40,7 +40,7 @@ class FileController extends Controller
     {
         $validated = $request->validate([
             'id' => 'required|exists:files,id',
-            'folder_id' => 'required',
+            'folder_id' => 'required|exists:folders,id',
             'name' => 'required',
             'links' => 'required',
         ]);

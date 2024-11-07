@@ -26,9 +26,9 @@ class UnitController extends Controller
     public function add(Request $request)
     {
         $validated = $request->validate([
-            'property_id' => 'required',
+            'property_id' => 'required|exists:properties,id',
             'type' => 'required',
-            'area' => 'required',
+            'area' => 'required|decimal:0,2',
             'price' => 'required',
             'status' => 'required',
         ]);
@@ -43,9 +43,9 @@ class UnitController extends Controller
     {
         $validated = $request->validate([
             'id' => 'required|exists:units,id',
-            'property_id' => 'required',
+            'property_id' => 'required|exists:properties,id',
             'type' => 'required',
-            'area' => 'required',
+            'area' => 'required|decimal:0,2',
             'price' => 'required',
             'status' => 'required',
         ]);
