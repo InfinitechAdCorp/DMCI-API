@@ -15,7 +15,7 @@ class ApplicationController extends Controller
     public function getAll()
     {
         $records = Model::with("career")->get();
-        $data = ['records' => $records];
+        $data = ['code' => 200, 'records' => $records];
         return response($data);
     }
 
@@ -37,7 +37,7 @@ class ApplicationController extends Controller
             'resume'  => 'required|mimes:pdf|max:2048',
         ]);
 
-        
+
         $key = 'resume';
         $validated[$key] = $this->upload($validated[$key], 'uploads/careers/applications');
 

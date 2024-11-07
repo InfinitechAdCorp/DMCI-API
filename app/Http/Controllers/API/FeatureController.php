@@ -12,7 +12,7 @@ class FeatureController extends Controller
     public function getAll()
     {
         $records = Model::all();
-        $data = ['records' => $records];
+        $data = ['code' => 200, 'records' => $records];
         return response($data);
     }
 

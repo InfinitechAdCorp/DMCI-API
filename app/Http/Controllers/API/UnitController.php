@@ -12,7 +12,7 @@ class UnitController extends Controller
     public function getAll()
     {
         $records = Model::with("property")->get();
-        $data = ['records' => $records];
+        $data = ['code' => 200, 'records' => $records];
         return response($data);
     }
 
