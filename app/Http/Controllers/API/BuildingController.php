@@ -20,15 +20,8 @@ class BuildingController extends Controller
 
     public function get($id)
     {
-        $record = Model::find($id);
-
-        if ($record) {
-            $data = ['code' => 200, 'record' => $record];
-        }
-        else {
-            $data = ['code' => 404];
-        }
-
+        $record = Model::findOrFail($id);
+        $data = ['code' => 200, 'record' => $record];
         return response($data);
     }
 
@@ -80,16 +73,8 @@ class BuildingController extends Controller
 
     public function delete($id)
     {
-        $record = Model::find($id);
-
-        if ($record) {
-            $record->delete();
-            $code = 200;
-        }
-        else {
-            $code = 404;
-        }
-
-        return response(['code' => $code]);
+        $record = Model::findOrFail($id);
+        $record->delete();
+        return response(['code' => 200]);
     }
 }
