@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Question as Model;
+use App\Models\Appointment as Model;
 
-class QuestionController extends Controller
+class AppointmentController extends Controller
 {
     public function getAll()
     {
@@ -25,8 +25,14 @@ class QuestionController extends Controller
     public function add(Request $request)
     {
         $validated = $request->validate([
-            'question' => 'required',
-            'answer' => 'required',
+            'name' => 'required',
+            'phone' => 'required',
+            'email' => 'required|email',
+            'date' => 'required|date',
+            'time' => 'required|date_format:H:i',
+            'type' => 'required',
+            'properties' => 'required',
+            'message' => 'required',
             'status' => 'required',
         ]);
 
@@ -39,9 +45,15 @@ class QuestionController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:questions,id',
-            'question' => 'required',
-            'answer' => 'required',
+            'id' => 'required|exists:appointments,id',
+            'name' => 'required',
+            'phone' => 'required',
+            'email' => 'required|email',
+            'date' => 'required|date',
+            'time' => 'required|date_format:H:i',
+            'type' => 'required',
+            'properties' => 'required',
+            'message' => 'required',
             'status' => 'required',
         ]);
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\API\CareerController;
 use App\Http\Controllers\API\FacilityController;
 use App\Http\Controllers\API\FeatureController;
 use App\Http\Controllers\API\ApplicationController;
+use App\Http\Controllers\API\AppointmentController;
 use App\Http\Controllers\API\BuildingController;
 use App\Http\Controllers\API\FileController;
 use App\Http\Controllers\API\FolderController;
@@ -138,4 +139,12 @@ Route::prefix('items')->group(function () {
     Route::post('', [ItemController::class, 'add']);     
     // Route::put('', [ItemController::class, 'update']);        
     Route::delete('{id}', [ItemController::class, 'delete']);
+});
+
+Route::prefix('appointments')->group(function () {   
+    Route::get('', [AppointmentController::class, 'getAll']);        
+    Route::get('{id}', [AppointmentController::class, 'get']);   
+    Route::post('', [AppointmentController::class, 'add']);     
+    Route::put('', [AppointmentController::class, 'update']);        
+    Route::delete('{id}', [AppointmentController::class, 'delete']);
 });

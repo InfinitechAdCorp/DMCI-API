@@ -34,7 +34,6 @@ class ItemController extends Controller
             'height' => 'required|decimal:0,2',
             'image' => 'required|image|max:2048',
         ]);
-        
 
         $keys = [
             'name',
