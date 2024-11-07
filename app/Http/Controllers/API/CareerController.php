@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use App\Traits\Uploadable;
 use App\Models\Career as Model;
 
@@ -36,24 +37,10 @@ class CareerController extends Controller
             'image' => 'required|image|max:2048',
         ]);
 
-        $keys = [
-            'referrer',
-            'sub_agent',
-            'broker',
-            'partner',
-            'position',
-            'image',
-        ];
+        $key = 'image';
+        $validated[$key] = $this->upload($validated[$key], 'uploads/careers/images');
 
-        foreach ($keys as $key) {
-            if ($key == 'image') {
-                $new[$key] = $this->upload($validated[$key], 'uploads/careers/images');
-            } else {
-                $new[$key] = $validated[$key];
-            }
-        }
-
-        Model::create($new);
+        Model::create($validated);
         $data = ['code' => 200];
 
         return response($data);

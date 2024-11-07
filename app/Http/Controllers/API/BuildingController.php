@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use App\Traits\Uploadable;
 use App\Models\Building as Model;
 
@@ -35,24 +36,10 @@ class BuildingController extends Controller
             'image' => 'required|image|max:2048',
         ]);
 
-        $keys = [
-            'property_id',
-            'name',
-            'floors',
-            'parking',
-            'image',
-        ];
+        $key = 'image';
+        $validated[$key] = $this->upload($validated[$key], 'uploads/properties/buildings');
 
-        foreach ($keys as $key) {
-            if ($key == 'image') {
-                $new[$key] = $this->upload($validated[$key], 'uploads/properties/buildings');
-            }
-            else {
-                $new[$key] = $validated[$key];
-            }
-        }
-
-        Model::create($new);
+        Model::create($validated);
         $data = ['code' => 200];
 
         return response($data);

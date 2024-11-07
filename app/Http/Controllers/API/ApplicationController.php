@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use App\Traits\Uploadable;
 use App\Models\Application as Model;
 
@@ -36,24 +37,10 @@ class ApplicationController extends Controller
             'resume'  => 'required|mimes:pdf|max:2048',
         ]);
 
-        $keys = [
-            'career_id',
-            'name',
-            'email',
-            'phone',
-            'address',
-            'resume',
-        ];
+        $key = 'resume';
+        $validated[$key] = $this->upload($validated[$key], 'uploads/careers/applications');
 
-        foreach ($keys as $key) {
-            if ($key == 'resume') {
-                $new[$key] = $this->upload($validated[$key], 'uploads/careers/applications');
-            } else {
-                $new[$key] = $validated[$key];
-            }
-        }
-
-        Model::create($new);
+        Model::create($validated);
         $data = ['code' => 200];
 
         return response($data);

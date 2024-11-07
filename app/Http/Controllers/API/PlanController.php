@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use App\Traits\Uploadable;
 use App\Models\Plan as Model;
 
@@ -34,23 +35,10 @@ class PlanController extends Controller
             'image' => 'required|image|max:2048',
         ]);
 
-        $keys = [
-            'property_id',
-            'area',
-            'theme',
-            'image',
-        ];
+        $key = 'image';
+        $validated[$key] = $this->upload($validated[$key], 'uploads/properties/plans');
 
-        foreach ($keys as $key) {
-            if ($key == 'logo') {
-                $new[$key] = $this->upload($validated[$key], 'uploads/properties/plans');
-            }
-            else {
-                $new[$key] = $validated[$key];
-            }
-        }
-
-        Model::create($new);
+        Model::create($validated);
         $data = ['code' => 200];
 
         return response($data);
