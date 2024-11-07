@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('logo');
             $table->string('slogan');
-            $table->string('description');
+            $table->text('description');
             $table->string('location');
             $table->double('min_price', 10, 2);
             $table->double('max_price', 10, 2);
