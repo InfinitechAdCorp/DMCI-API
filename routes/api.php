@@ -12,11 +12,13 @@ use App\Http\Controllers\API\FeatureController;
 use App\Http\Controllers\API\ApplicationController;
 use App\Http\Controllers\API\AppointmentController;
 use App\Http\Controllers\API\BuildingController;
+use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\FileController;
 use App\Http\Controllers\API\FolderController;
 use App\Http\Controllers\API\ItemController;
 use App\Http\Controllers\API\PlanController;
 use App\Http\Controllers\API\UnitController;
+use App\Http\Controllers\API\ListingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -147,4 +149,16 @@ Route::prefix('appointments')->group(function () {
     Route::post('', [AppointmentController::class, 'add']);     
     Route::put('', [AppointmentController::class, 'update']);        
     Route::delete('{id}', [AppointmentController::class, 'delete']);
+});
+
+Route::prefix('listings')->group(function () {   
+    Route::get('', [ListingsController::class, 'getAll']);        
+    Route::get('{id}', [ListingsController::class, 'get']);   
+    Route::post('', [ListingsController::class, 'add']);     
+    Route::put('', [ListingsController::class, 'update']);        
+    Route::delete('{id}', [ListingsController::class, 'delete']);
+});
+
+Route::prefix('count')->group(function () {   
+    Route::get('', [DashboardController::class, 'countProperties']);        
 });
