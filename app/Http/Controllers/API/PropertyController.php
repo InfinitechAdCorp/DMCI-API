@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use App\Traits\Uploadable;
 use App\Models\Property as Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PropertyController extends Controller
 {
@@ -14,10 +16,20 @@ class PropertyController extends Controller
 
     public function getAll()
     {
-        $records = Model::with("category")->get();
-        $data = ['code' => 200, 'records' => $records];
-        return response($data);
+        $user = Auth::id();
+
+        if ($user) {
+            $records = Model::where('user_id', $user)->get();
+            $data = ['code' => 200, 'records' => $records];
+            return response($data);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not authenticated.'
+            ], 401);
+        }
     }
+
 
     public function get($id)
     {
@@ -28,28 +40,64 @@ class PropertyController extends Controller
 
     public function add(Request $request)
     {
-        $validated = $request->validate( [
+        $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required',
-            'logo' => 'required|image|max:2048',
-            'description' => 'required',
-            'slogan' => 'required',
-            'location'  => 'required',
-            'min_price'  => 'required|decimal:0,2',
-            'max_price'  => 'required|decimal:0,2',
-            'status'  => 'required',
-            'percent' => 'required|numeric',
+            'name' => 'required|string|max:255',
+            'logo' => 'required',
+            'description' => 'required|string',
+            'slogan' => 'required|string|max:255',
+            'location'  => 'required|string|max:255',
+            'min_price'  => 'required|numeric|min:0',
+            'max_price'  => 'required|numeric|gte:min_price',
+            'status'  => 'required|string',
+            'percent' => 'required|numeric|between:0,100',
+            'images.*' => 'required'  // Optional images upload
         ]);
 
-        $key = 'logo';
-        $validated[$key] = $this->upload($validated[$key], 'uploads/properties/logos');
+        try {
+            // Get the authenticated user
+            $user = auth()->user();
 
-        Model::create($validated);
-        $data = ['code' => 200];
+            // Upload the logo
+            if ($request->hasFile('logo')) {
+                $validated['logo'] = $this->upload($validated['logo'], 'uploads/properties/logos');
+            }
 
-        return response($data);
+            // Handle additional images
+            if ($request->hasFile('images')) {
+                $images = [];
+                foreach ($request->file('images') as $image) {
+                    $images[] = $this->upload($image, 'uploads/properties/images');
+                }
+                $validated['images'] = json_encode($images); // Save as JSON if images column is a JSON type
+            }
+
+            // Set the authenticated user's ID
+            $validated['user_id'] = $user->user_id;
+
+            // Create a new property record
+            $property = Model::create($validated);
+
+            return response()->json([
+                'code' => 200,
+                'message' => 'Property created successfully'
+            ])
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+                ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'message' => 'Failed to create property',
+                'error' => $e->getMessage()
+            ], 500)
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+                ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        }
     }
-    
+
+
     // public function update(Request $request, $id)
     // {
     //     $request->validate([

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('properties', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid("category_id"); 
+            $table->foreignUlid('user_id');
             $table->string('name');
             $table->string('logo');
             $table->string('slogan');

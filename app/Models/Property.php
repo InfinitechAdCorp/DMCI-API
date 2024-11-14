@@ -15,7 +15,7 @@ class Property extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'category_id',
+        'user_id',
         'name',
         'logo',
         'slogan',
@@ -35,8 +35,8 @@ class Property extends Model
         });
     }
 
-    public function category(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(User::class); 
     }
 }
