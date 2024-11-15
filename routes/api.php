@@ -165,7 +165,7 @@ Route::prefix('count')->middleware('auth:sanctum')->group(function () {
     Route::get('', [DashboardController::class, 'countProperties']);        
 });
 
-Route::prefix('listings')->group(function () {   
+Route::prefix('listings')->middleware('auth:sanctum')->group(function () {   
     Route::get('', [ListingsController::class, 'getAll']);        
     Route::get('{id}', [ListingsController::class, 'get']);   
     Route::post('', [ListingsController::class, 'add']);     
@@ -173,16 +173,15 @@ Route::prefix('listings')->group(function () {
     Route::delete('{id}', [ListingsController::class, 'delete']);
 });
 
-// Route::prefix('users')->group(function () {   
-//     Route::get('', [UserController::class, 'getAll']);        
-//     Route::post('   ', [UserController::class, 'addUser']); 
-// });
-
 
 Route::prefix('users')->group(function () {   
+    Route::get('', [UserController::class, 'getAll']);        
     Route::post('', [UserController::class, 'add']); 
 });
 
 
+
+
 Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'userLogout']); 
-Route::post('login', [UserController::class, 'loginUser']);     
+Route::post('users/login', [UserController::class, 'loginUser']);
+Route::middleware('auth:sanctum')->get('/profile', [UserController::class, 'userProfile']); 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Listings as Model;
 use App\Traits\Uploadable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ListingsController extends Controller
 {
@@ -13,9 +14,17 @@ class ListingsController extends Controller
 
     public function getAll()
     {
-        $records = Model::all();
-        $data = ['code' => 200, 'records' => $records];
-        return response($data);
+        if (Auth::check()) {
+            $users = Auth::id();
+            $records = Model::where("user_id", $users)->get();
+            $data = ['code' => 200, 'records' => $records];
+            return response($data);
+        }
+        else{
+            return response()->json([
+                'message' => 'User not authenticated.'
+            ], 401);    
+        }
     }
 
     public function get($id)
@@ -28,6 +37,7 @@ class ListingsController extends Controller
     public function add(Request $request)
     {
         $validated = $request->validate([
+            'user_id' => 'required',
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'phone' => 'required|string|max:15',
@@ -38,7 +48,7 @@ class ListingsController extends Controller
             'status' => 'required|string',
             'images[]' => 'nullable'
         ]);
-        
+
 
         $record = new Model();
 
@@ -55,7 +65,7 @@ class ListingsController extends Controller
         $record->fill($validated);
         $record->save();
 
-      
+
 
         return response()->json([
             'code' => 200,

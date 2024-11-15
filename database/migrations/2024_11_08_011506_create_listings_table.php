@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('listings', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->foreignUlid('user_id');
             $table->string('name');
             $table->string('email');
             $table->string('phone');

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
             $table->string('name');
-            $table->string('logo');
+            $table->string('logo')->nullable();
             $table->string('slogan');
             $table->text('description');
             $table->string('location');

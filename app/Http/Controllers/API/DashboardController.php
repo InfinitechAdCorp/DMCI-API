@@ -14,12 +14,14 @@ class DashboardController extends Controller
         $user = Auth::id();
         $record = Property::where('user_id', $user)->count();
         $recordConstruction = Property::where('user_id', $user)->where('status',"Under Construction")->count();
-        $recordAvailable = Listings::where('status', 'Available')->count();
+        $recordRFO = Property::where('user_id', $user)->where('status',"Ready For Occupancy")->count();
+        $recordNew = Property::where('user_id', $user)->where('status',"New")->count();
     
         $records = [
             'properties' => $record,
-            'available' => $recordAvailable,
+            'available' => $recordRFO,
             'construction' => $recordConstruction,
+            'new' => $recordNew,
         ];
         return response(['code' => 200, 'record' => $records]);
     }

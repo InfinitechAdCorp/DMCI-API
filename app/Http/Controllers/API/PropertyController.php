@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use App\Traits\Uploadable;
-use App\Models\Property as Model;
+use App\Models\Property as property;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -19,7 +19,7 @@ class PropertyController extends Controller
         $user = Auth::id();
 
         if ($user) {
-            $records = Model::where('user_id', $user)->get();
+            $records = property::where('user_id', $user)->get();
             $data = ['code' => 200, 'records' => $records];
             return response($data);
         } else {
@@ -33,69 +33,69 @@ class PropertyController extends Controller
 
     public function get($id)
     {
-        $record = Model::findOrFail($id);
+        $record = property::findOrFail($id);
         $data = ['code' => 200, 'record' => $record];
         return response($data);
     }
 
     public function add(Request $request)
     {
-        $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'logo' => 'required',
-            'description' => 'required|string',
-            'slogan' => 'required|string|max:255',
-            'location'  => 'required|string|max:255',
-            'min_price'  => 'required|numeric|min:0',
-            'max_price'  => 'required|numeric|gte:min_price',
-            'status'  => 'required|string',
-            'percent' => 'required|numeric|between:0,100',
-            'images.*' => 'required'  // Optional images upload
-        ]);
-
         try {
-            // Get the authenticated user
+            // Validation
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'logo' => 'required',
+                'description' => 'required|string',
+                'slogan' => 'required|string|max:255',
+                'location' => 'required|string|max:255',
+                'min_price' => 'required|numeric|min:0',
+                'max_price' => 'required|numeric|gte:min_price',
+                'status' => 'required|string',
+                'percent' => 'required|numeric|between:0,100',
+                'images.*' => 'file',
+            ]);
+    
+            // Log validated data
+            Log::info('Validated data:', $validated);
+    
+            // Ensure user is authenticated
             $user = auth()->user();
-
-            // Upload the logo
-            if ($request->hasFile('logo')) {
-                $validated['logo'] = $this->upload($validated['logo'], 'uploads/properties/logos');
+            if (!$user) {
+                return response()->json(['message' => 'User not authenticated'], 401);
             }
-
-            // Handle additional images
+    
+            // File upload processing
+            if ($request->hasFile('logo')) {
+                $validated['logo'] = $this->upload($request->file('logo'), 'uploads/properties/logos');
+            }
+    
             if ($request->hasFile('images')) {
                 $images = [];
                 foreach ($request->file('images') as $image) {
                     $images[] = $this->upload($image, 'uploads/properties/images');
                 }
-                $validated['images'] = json_encode($images); // Save as JSON if images column is a JSON type
+                $validated['images'] = json_encode($images);
             }
-
-            // Set the authenticated user's ID
+    
             $validated['user_id'] = $user->user_id;
-
-            // Create a new property record
-            $property = Model::create($validated);
-
+    
+            $property = Property::create($validated);
+            
             return response()->json([
                 'code' => 200,
-                'message' => 'Property created successfully'
-            ])
-                ->header('Access-Control-Allow-Origin', '*')
-                ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-                ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+                'message' => 'Property created successfully',
+                'property' => $property,
+            ]);
         } catch (\Exception $e) {
+            Log::error('Error creating property:', ['error' => $e->getMessage()]);
             return response()->json([
                 'code' => 500,
                 'message' => 'Failed to create property',
-                'error' => $e->getMessage()
-            ], 500)
-                ->header('Access-Control-Allow-Origin', '*')
-                ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-                ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
+    
 
 
     // public function update(Request $request, $id)
@@ -105,7 +105,7 @@ class PropertyController extends Controller
     //         'description' => 'required',
     //     ]);
 
-    //     $record = Model::find($id);
+    //     $record = property::find($id);
     //     $record->update($request->all());
 
     //     return response(['code' => 200]);
@@ -113,8 +113,20 @@ class PropertyController extends Controller
 
     public function delete($id)
     {
-        $record = Model::findOrFail($id);
-        $record->delete();
-        return response(['code' => 200]);
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            $user = Auth::id();
+    
+            $property = Property::where('id', $id)->where('user_id', $user)->first();
+    
+            if ($property) {
+                $property->delete();
+                return response()->json(['code' => 200, 'message' => 'Property deleted successfully']);
+            } else {
+                return response()->json(['code' => 404, 'message' => 'Property not found or not owned by user'], 404);
+            }
+        }
+        return response()->json(['code' => 401, 'message' => 'Unauthorized'], 401);
     }
+    
 }
