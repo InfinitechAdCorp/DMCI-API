@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->foreignUlid('user_id');
             $table->string('name');
             $table->string('phone');
             $table->string('email');

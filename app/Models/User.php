@@ -38,6 +38,14 @@ class User extends Authenticatable
         return $this->hasMany(Property::class);     
     }
 
+    public function appointment():HasMany
+    {
+        return $this->hasMany(Appointment::class);     
+    }
+
+
+
+
 
 
 }

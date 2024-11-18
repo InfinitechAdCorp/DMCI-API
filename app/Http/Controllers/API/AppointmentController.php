@@ -25,6 +25,7 @@ class AppointmentController extends Controller
     public function add(Request $request)
     {
         $validated = $request->validate([
+            'user_id' => 'required',
             'name' => 'required',
             'phone' => 'required',
             'email' => 'required|email',
