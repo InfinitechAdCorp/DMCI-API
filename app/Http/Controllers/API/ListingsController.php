@@ -36,8 +36,8 @@ class ListingsController extends Controller
 
     public function add(Request $request)
     {
+        // Validate input data
         $validated = $request->validate([
-            'user_id' => 'required',
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'phone' => 'required|string|max:15',
@@ -45,34 +45,37 @@ class ListingsController extends Controller
             'unit_type' => 'required|string|max:255',
             'unit_location' => 'required|string|max:255',
             'unit_price' => 'required|numeric|between:0,9999999.99',
-            'status' => 'required|string',
-            'images[]' => 'nullable'
+        
+            'images.*' => 'nullable|image',  // Allow images, if any, to be uploaded
         ]);
-
-
-        $record = new Model();
-
-        if ($request->hasFile('images')) {
-            $mediaFiles = [];
-            foreach ($request->file('images') as $file) {
-                $filename = time() . '_' . $file->getClientOriginalName(); // Avoid filename conflicts
-                $file->move(public_path('/upload/properties'), $filename);
-                $mediaFiles[] = $filename;
-            }
-            $record->images = json_encode($mediaFiles);
+    
+        // Determine user_id based on authentication status
+        if (Auth::check()) {
+            $validated['user_id'] = Auth::id();
+            $validated['status'] = "Pending";
+        } else {
+            $validated['user_id'] = $request->input('user_id');
         }
 
-        $record->fill($validated);
-        $record->save();
-
-
-
+        // Handle file uploads (if images are provided)
+        if ($request->hasFile('images')) {
+            $images = [];
+            foreach ($request->file('images') as $image) {
+                $images[] = $this->upload($image, 'uploads/listings/images');
+            }
+            $validated['images'] = json_encode($images);
+        }
+    
+        // Fill the validated data into the model and save the record
+        $property = Model::create($validated);
+    
+        // Return a success response
         return response()->json([
             'code' => 200,
             'message' => 'Property added successfully'
         ]);
     }
-
+    
 
 
     public function delete($id)

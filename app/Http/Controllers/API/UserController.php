@@ -17,7 +17,7 @@ class UserController extends Controller
         $user = Auth::id();
 
         if ($user) {
-            $records = User::where('user_id', $user)->get();
+            $records = User::where('user_id', $user)->first();
             $data = ['code' => 200, 'records' => $records];
             return response($data); 
         }

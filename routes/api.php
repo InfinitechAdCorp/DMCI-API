@@ -153,7 +153,7 @@ Route::prefix('appointments')->group(function () {
     Route::delete('{id}', [AppointmentController::class, 'delete']);
 });
 
-Route::prefix('listings')->group(function () {   
+Route::prefix('listings')->middleware('auth:sanctum')->group(function () {   
     Route::get('', [ListingsController::class, 'getAll']);        
     Route::get('{id}', [ListingsController::class, 'get']);   
     Route::post('', [ListingsController::class, 'add']);     

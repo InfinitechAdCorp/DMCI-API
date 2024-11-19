@@ -9,6 +9,7 @@ use App\Traits\Uploadable;
 use App\Models\Property as property;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 
 class PropertyController extends Controller
 {
@@ -18,7 +19,7 @@ class PropertyController extends Controller
     {
         $user = Auth::id();
 
-        if ($user) {
+        if ($user) {        
             $records = property::where('user_id', $user)->get();
             $data = ['code' => 200, 'records' => $records];
             return response($data);
@@ -33,9 +34,19 @@ class PropertyController extends Controller
 
     public function get($id)
     {
-        $record = property::findOrFail($id);
-        $data = ['code' => 200, 'record' => $record];
-        return response($data);
+        $user = Auth::id();
+        if($user){
+            $record = property::where('user_id', $user)->where('id', $id)->first();
+            $data = ['code' => 200, 'record' => $record];
+            return response($data);
+        }
+        else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not authenticated.'
+            ], 401);
+        }
+      
     }
 
     public function add(Request $request)
@@ -54,21 +65,17 @@ class PropertyController extends Controller
                 'percent' => 'required|numeric|between:0,100',
                 'images.*' => 'file',
             ]);
-    
-            // Log validated data
-            Log::info('Validated data:', $validated);
-    
+
             // Ensure user is authenticated
             $user = auth()->user();
             if (!$user) {
                 return response()->json(['message' => 'User not authenticated'], 401);
             }
-    
-            // File upload processing
+
             if ($request->hasFile('logo')) {
                 $validated['logo'] = $this->upload($request->file('logo'), 'uploads/properties/logos');
             }
-    
+
             if ($request->hasFile('images')) {
                 $images = [];
                 foreach ($request->file('images') as $image) {
@@ -76,11 +83,11 @@ class PropertyController extends Controller
                 }
                 $validated['images'] = json_encode($images);
             }
-    
+
             $validated['user_id'] = $user->user_id;
-    
+
             $property = Property::create($validated);
-            
+
             return response()->json([
                 'code' => 200,
                 'message' => 'Property created successfully',
@@ -95,7 +102,7 @@ class PropertyController extends Controller
             ], 500);
         }
     }
-    
+
 
 
     // public function update(Request $request, $id)
@@ -115,18 +122,63 @@ class PropertyController extends Controller
     {
         // Check if the user is authenticated
         if (Auth::check()) {
+            // Get the authenticated user's ID
             $user = Auth::id();
-    
+
+            // Find the property by its ID and ensure it belongs to the authenticated user
             $property = Property::where('id', $id)->where('user_id', $user)->first();
-    
+
             if ($property) {
-                $property->delete();
-                return response()->json(['code' => 200, 'message' => 'Property deleted successfully']);
+                try {
+                    // Handle the logo image deletion if it exists
+                    if ($property->logo) {
+                        // Assuming the logo column stores the relative path to the logo image
+                        $logoPath = public_path('uploads/properties/logos/' . $property->logo);
+                        if (File::exists($logoPath)) {
+                            File::delete($logoPath);
+                        }
+                    }
+
+                    // Handle the property images deletion if they exist
+                    if ($property->images) {
+                        $images = json_decode($property->images, true);
+                        foreach ($images as $image) {
+                            // Assuming each image is stored in 'uploads/properties/images/'
+                            $imagePath = public_path('uploads/properties/images/' . $image);
+                            if (File::exists($imagePath)) {
+                                File::delete($imagePath);
+                            }
+                        }
+                    }
+
+                    // Delete the property record from the database
+                    $property->delete();
+
+                    // Return success response
+                    return response()->json([
+                        'code' => 200,
+                        'message' => 'Property and its associated images deleted successfully'
+                    ]);
+                } catch (\Exception $e) {
+                    // Handle any exceptions during deletion (e.g., file not found, database error)
+                    return response()->json([
+                        'code' => 500,
+                        'message' => 'Error deleting property or images: ' . $e->getMessage()
+                    ], 500);
+                }
             } else {
-                return response()->json(['code' => 404, 'message' => 'Property not found or not owned by user'], 404);
+                // Return 404 if the property is not found or does not belong to the user
+                return response()->json([
+                    'code' => 404,
+                    'message' => 'Property not found or not owned by user'
+                ], 404);
             }
         }
-        return response()->json(['code' => 401, 'message' => 'Unauthorized'], 401);
+
+        // Return 401 if the user is not authenticated
+        return response()->json([
+            'code' => 401,
+            'message' => 'Unauthorized'
+        ], 401);
     }
-    
 }
