@@ -25,19 +25,26 @@ class UnitController extends Controller
 
     public function add(Request $request)
     {
+        // Validate the request data
         $validated = $request->validate([
-            'property_id' => 'required|exists:properties,id',
-            'type' => 'required',
-            'area' => 'required|decimal:0,2',
-            'price' => 'required',
-            'status' => 'required',
+            'property_id' => 'required|exists:properties,id',   
+            'type' => 'required|string|max:255',
+            'area' => 'required|numeric|between:0,999999.99',   
+            'price' => 'required|numeric|min:0',
+            'status' => 'required|string|max:255',
         ]);
-
-        Model::create($validated);
-        $data = ['code' => 200];
-
-        return response($data);
+    
+        // Create the unit
+        $unit = Model::create($validated);
+    
+        // Return a response
+        return response()->json([
+            'code' => 201,
+            'message' => 'Unit created successfully',
+            'data' => $unit,
+        ], 201);
     }
+    
 
     public function update(Request $request)
     {

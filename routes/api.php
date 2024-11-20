@@ -45,7 +45,7 @@ Route::prefix('properties')->middleware('auth:sanctum')->group(function () {
     Route::get('', [PropertyController::class, 'getAll']);        
     Route::get('{id}', [PropertyController::class, 'get']);   
     Route::post('', [PropertyController::class, 'add']);     
-    // Route::put('', [PropertyController::class, 'update']);        
+    Route::put('{id}', [PropertyController::class, 'update']);        
     Route::delete('{id}', [PropertyController::class, 'delete']);
 });
 

@@ -39,7 +39,7 @@ class PlanController extends Controller
         $validated[$key] = $this->upload($validated[$key], 'uploads/properties/plans');
 
         Model::create($validated);
-        $data = ['code' => 200];
+        $data = ['code' => 200, 'message' => "Add Success"];
 
         return response($data);
     }

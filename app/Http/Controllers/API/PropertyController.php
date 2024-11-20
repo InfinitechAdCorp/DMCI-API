@@ -105,18 +105,28 @@ class PropertyController extends Controller
 
 
 
-    // public function update(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'name' => 'required',
-    //         'description' => 'required',
-    //     ]);
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required',
+            'status' => 'required',
+            'percent' => 'required',
+            'location' => 'required',
+            'min_price' => 'required',
+            'max_price' => 'required',
+            'slogan' => 'required',
+            'description' => 'required',
 
-    //     $record = property::find($id);
-    //     $record->update($request->all());
+        ]);
 
-    //     return response(['code' => 200]);
-    // }
+        $record = property::where('id', $id);
+        $record->update($validated);
+        $data = ['code' => 200];
+
+        return response($data);
+    }
+
+
 
     public function delete($id)
     {
