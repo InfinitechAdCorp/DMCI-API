@@ -15,8 +15,23 @@ class ListingsController extends Controller
     public function getAll()
     {
         if (Auth::check()) {
-            $users = Auth::id();
-            $records = Model::where("user_id", $users)->get();
+            $user = Auth::user();
+            if($user->user_type == "Agent"){
+                $userID = $user->user_id;
+                $records = Model::where("user_id", $userID)->get();
+              
+            }
+            elseif($user->user_type == "Admin"){
+                $records = Model::with(['user'])->get();
+            }
+            else {
+                // If needed, return a response for unauthorized user type
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User type not authorized.'
+                ], 403); // 403 Forbidden, as this user type isn't allowed
+            }
+
             $data = ['code' => 200, 'records' => $records];
             return response($data);
         }

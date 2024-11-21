@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -16,7 +17,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     use HasFactory;
-    protected $primaryKey = 'user_id'; 
+    protected $primaryKey = 'user_id';
     protected $keyType = 'string';
     public $incrementing = false;
 
@@ -24,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'user_type',    
     ];
 
     public static function booted()
@@ -33,19 +35,20 @@ class User extends Authenticatable
         });
     }
 
-    public function property():HasMany
+    public function property(): HasMany
     {
-        return $this->hasMany(Property::class);     
+        return $this->hasMany(Property::class);
     }
 
-    public function appointment():HasMany
+    public function listing(): HasMany
     {
-        return $this->hasMany(Appointment::class);     
+        return $this->hasMany(Listings::class);
     }
 
+    public function appointment(): HasMany
+    {
+        return $this->hasMany(Appointment::class);
+    }
 
-
-
-
-
+   
 }

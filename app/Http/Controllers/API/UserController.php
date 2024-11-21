@@ -13,21 +13,28 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public function getAll()
-    {   
-        $user = Auth::id();
-
-        if ($user) {
-            $records = User::where('user_id', $user)->first();
-            $data = ['code' => 200, 'records' => $records];
-            return response($data); 
-        }
-        else{
+    {
+        if (Auth::check()) {
+            $user = Auth::id();
+        
+            if ($user) {
+                $records = User::where('user_id', $user)->first();
+                $data = ['code' => 200, 'records' => $records];
+                return response($data);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User not authenticated.'
+                ], 401);
+            }
+        } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'User not authenticated.'  
+                'message' => 'User not authenticated.'
             ], 401);
         }
     }
+    
 
     // Add User
     public function add(Request $request)
@@ -36,13 +43,14 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
+            'user_type' => 'required'
         ]);
 
         try {
             $user = new User();
             $user->name = $validated['name'];
             $user->email = $validated['email'];
-            // Hash the password before storing
+            $user->user_type = $validated['user_type'];
             $user->password = Hash::make($validated['password']);
             $user->save(); // Save the user to the database
 
@@ -106,15 +114,15 @@ class UserController extends Controller
     }
 
     public function userProfile(Request $request)
-    {   
-    
-        if(Auth::check()){
+    {
+
+        if (Auth::check()) {
             $users = Auth::id();
             $records = User::where('user_id', $users)->first();
 
             return response()->json([
                 'message' => 'Login successful.',
-                'records' => $records,      
+                'records' => $records,
             ]);
         }
     }

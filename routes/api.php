@@ -174,12 +174,10 @@ Route::prefix('listings')->middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::prefix('users')->group(function () {   
+Route::prefix('users')->middleware('auth:sanctum')->group(function () {   
     Route::get('', [UserController::class, 'getAll']);        
     Route::post('', [UserController::class, 'add']); 
 });
-
-
 
 
 Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'userLogout']); 

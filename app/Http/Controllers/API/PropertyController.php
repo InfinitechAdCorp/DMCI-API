@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use App\Traits\Uploadable;
 use App\Models\Property as property;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
@@ -17,11 +18,47 @@ class PropertyController extends Controller
 
     public function getAll()
     {
-        $user = Auth::id();
+        if (Auth::check()) {
 
-        if ($user) {        
-            $records = property::where('user_id', $user)->get();
+            $user = Auth::user();
+
+            // Initialize $records in case neither condition is met
+            $records = [];
+
+            // Check user type
+            if ($user->user_type == "Agent") {
+                $userID = $user->user_id;
+                $records = Property::where('user_id', $userID)->get(); // Fetch properties for the agent
+            } elseif ($user->user_type == "Admin") {
+                $records = property::with(['user'])->get();
+            } else {
+                // If needed, return a response for unauthorized user type
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User type not authorized.'
+                ], 403); // 403 Forbidden, as this user type isn't allowed
+            }
+
+            // Return the records with a success response
             $data = ['code' => 200, 'records' => $records];
+            return response($data);
+        }
+
+        // Return error response if the user is not authenticated
+        return response()->json([
+            'status' => 'error',
+            'message' => 'User not authenticated.'
+        ], 401);
+    }
+
+
+
+    public function get($id)
+    {
+        $user = Auth::id();
+        if ($user) {
+            $record = property::where('user_id', $user)->where('id', $id)->first();
+            $data = ['code' => 200, 'record' => $record];
             return response($data);
         } else {
             return response()->json([
@@ -29,24 +66,6 @@ class PropertyController extends Controller
                 'message' => 'User not authenticated.'
             ], 401);
         }
-    }
-
-
-    public function get($id)
-    {
-        $user = Auth::id();
-        if($user){
-            $record = property::where('user_id', $user)->where('id', $id)->first();
-            $data = ['code' => 200, 'record' => $record];
-            return response($data);
-        }
-        else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'User not authenticated.'
-            ], 401);
-        }
-      
     }
 
     public function add(Request $request)
