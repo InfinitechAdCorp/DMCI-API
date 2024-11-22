@@ -183,3 +183,12 @@ Route::prefix('users')->middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'userLogout']); 
 Route::post('users/login', [UserController::class, 'loginUser']);
 Route::middleware('auth:sanctum')->get('/profile', [UserController::class, 'userProfile']); 
+
+
+// Guest Routes
+
+Route::prefix('giolo')->group(function () {   
+    Route::get('recommended/{id}', [PropertyController::class, 'getPropertyAgent']);    
+    Route::get('progress/{id}', [PropertyController::class, 'getPropertyAgent']);       
+
+});

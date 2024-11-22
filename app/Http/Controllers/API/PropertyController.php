@@ -44,12 +44,29 @@ class PropertyController extends Controller
             return response($data);
         }
 
-        // Return error response if the user is not authenticated
         return response()->json([
             'status' => 'error',
             'message' => 'User not authenticated.'
         ], 401);
     }
+
+    public function getPropertyAgent($id)
+    {
+        $records = Property::where('user_id', $id)->get();
+
+        if ($records->isNotEmpty()) {
+            return response()->json([
+                'status' => 'success',
+                'record' => $records,
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'No properties found for the given user ID.',
+        ], 404);
+    }
+
 
 
 

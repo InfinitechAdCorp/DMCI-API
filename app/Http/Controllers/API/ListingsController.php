@@ -42,6 +42,22 @@ class ListingsController extends Controller
         }
     }
 
+    public function getPropertyAgent($id)
+    {
+        $records = Model::where('user_id', $id)->get();
+
+        if ($records->isNotEmpty()) {
+            return response()->json([
+                'status' => 'success',
+                'record' => $records,
+            ], 200);
+        }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'No properties found for the given user ID.',
+        ], 404);
+    }
+
     public function get($id)
     {
         $record = Model::findOrFail($id);
