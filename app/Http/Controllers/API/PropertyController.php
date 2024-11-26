@@ -28,7 +28,7 @@ class PropertyController extends Controller
             // Check user type
             if ($user->user_type == "Agent") {
                 $userID = $user->user_id;
-                $records = Property::where('user_id', $userID)->get(); // Fetch properties for the agent
+                $records = Property::where('user_id', $userID)->get(); 
             } elseif ($user->user_type == "Admin") {
                 $records = property::with(['user'])->get();
             } else {
