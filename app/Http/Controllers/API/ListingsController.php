@@ -58,11 +58,21 @@ class ListingsController extends Controller
         ], 404);
     }
 
-    public function get($id)
+    public function getListingsAgent($id)
     {
-        $record = Model::findOrFail($id);
-        $data = ['code' => 200, 'record' => $record];
-        return response($data);
+        $records = Model::where('user_id', $id)->get();
+
+        if ($records->isNotEmpty()) {
+            return response()->json([
+                'status' => 'success',
+                'record' => $records,
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'No Listings found for the given user ID.',
+        ], 404);
     }
 
     public function add(Request $request)

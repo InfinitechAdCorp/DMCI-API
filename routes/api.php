@@ -12,6 +12,7 @@ use App\Http\Controllers\API\FeatureController;
 use App\Http\Controllers\API\ApplicationController;
 use App\Http\Controllers\API\AppointmentController;
 use App\Http\Controllers\API\BuildingController;
+use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\FileController;
 use App\Http\Controllers\API\FolderController;
@@ -189,6 +190,9 @@ Route::middleware('auth:sanctum')->get('/profile', [UserController::class, 'user
 
 Route::prefix('giolo')->group(function () {   
     Route::get('recommended/{id}', [PropertyController::class, 'getPropertyAgent']);    
-    Route::get('progress/{id}', [PropertyController::class, 'getPropertyAgent']);       
-
+    Route::get('progress/{id}', [PropertyController::class, 'getPropertyAgent']);  
+    Route::get('listings/{id}', [ListingsController::class, 'getListingsAgent']);   
+    Route::post('contact', [ContactController::class, 'contact']);       
 });
+
+

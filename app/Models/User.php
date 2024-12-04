@@ -33,7 +33,7 @@ class User extends Authenticatable
         static::creating(function (User $record) {
             $record->user_id = Str::ulid();
         });
-    }
+    }   
 
     public function property(): HasMany
     {
