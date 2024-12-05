@@ -16,6 +16,7 @@ use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\FileController;
 use App\Http\Controllers\API\FolderController;
+use App\Http\Controllers\API\GuestController;
 use App\Http\Controllers\API\ItemController;
 use App\Http\Controllers\API\PlanController;
 use App\Http\Controllers\API\UnitController;
@@ -192,7 +193,9 @@ Route::prefix('giolo')->group(function () {
     Route::get('recommended/{id}', [PropertyController::class, 'getPropertyAgent']);    
     Route::get('progress/{id}', [PropertyController::class, 'getPropertyAgent']);  
     Route::get('listings/{id}', [ListingsController::class, 'getListingsAgent']);   
-    Route::post('contact', [ContactController::class, 'contact']);       
+    Route::post('contact', [ContactController::class, 'contact']); 
+    Route::post('submitproperty', [GuestController::class, 'AddListings']);          
+
 });
 
 
