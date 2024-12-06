@@ -23,7 +23,7 @@ class GuestController extends Controller
             'unit_location' => 'required',
             'status' => 'nullable',
             'unit_price' => 'required|numeric|between:0,9999999.99',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp',
         ]);
 
         // Handle image uploads
@@ -34,11 +34,10 @@ class GuestController extends Controller
                 $path = $image->store('uploads/listings/images', 's3', 'public'); 
                 
                 // Get the public URL for the uploaded file
-                $url = 'https://' . env('AWS_BUCKET') . '.s3.' . '.amazonaws.com/' . $path;
-
+                $url = 'https://' . env('AWS_BUCKET') . '.s3.' . 'amazonaws.com/' . $path;
                 // Add the URL to the images array
                 $images[] = $url;
-            }
+            }   
         }
 
         // Add the images to the validated data as a JSON string
@@ -68,3 +67,4 @@ class GuestController extends Controller
         }
     }
 }
+
