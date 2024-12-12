@@ -21,6 +21,7 @@ use App\Http\Controllers\API\ItemController;
 use App\Http\Controllers\API\PlanController;
 use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\ListingsController;
+use App\Http\Controllers\API\PropertyFinder;
 use App\Http\Controllers\API\UserController;
 
 /*
@@ -194,7 +195,11 @@ Route::prefix('giolo')->group(function () {
     Route::get('progress/{id}', [PropertyController::class, 'getPropertyAgent']);  
     Route::get('listings/{id}', [ListingsController::class, 'getListingsAgent']);   
     Route::post('contact', [ContactController::class, 'contact']); 
-    Route::post('submitproperty', [GuestController::class, 'AddListings']);          
+    Route::post('submitproperty', [GuestController::class, 'AddListings']);       
+    
+    // Property Finder
+    Route::get('property-finder/{id}', [PropertyFinder::class, 'getPropertyFinder']);
+
 
 });
 

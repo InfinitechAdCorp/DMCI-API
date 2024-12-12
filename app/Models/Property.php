@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Property extends Model
 {
@@ -38,5 +39,10 @@ class Property extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id'); 
+    }
+
+    public function units(): HasMany
+    {
+        return $this->hasMany(Unit::class);
     }
 }

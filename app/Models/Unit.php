@@ -31,6 +31,6 @@ class Unit extends Model
 
     public function property(): BelongsTo
     {
-        return $this->belongsTo(Property::class);
+        return $this->belongsTo(Property::class, 'property_id', 'property_id');
     }
 }
