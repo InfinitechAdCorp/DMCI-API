@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use App\Traits\Uploadable;
 use App\Models\Article as Model;
 
@@ -36,7 +35,7 @@ class ArticleController extends Controller
         ]); 
 
         $key = 'image';
-        $validated[$key] = $this->upload($validated[$key], 'uploads/articles');
+        $validated[$key] = $this->upload($validated[$key], 'articles');
 
         Model::create($validated);
         $data = ['code' => 200];

@@ -1,13 +1,14 @@
 <?php
 namespace App\Traits;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 trait Uploadable {
     public function upload($file, $directory) {
         if ($file) {
-            $name = mt_rand().'.'.$file->clientExtension();
-            $file->move($directory, $name);
+            $name = Str::ulid() . "." . $file->clientExtension();
+            Storage::disk('s3')->put("$directory/$name", $file->getContent(), 'public');
             return $name;
         }
         else {
