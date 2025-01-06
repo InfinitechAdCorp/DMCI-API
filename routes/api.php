@@ -43,7 +43,6 @@ Route::prefix('categories')->middleware('auth:sanctum')->group(function () {
     Route::delete('{id}', [CategoryController::class, 'delete']);
 });
 
-
 Route::prefix('properties')->middleware('auth:sanctum')->group(function () {   
     Route::get('', [PropertyController::class, 'getAll']);        
     Route::get('{id}', [PropertyController::class, 'get']);   
