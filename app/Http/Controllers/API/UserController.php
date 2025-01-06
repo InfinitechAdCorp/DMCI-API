@@ -4,126 +4,111 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
 
+use App\Models\User as Model;
 
 class UserController extends Controller
 {
-    public function getAll()
+    public $model = "User";
+
+    public function getAll(Request $request)
     {
-        if (Auth::check()) {
-            $user = Auth::id();
-        
-            if ($user) {
-                $records = User::where('user_id', $user)->first();
-                $data = ['code' => 200, 'records' => $records];
-                return response($data);
+        if ($token = $request->bearerToken()) {
+            $record =  PersonalAccessToken::findToken($token)->tokenable;
+            if ($record) {
+                if ($record->type == "Admin") {
+                    $records = Model::all();
+
+                    $code = 200;
+                    $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
+                } else if ($record->type == "Agent") {
+                    $code = 200;
+                    $response = ['message' => "Fetched $this->model", 'record' => $record];
+                }
             } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'User not authenticated.'
-                ], 401);
+                $code = 404;
+                $response = ['message' => "$this->model Not Found"];
             }
         } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'User not authenticated.'
-            ], 401);
+            $code = 401;
+            $response = ['message' => "$this->model Not Authenticated"];
         }
-    }
-    
 
-    // Add User
-    public function add(Request $request)
+        return response()->json($response, $code);
+    }
+
+    public function get($id)
+    {
+        $record = Model::find($id);
+        if ($record) {
+            $code = 200;
+            $response = ['message' => "Fetched $this->model", 'record' => $record];
+        } else {
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
+        }
+        return response()->json($response, $code);
+    }
+
+    public function create(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8',
-            'user_type' => 'required'
+            'password' => 'required|min:8',
+            'type' => 'required'
         ]);
 
-        try {
-            $user = new User();
-            $user->name = $validated['name'];
-            $user->email = $validated['email'];
-            $user->user_type = $validated['user_type'];
-            $user->password = Hash::make($validated['password']);
-            $user->save(); // Save the user to the database
+        $key = "password";
+        $validated[$key] = Hash::make($validated[$key]);
+        $record = Model::create($validated);
 
-            // Return a successful response
-            return response()->json([
-                'message' => 'User created successfully!',
-                'user' => $user,
-            ], 201); // 201 is the HTTP status code for "created"
-        } catch (\Exception $e) {
-            // Return error response if something goes wrong
-            return response()->json([
-                'error' => 'An error occurred while creating the user.',
-                'message' => $e->getMessage()
-            ], 500); // 500 is the HTTP status code for "server error"
-        }
+        $code = 201;
+        $response = [
+            'message' => "Created $this->model",
+            'record' => $record,
+        ];
+
+        return response()->json($response, $code);
     }
 
-    public function loginUser(Request $request)
+    public function login(Request $request)
     {
-        // Validate input
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|min:8',
         ]);
 
-        // Find user by email
-        $user = User::where('email', $request->email)->first();
+        $record = Model::where('email', $request->email)->first();
 
-        // Check if user exists and password matches
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Invalid email or password.',
-            ], 401);
+        if ($record && Hash::check($request->password, $record->password)) {
+            $record->tokens()->delete();
+            $token = $record->createToken($record->name . '-AuthToken')->plainTextToken;
+
+            $code = 200;
+            $response = [
+                'message' => 'Login Successful',
+                'record' => $record,
+                'token' => $token,
+            ];
+        } else {
+            $code = 401;
+            $response = [
+                'message' => 'Invalid Credentials',
+            ];
         }
 
-        // Revoke previous tokens and create a new token
-        $user->tokens()->delete();
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Login successful.',
-            'access_token' => $token,
-            // 'token_type' => 'Bearer',
-            // 'user' => $user,
-        ]);
+        return response()->json($response, $code);
     }
 
-    public function userLogout(Request $request)
+    public function logout(Request $request)
     {
-        // Check if the user is authenticated
-        if (Auth::check()) {
-
-            // Revoke the current access token for Sanctum
-            $request->user()->currentAccessToken()->delete();
-            // In case of an error
-            return response()->json(['success' => true, 'message' => 'Logged out successfully.']);
-        }
-
-        // If the user is not authenticated
-        return response()->json(['error' => 'Not authenticated'], 401);
-    }
-
-    public function userProfile(Request $request)
-    {
-
-        if (Auth::check()) {
-            $users = Auth::id();
-            $records = User::where('user_id', $users)->first();
-
-            return response()->json([
-                'message' => 'Login successful.',
-                'records' => $records,
-            ]);
-        }
+        $request->user()->currentAccessToken()->delete();
+        $code = 200;
+        $response = ['message' => 'Logged Out Successfully'];
+        return response()->json($response, $code);
     }
 }

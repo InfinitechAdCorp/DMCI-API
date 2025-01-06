@@ -2,22 +2,18 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    use HasFactory;
-    protected $primaryKey = 'user_id';
     protected $keyType = 'string';
     public $incrementing = false;
 
@@ -25,27 +21,27 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'user_type',    
+        'type',    
     ];
 
     public static function booted()
     {
         static::creating(function (User $record) {
-            $record->user_id = Str::ulid();
+            $record->id = Str::ulid();
         });
     }   
 
-    public function property(): HasMany
+    public function properties(): HasMany
     {
         return $this->hasMany(Property::class);
     }
 
-    public function listing(): HasMany
+    public function listings(): HasMany
     {
         return $this->hasMany(Listings::class);
     }
 
-    public function appointment(): HasMany
+    public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
     }
