@@ -35,7 +35,31 @@ use App\Http\Controllers\API\UserController;
 |
 */
 
-Route::prefix('categories')->middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('users')->group(function () {
+        Route::get('', [UserController::class, 'getAll']);
+        Route::get('{id}', [UserController::class, 'get']);
+        Route::post('/logout', [UserController::class, 'logout']);
+    });
+});
+
+Route::prefix('users')->group(function () {
+    Route::post('', [UserController::class, 'create']);
+    Route::post('/login', [UserController::class, 'login']);
+});
+
+
+// Route::prefix('users')->group(function () {   
+//     Route::get('', [UserController::class, 'getAll']);        
+//     Route::post('', [UserController::class, 'add']); 
+// });
+
+
+// Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'userLogout']); 
+// Route::post('users/login', [UserController::class, 'loginUser']);
+// Route::middleware('auth:sanctum')->get('/profile', [UserController::class, 'userProfile']); 
+
+Route::prefix('categories')->group(function () {
     Route::get('', [CategoryController::class, 'getAll']);
     Route::get('{id}', [CategoryController::class, 'get']);
     Route::post('', [CategoryController::class, 'add']);
@@ -43,7 +67,7 @@ Route::prefix('categories')->middleware('auth:sanctum')->group(function () {
     Route::delete('{id}', [CategoryController::class, 'delete']);
 });
 
-Route::prefix('properties')->middleware('auth:sanctum')->group(function () {   
+Route::prefix('properties')->group(function () {   
     Route::get('', [PropertyController::class, 'getAll']);        
     Route::get('{id}', [PropertyController::class, 'get']);   
     Route::post('', [PropertyController::class, 'add']);     
@@ -155,7 +179,7 @@ Route::prefix('appointments')->group(function () {
     Route::delete('{id}', [AppointmentController::class, 'delete']);
 });
 
-Route::prefix('listings')->middleware('auth:sanctum')->group(function () {   
+Route::prefix('listings')->group(function () {   
     Route::get('', [ListingsController::class, 'getAll']);        
     Route::get('{id}', [ListingsController::class, 'get']);   
     Route::post('', [ListingsController::class, 'add']);     
@@ -163,29 +187,17 @@ Route::prefix('listings')->middleware('auth:sanctum')->group(function () {
     Route::delete('{id}', [ListingsController::class, 'delete']);
 });
 
-Route::prefix('count')->middleware('auth:sanctum')->group(function () {   
+Route::prefix('count')->group(function () {   
     Route::get('', [DashboardController::class, 'countProperties']);        
 });
 
-Route::prefix('listings')->middleware('auth:sanctum')->group(function () {   
+Route::prefix('listings')->group(function () {   
     Route::get('', [ListingsController::class, 'getAll']);        
     Route::get('{id}', [ListingsController::class, 'get']);   
     Route::post('', [ListingsController::class, 'add']);     
     Route::put('', [ListingsController::class, 'update']);        
     Route::delete('{id}', [ListingsController::class, 'delete']);
 });
-
-
-Route::prefix('users')->middleware('auth:sanctum')->group(function () {   
-    Route::get('', [UserController::class, 'getAll']);        
-    Route::post('', [UserController::class, 'add']); 
-});
-
-
-Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'userLogout']); 
-Route::post('users/login', [UserController::class, 'loginUser']);
-Route::middleware('auth:sanctum')->get('/profile', [UserController::class, 'userProfile']); 
-
 
 // Guest Routes
 
