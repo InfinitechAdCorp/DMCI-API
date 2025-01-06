@@ -48,17 +48,6 @@ Route::prefix('users')->group(function () {
     Route::post('/login', [UserController::class, 'login']);
 });
 
-
-// Route::prefix('users')->group(function () {   
-//     Route::get('', [UserController::class, 'getAll']);        
-//     Route::post('', [UserController::class, 'add']); 
-// });
-
-
-// Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'userLogout']); 
-// Route::post('users/login', [UserController::class, 'loginUser']);
-// Route::middleware('auth:sanctum')->get('/profile', [UserController::class, 'userProfile']); 
-
 Route::prefix('categories')->group(function () {
     Route::get('', [CategoryController::class, 'getAll']);
     Route::get('{id}', [CategoryController::class, 'get']);
@@ -166,8 +155,8 @@ Route::prefix('files')->group(function () {
 Route::prefix('items')->group(function () {   
     Route::get('', [ItemController::class, 'getAll']);        
     Route::get('{id}', [ItemController::class, 'get']);   
-    Route::post('', [ItemController::class, 'add']);     
-    // Route::put('', [ItemController::class, 'update']);        
+    Route::post('', [ItemController::class, 'create']);     
+    Route::put('', [ItemController::class, 'update']);        
     Route::delete('{id}', [ItemController::class, 'delete']);
 });
 
