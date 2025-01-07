@@ -23,6 +23,7 @@ use App\Http\Controllers\API\PropertyFinder;
 use App\Http\Controllers\API\CertificateController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\GalleryController;
+use App\Http\Controllers\API\TestimonialController;
 
 /*
 |---------------------------------------------------------------------- ----
@@ -171,6 +172,14 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::post('', [CertificateController::class, 'add']);     
         Route::put('', [CertificateController::class, 'update']);        
         Route::delete('{id}', [CertificateController::class, 'delete']);
+    });
+
+    Route::prefix('testimonials')->group(function () {
+        Route::get('', [TestimonialController::class, 'getAll']);
+        Route::get('{id}', [TestimonialController::class, 'get']);   
+        Route::post('', [TestimonialController::class, 'create']);     
+        Route::put('', [TestimonialController::class, 'update']);        
+        Route::delete('{id}', [TestimonialController::class, 'delete']);
     });
 });
 
