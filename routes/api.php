@@ -125,7 +125,7 @@ Route::prefix('plans')->group(function () {
 Route::prefix('units')->group(function () {   
     Route::get('', [UnitController::class, 'getAll']);        
     Route::get('{id}', [UnitController::class, 'get']);   
-    Route::post('', [UnitController::class, 'add']);     
+    Route::post('', [UnitController::class, 'create']);     
     Route::put('', [UnitController::class, 'update']);        
     Route::delete('{id}', [UnitController::class, 'delete']);
 });
