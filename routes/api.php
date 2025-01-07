@@ -64,7 +64,7 @@ Route::middleware('throttle:150,1')->group(function () {
     Route::prefix('questions')->group(function () {   
         Route::get('', [QuestionController::class, 'getAll']);        
         Route::get('{id}', [QuestionController::class, 'get']);   
-        Route::post('', [QuestionController::class, 'add']);     
+        Route::post('', [QuestionController::class, 'create']);     
         Route::put('', [QuestionController::class, 'update']);        
         Route::delete('{id}', [QuestionController::class, 'delete']);
     });
