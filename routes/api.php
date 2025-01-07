@@ -14,8 +14,6 @@ use App\Http\Controllers\API\AppointmentController;
 use App\Http\Controllers\API\BuildingController;
 use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\DashboardController;
-use App\Http\Controllers\API\FileController;
-use App\Http\Controllers\API\FolderController;
 use App\Http\Controllers\API\GuestController;
 use App\Http\Controllers\API\ItemController;
 use App\Http\Controllers\API\PlanController;
@@ -25,8 +23,6 @@ use App\Http\Controllers\API\PropertyFinder;
 use App\Http\Controllers\API\CertificateController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\GalleryController;
-
-
 
 /*
 |---------------------------------------------------------------------- ----
@@ -131,22 +127,6 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::post('', [UnitController::class, 'create']);     
         Route::put('', [UnitController::class, 'update']);        
         Route::delete('{id}', [UnitController::class, 'delete']);
-    });
-    
-    Route::prefix('folders')->group(function () {   
-        Route::get('', [FolderController::class, 'getAll']);        
-        Route::get('{id}', [FolderController::class, 'get']);   
-        Route::post('', [FolderController::class, 'add']);     
-        Route::put('', [FolderController::class, 'update']);        
-        Route::delete('{id}', [FolderController::class, 'delete']);
-    });
-    
-    Route::prefix('files')->group(function () {   
-        Route::get('', [FileController::class, 'getAll']);        
-        Route::get('{id}', [FileController::class, 'get']);   
-        Route::post('', [FileController::class, 'add']);     
-        Route::put('', [FileController::class, 'update']);        
-        Route::delete('{id}', [FileController::class, 'delete']);
     });
     
     Route::prefix('items')->group(function () {   
