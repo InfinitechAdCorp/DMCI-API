@@ -24,6 +24,8 @@ use App\Http\Controllers\API\ListingsController;
 use App\Http\Controllers\API\PropertyFinder;
 use App\Http\Controllers\API\CertificateController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\GalleryController;
+
 
 
 /*
@@ -190,6 +192,12 @@ Route::prefix('certificates')->group(function () {
     Route::delete('{id}', [CertificateController::class, 'delete']);
 });
 
+Route::prefix('galleries')->group(function () {   
+    Route::get('', [GalleryController::class, 'getAll']);        
+    Route::get('{id}', [GalleryController::class, 'get']);   
+    Route::post('', [GalleryController::class, 'add']);     
+    Route::delete('{id}', [GalleryController::class, 'delete']);
+});
 
 // Guest Routes
 
