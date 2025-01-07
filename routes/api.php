@@ -115,8 +115,8 @@ Route::prefix('buildings')->group(function () {
 Route::prefix('plans')->group(function () {   
     Route::get('', [PlanController::class, 'getAll']);        
     Route::get('{id}', [PlanController::class, 'get']);   
-    Route::post('', [PlanController::class, 'add']);     
-    // Route::put('', [PlanController::class, 'update']);        
+    Route::post('', [PlanController::class, 'create']);     
+    Route::put('', [PlanController::class, 'update']);        
     Route::delete('{id}', [PlanController::class, 'delete']);
 });
 
