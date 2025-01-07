@@ -69,8 +69,8 @@ Route::prefix('questions')->group(function () {
 Route::prefix('articles')->group(function () {   
     Route::get('', [ArticleController::class, 'getAll']);        
     Route::get('{id}', [ArticleController::class, 'get']);   
-    Route::post('', [ArticleController::class, 'add']);     
-    // Route::put('', [ArticleController::class, 'update']);        
+    Route::post('', [ArticleController::class, 'create']);     
+    Route::put('', [ArticleController::class, 'update']);        
     Route::delete('{id}', [ArticleController::class, 'delete']);
 });
 
@@ -93,8 +93,8 @@ Route::prefix('features')->group(function () {
 Route::prefix('facilities')->group(function () {   
     Route::get('', [FacilityController::class, 'getAll']);        
     Route::get('{id}', [FacilityController::class, 'get']);   
-    Route::post('', [FacilityController::class, 'add']);     
-    // Route::put('', [FacilityController::class, 'update']);        
+    Route::post('', [FacilityController::class, 'create']);     
+    Route::put('', [FacilityController::class, 'update']);        
     Route::delete('{id}', [FacilityController::class, 'delete']);
 });
 
