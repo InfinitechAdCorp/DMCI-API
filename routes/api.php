@@ -110,8 +110,8 @@ Route::middleware('throttle:150,1')->group(function () {
     Route::prefix('buildings')->group(function () {   
         Route::get('', [BuildingController::class, 'getAll']);        
         Route::get('{id}', [BuildingController::class, 'get']);   
-        Route::post('', [BuildingController::class, 'add']);     
-        // Route::put('', [BuildingController::class, 'update']);        
+        Route::post('', [BuildingController::class, 'create']);     
+        Route::put('', [BuildingController::class, 'update']);        
         Route::delete('{id}', [BuildingController::class, 'delete']);
     });
     
