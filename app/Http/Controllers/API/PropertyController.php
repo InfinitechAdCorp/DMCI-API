@@ -4,227 +4,160 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use App\Traits\Uploadable;
-use App\Models\Property as property;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\File;
+use Laravel\Sanctum\PersonalAccessToken;
+
+use App\Models\Property as Model;
 
 class PropertyController extends Controller
 {
     use Uploadable;
 
-    public function getAll()
+    public $model = "Property";
+
+    public function getAll(Request $request)
     {
-        if (Auth::check()) {
+        if ($token = $request->bearerToken()) {
+            $user =  PersonalAccessToken::findToken($token)->tokenable;
 
-            $user = Auth::user();
-
-            // Initialize $records in case neither condition is met
-            $records = [];
-
-            // Check user type
-            if ($user->user_type == "Agent") {
-                $userID = $user->user_id;
-                $records = Property::where('user_id', $userID)->get(); 
-            } elseif ($user->user_type == "Admin") {
-                $records = property::with(['user'])->get();
+            if ($user) {
+                $relations = ['plan', 'features', 'units'];
+                if ($user->type == "Admin") {
+                    $records = Model::with($relations)->get();
+                } else if ($user->type == "Agent") {
+                    $records = Model::with($relations)->where('user_id', $user->id)->get();
+                }
+                $code = 200;
+                $response = ['message' => "Fetched Properties", 'records' => $records];
             } else {
-                // If needed, return a response for unauthorized user type
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'User type not authorized.'
-                ], 403); // 403 Forbidden, as this user type isn't allowed
+                $code = 404;
+                $response = ['message' => "User Not Found"];
             }
-
-            // Return the records with a success response
-            $data = ['code' => 200, 'records' => $records];
-            return response($data);
+        } else {
+            $code = 401;
+            $response = ['message' => "User Not Authenticated"];
         }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'User not authenticated.'
-        ], 401);
+        return response()->json($response, $code);
     }
-
-    public function getPropertyAgent($id)
-    {
-        $records = Property::where('user_id', $id)->get();
-
-        if ($records->isNotEmpty()) {
-            return response()->json([
-                'status' => 'success',
-                'record' => $records,
-            ], 200);
-        }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'No properties found for the given user ID.',
-        ], 404);
-    }
-
-
-
 
     public function get($id)
     {
-        $user = Auth::id();
-        if ($user) {
-            $record = property::where('user_id', $user)->where('id', $id)->first();
-            $data = ['code' => 200, 'record' => $record];
-            return response($data);
+        $record = Model::find($id);
+        if ($record) {
+            $code = 200;
+            $response = ['message' => "Fetched $this->model", 'record' => $record];
         } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'User not authenticated.'
-            ], 401);
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
         }
+        return response()->json($response, $code);
     }
 
-    public function add(Request $request)
-    {
-        try {
-            // Validation
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'logo' => 'required',
-                'description' => 'required|string',
-                'slogan' => 'required|string|max:255',
-                'location' => 'required|string|max:255',
-                'min_price' => 'required|numeric|min:0',
-                'max_price' => 'required|numeric|gte:min_price',
-                'status' => 'required|string',
-                'percent' => 'required|numeric|between:0,100',
-                'images.*' => 'file',
-            ]);
-
-            // Ensure user is authenticated
-            $user = auth()->user();
-            if (!$user) {
-                return response()->json(['message' => 'User not authenticated'], 401);
-            }
-
-            if ($request->hasFile('logo')) {
-                $validated['logo'] = $this->upload($request->file('logo'), 'uploads/properties/logos');
-            }
-
-            if ($request->hasFile('images')) {
-                $images = [];
-                foreach ($request->file('images') as $image) {
-                    $images[] = $this->upload($image, 'uploads/properties/images');
-                }
-                $validated['images'] = json_encode($images);
-            }
-
-            $validated['user_id'] = $user->user_id;
-
-            $property = Property::create($validated);
-
-            return response()->json([
-                'code' => 200,
-                'message' => 'Property created successfully',
-                'property' => $property,
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error creating property:', ['error' => $e->getMessage()]);
-            return response()->json([
-                'code' => 500,
-                'message' => 'Failed to create property',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
-
-
-
-    public function update(Request $request, $id)
+    public function create(Request $request)
     {
         $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
             'name' => 'required',
-            'status' => 'required',
-            'percent' => 'required',
-            'location' => 'required',
-            'min_price' => 'required',
-            'max_price' => 'required',
             'slogan' => 'required',
+            'location' => 'required',
+            'min_price' => 'required|decimal:0,2',
+            'max_price' => 'required|decimal:0,2',
+            'status' => 'required',
+            'percent' => 'required|numeric|integer',
             'description' => 'required',
-
+            'logo' => 'required',
+            'images' => 'required',
         ]);
 
-        $record = property::where('id', $id);
-        $record->update($validated);
-        $data = ['code' => 200];
+        $key = 'logo';
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($request->file($key), "properties/logos");
+        }
 
-        return response($data);
+        $key = 'images';
+        if ($request[$key]) {
+            $images = [];
+            foreach ($request[$key] as $image) {
+                array_push($images, $this->upload($image, "properties/images"));
+            }
+            $validated[$key] = json_encode($images);
+        }
+
+        $record = Model::create($validated);
+        $code = 201;
+        $response = [
+            'message' => "Created $this->model",
+            'record' => $record,
+        ];
+        return response()->json($response, $code);
     }
 
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:properties,id',
+            'user_id' => 'required|exists:users,id',
+            'name' => 'required',
+            'slogan' => 'required',
+            'location' => 'required',
+            'min_price' => 'required|decimal:0,2',
+            'max_price' => 'required|decimal:0,2',
+            'status' => 'required',
+            'percent' => 'required|numeric|integer',
+            'description' => 'required',
+            'logo' => 'nullable',
+            'images' => 'nullable',
+        ]);
 
+        $record = Model::find($validated['id']);
+
+        $key = 'logo';
+        if ($request->hasFile($key)) {
+            Storage::disk('s3')->delete("properties/logos/$record->logo");
+            $validated[$key] = $this->upload($request->file($key), "properties/logos");
+        }
+
+        $key = 'images';
+        if ($request[$key]) {
+            $images = json_decode($record[$key]);
+            foreach ($images as $image) {
+                Storage::disk('s3')->delete("properties/images/$image");
+            }
+
+            $images = [];
+            foreach ($request[$key] as $image) {
+                array_push($images, $this->upload($image, "properties/images"));
+            }
+            $validated[$key] = json_encode($images);
+        }
+
+        $record->update($validated);
+        $code = 200;
+        $response = ['message' => "Updated $this->model"];
+        return response()->json($response, $code);
+    }
 
     public function delete($id)
     {
-        // Check if the user is authenticated
-        if (Auth::check()) {
-            // Get the authenticated user's ID
-            $user = Auth::id();
+        $record = Model::find($id);
+        if ($record) {
+            Storage::disk('s3')->delete("properties/logos/$record->logo");
 
-            // Find the property by its ID and ensure it belongs to the authenticated user
-            $property = Property::where('id', $id)->where('user_id', $user)->first();
-
-            if ($property) {
-                try {
-                    // Handle the logo image deletion if it exists
-                    if ($property->logo) {
-                        // Assuming the logo column stores the relative path to the logo image
-                        $logoPath = public_path('uploads/properties/logos/' . $property->logo);
-                        if (File::exists($logoPath)) {
-                            File::delete($logoPath);
-                        }
-                    }
-
-                    // Handle the property images deletion if they exist
-                    if ($property->images) {
-                        $images = json_decode($property->images, true);
-                        foreach ($images as $image) {
-                            // Assuming each image is stored in 'uploads/properties/images/'
-                            $imagePath = public_path('uploads/properties/images/' . $image);
-                            if (File::exists($imagePath)) {
-                                File::delete($imagePath);
-                            }
-                        }
-                    }
-
-                    // Delete the property record from the database
-                    $property->delete();
-
-                    // Return success response
-                    return response()->json([
-                        'code' => 200,
-                        'message' => 'Property and its associated images deleted successfully'
-                    ]);
-                } catch (\Exception $e) {
-                    // Handle any exceptions during deletion (e.g., file not found, database error)
-                    return response()->json([
-                        'code' => 500,
-                        'message' => 'Error deleting property or images: ' . $e->getMessage()
-                    ], 500);
-                }
-            } else {
-                // Return 404 if the property is not found or does not belong to the user
-                return response()->json([
-                    'code' => 404,
-                    'message' => 'Property not found or not owned by user'
-                ], 404);
+            $images = json_decode($record->images);
+            foreach ($images as $image) {
+                Storage::disk('s3')->delete("properties/images/$image");
             }
-        }
 
-        // Return 401 if the user is not authenticated
-        return response()->json([
-            'code' => 401,
-            'message' => 'Unauthorized'
-        ], 401);
+            $record->delete();
+            $code = 200;
+            $response = [
+                'message' => "Deleted $this->model"
+            ];
+        } else {
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
+        }
+        return response()->json($response, $code);
     }
 }

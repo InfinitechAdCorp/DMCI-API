@@ -15,15 +15,15 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
             $table->string('name');
-            $table->string('logo')->nullable();
             $table->string('slogan');
-            $table->text('description');
             $table->string('location');
             $table->double('min_price', 10, 2);
             $table->double('max_price', 10, 2);
             $table->string('status');
             $table->integer('percent');
-            $table->json('images')->nullable();
+            $table->text('description');
+            $table->string('logo');
+            $table->json('images');
             $table->timestamps();
         });
     }

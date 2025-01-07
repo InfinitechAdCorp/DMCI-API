@@ -48,19 +48,11 @@ Route::prefix('users')->group(function () {
     Route::post('/login', [UserController::class, 'login']);
 });
 
-Route::prefix('categories')->group(function () {
-    Route::get('', [CategoryController::class, 'getAll']);
-    Route::get('{id}', [CategoryController::class, 'get']);
-    Route::post('', [CategoryController::class, 'add']);
-    Route::put('', [CategoryController::class, 'update']);
-    Route::delete('{id}', [CategoryController::class, 'delete']);
-});
-
 Route::prefix('properties')->group(function () {   
     Route::get('', [PropertyController::class, 'getAll']);        
     Route::get('{id}', [PropertyController::class, 'get']);   
-    Route::post('', [PropertyController::class, 'add']);     
-    Route::put('{id}', [PropertyController::class, 'update']);        
+    Route::post('', [PropertyController::class, 'create']);     
+    Route::put('', [PropertyController::class, 'update']);        
     Route::delete('{id}', [PropertyController::class, 'delete']);
 });
 
