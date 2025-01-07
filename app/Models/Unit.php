@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Unit extends Model
 {
@@ -31,6 +31,6 @@ class Unit extends Model
 
     public function property(): BelongsTo
     {
-        return $this->belongsTo(Property::class, 'property_id', 'property_id');
+        return $this->belongsTo(Property::class);
     }
 }
