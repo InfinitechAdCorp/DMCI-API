@@ -4,62 +4,94 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use App\Traits\Uploadable;
+
 use App\Models\Facility as Model;
 
 class FacilityController extends Controller
 {
     use Uploadable;
+    
+    public $model = "Facility";
 
     public function getAll()
     {
         $records = Model::all();
-        $data = ['code' => 200, 'records' => $records];
-        return response($data);
+        $code = 200;
+        $response = ['message' => "Fetched Facilities", 'records' => $records];
+        return response()->json($response, $code);
     }
 
     public function get($id)
     {
-        $record = Model::findOrFail($id);
-        $data = ['code' => 200, 'record' => $record];
-        return response($data);
+        $record = Model::find($id);
+        if ($record) {
+            $code = 200;
+            $response = ['message' => "Fetched $this->model", 'record' => $record];
+        }
+        else {
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
+        }
+        return response()->json($response, $code);
     }
 
-    public function add(Request $request)
+    public function create(Request $request)
     {
         $validated = $request->validate([
             'property_id' => 'required|exists:properties,id',
             'name' => 'required',
-            'image' => 'required|image|max:2048',
+            'image' => 'required',
         ]);
 
         $key = 'image';
-        $validated[$key] = $this->upload($validated[$key], 'uploads/properties/facilities');
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($request->file($key), "properties/facilities");
+        }
 
-        Model::create($validated);
-        $data = ['code' => 200];
-
-        return response($data);
+        $record = Model::create($validated);
+        $code = 201;
+        $response = ['message' => "Created $this->model", 'record' => $record];
+        return response()->json($response, $code);
     }
 
-    // public function update(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'name' => 'required',
-    //         'description' => 'required',
-    //     ]);
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:facilities,id',
+            'property_id' => 'required|exists:properties,id',
+            'name' => 'required',
+            'image' => 'nullable',
+        ]);
 
-    //     $record = Model::find($id);
-    //     $record->update($request->all());
+        $record = Model::find($validated['id']);
 
-    //     return response(['code' => 200]);
-    // }
+        $key = 'image';
+        if ($request->hasFile($key)) {
+            Storage::disk('s3')->delete("properties/facilities/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), "properties/facilities");
+        }
+
+        $record->update($validated);
+        $code = 200;
+        $response = ['message' => "Updated $this->model", 'record' => $record];
+        return response()->json($response, $code);
+    }
 
     public function delete($id)
     {
-        $record = Model::findOrFail($id);
-        $record->delete();
-        return response(['code' => 200]);
+        $record = Model::find($id);
+        if ($record) {
+            Storage::disk('s3')->delete("properties/facilities/$record->image");
+            $record->delete();
+            $code = 200;
+            $response = ['message' => "Deleted $this->model"];
+        }
+        else {
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
+        }
+        return response($response, $code);
     }
 }
