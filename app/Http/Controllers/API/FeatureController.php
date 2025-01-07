@@ -4,36 +4,46 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 use App\Models\Feature as Model;
 
 class FeatureController extends Controller
 {
+    public $model = "Feature";
 
     public function getAll()
     {
         $records = Model::all();
-        $data = ['code' => 200, 'records' => $records];
-        return response($data);
+        $code = 200;
+        $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
+        return response()->json($response, $code);
     }
 
     public function get($id)
     {
-        $record = Model::findOrFail($id);
-        $data = ['code' => 200, 'record' => $record];
-        return response($data);
+        $record = Model::find($id);
+        if ($record) {
+            $code = 200;
+            $response = ['message' => "Fetched $this->model", 'record' => $record];
+        }
+        else {
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
+        }
+        return response()->json($response, $code);
     }
 
-    public function add(Request $request)
+    public function create(Request $request)
     {
         $validated = $request->validate([
             'property_id' => 'required|exists:properties,id',
             'name' => 'required',
         ]);
 
-        Model::create($validated);
-        $data = ['code' => 200];
-
-        return response($data);
+        $record = Model::create($validated);
+        $code = 201;
+        $response = ['message' => "Created $this->model", 'record' => $record];
+        return response()->json($response, $code);
     }
 
     public function update(Request $request)
@@ -45,16 +55,25 @@ class FeatureController extends Controller
         ]);
 
         $record = Model::find($validated['id']);
-        $record->update($validated);
-        $data = ['code' => 200];
 
-        return response($data);
+        $record->update($validated);
+        $code = 200;
+        $response = ['message' => "Updated $this->model", 'record' => $record];
+        return response()->json($response, $code);
     }
 
     public function delete($id)
     {
-        $record = Model::findOrFail($id);
-        $record->delete();
-        return response(['code' => 200]);
+        $record = Model::find($id);
+        if ($record) {
+            $record->delete();
+            $code = 200;
+            $response = ['message' => "Deleted $this->model"];
+        }
+        else {
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
+        }
+        return response($response, $code);
     }
 }

@@ -53,10 +53,8 @@ class ItemController extends Controller
         }
 
         $record = Model::create($validated);
-        
         $code = 201;
         $response = ['message' => "Created $this->model", 'record' => $record];
-
         return response()->json($response, $code);
     }
 
@@ -75,15 +73,13 @@ class ItemController extends Controller
 
         $key = 'image';
         if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("items/$record->image");
+            Storage::disk('s3')->delete("items/$record[$key]");
             $validated[$key] = $this->upload($request->file($key), "items");
         }
 
         $record->update($validated);
-
         $code = 200;
         $response = ['message' => "Updated $this->model", 'record' => $record];
-
         return response()->json($response, $code);
     }
 
@@ -93,7 +89,6 @@ class ItemController extends Controller
         if ($record) {
             Storage::disk('s3')->delete("items/$record->image");
             $record->delete();
-
             $code = 200;
             $response = ['message' => "Deleted $this->model"];
         }
@@ -101,7 +96,6 @@ class ItemController extends Controller
             $code = 404;
             $response = ['message' => "$this->model Not Found"];
         }
-
         return response($response, $code);
     }
 }

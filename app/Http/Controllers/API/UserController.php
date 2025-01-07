@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -21,7 +20,6 @@ class UserController extends Controller
             if ($record) {
                 if ($record->type == "Admin") {
                     $records = Model::all();
-
                     $code = 200;
                     $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
                 } else if ($record->type == "Agent") {
@@ -36,7 +34,6 @@ class UserController extends Controller
             $code = 401;
             $response = ['message' => "$this->model Not Authenticated"];
         }
-
         return response()->json($response, $code);
     }
 
@@ -64,14 +61,13 @@ class UserController extends Controller
 
         $key = "password";
         $validated[$key] = Hash::make($validated[$key]);
-        $record = Model::create($validated);
 
+        $record = Model::create($validated);
         $code = 201;
         $response = [
             'message' => "Created $this->model",
             'record' => $record,
         ];
-
         return response()->json($response, $code);
     }
 
@@ -87,7 +83,6 @@ class UserController extends Controller
         if ($record && Hash::check($request->password, $record->password)) {
             $record->tokens()->delete();
             $token = $record->createToken($record->name . '-AuthToken')->plainTextToken;
-
             $code = 200;
             $response = [
                 'message' => 'Login Successful',
@@ -100,7 +95,6 @@ class UserController extends Controller
                 'message' => 'Invalid Credentials',
             ];
         }
-
         return response()->json($response, $code);
     }
 

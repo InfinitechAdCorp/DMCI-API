@@ -91,7 +91,7 @@ Route::prefix('careers')->group(function () {
 Route::prefix('features')->group(function () {   
     Route::get('', [FeatureController::class, 'getAll']);        
     Route::get('{id}', [FeatureController::class, 'get']);   
-    Route::post('', [FeatureController::class, 'add']);     
+    Route::post('', [FeatureController::class, 'create']);     
     Route::put('', [FeatureController::class, 'update']);        
     Route::delete('{id}', [FeatureController::class, 'delete']);
 });
