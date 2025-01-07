@@ -41,7 +41,7 @@ class ItemController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required',
-            'category' => 'required',
+            'type' => 'required',
             'width' => 'required|decimal:0,2',
             'height' => 'required|decimal:0,2',
             'image' => 'required',
@@ -65,7 +65,7 @@ class ItemController extends Controller
         $validated = $request->validate([
             'id' => 'required|exists:items,id',
             'name' => 'required',
-            'category' => 'required',
+            'type' => 'required',
             'width' => 'required|decimal:0,2',
             'height' => 'required|decimal:0,2',
             'image' => 'nullable',
@@ -82,7 +82,7 @@ class ItemController extends Controller
         $record->update($validated);
 
         $code = 200;
-        $response = ['message' => "Updated $this->model"];
+        $response = ['message' => "Updated $this->model", 'record' => $record];
 
         return response()->json($response, $code);
     }

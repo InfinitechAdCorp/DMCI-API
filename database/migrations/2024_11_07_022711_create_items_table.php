@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name');
-            $table->string('category');
+            $table->string('type');
             $table->double('width', 10, 2);
             $table->double('height', 10, 2);
             $table->string('image');
