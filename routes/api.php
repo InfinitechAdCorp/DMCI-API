@@ -22,10 +22,12 @@ use App\Http\Controllers\API\PlanController;
 use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\ListingsController;
 use App\Http\Controllers\API\PropertyFinder;
+use App\Http\Controllers\API\CertificateController;
 use App\Http\Controllers\API\UserController;
 
+
 /*
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------- ----
 | API Routes
 |--------------------------------------------------------------------------
 |
@@ -187,6 +189,15 @@ Route::prefix('listings')->group(function () {
     Route::put('', [ListingsController::class, 'update']);        
     Route::delete('{id}', [ListingsController::class, 'delete']);
 });
+
+Route::prefix('certificates')->group(function () {
+    Route::get('', [CertificateController::class, 'getAll']);
+    Route::get('{id}', [CertificateController::class, 'get']);   
+    Route::post('', [CertificateController::class, 'add']);     
+    Route::put('', [CertificateController::class, 'update']);        
+    Route::delete('{id}', [CertificateController::class, 'delete']);
+});
+
 
 // Guest Routes
 
