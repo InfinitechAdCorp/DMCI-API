@@ -13,7 +13,7 @@ class FeatureController extends Controller
 
     public function getAll()
     {
-        $records = Model::all();
+        $records = Model::with('property')->get();
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
@@ -21,7 +21,7 @@ class FeatureController extends Controller
 
     public function get($id)
     {
-        $record = Model::find($id);
+        $record = Model::with('property')->where('id', $id)->get();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
