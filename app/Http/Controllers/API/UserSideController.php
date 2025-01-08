@@ -134,8 +134,8 @@ class UserSideController extends Controller
 
     public function submitProperty(Request $request)
     {
-        $user_id = $request->bearerToken();
         $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
@@ -146,8 +146,6 @@ class UserSideController extends Controller
             'status' => 'required',
             'images' => 'required',
         ]);
-
-        $validated['user_id'] = $user_id;
 
         $key = 'images';
         if ($request[$key]) {
