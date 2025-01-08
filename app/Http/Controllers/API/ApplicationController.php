@@ -17,7 +17,7 @@ class ApplicationController extends Controller
 
     public function getAll()
     {
-        $records = Model::with('applications')->get();
+        $records = Model::with('career')->get();
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
@@ -25,7 +25,7 @@ class ApplicationController extends Controller
 
     public function get($id)
     {
-        $record = Model::find($id);
+        $record = Model::with('career')->where('id', $id)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
@@ -40,17 +40,17 @@ class ApplicationController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate([
-            'position' => 'required',
-            'referrer' => 'required',
-            'sub_agent' => 'required',
-            'broker' => 'required',
-            'partner' => 'required',
-            'image' => 'required',
+            'career_id' => 'required|exists:careers,id',
+            'name' => 'required',
+            'email' => 'required|email',
+            'phone' => 'required',
+            'address' => 'required',
+            'resume' => 'required',
         ]);
 
-        $key = 'image';
+        $key = 'resume';
         if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), "careers/images");
+            $validated[$key] = $this->upload($request->file($key), "careers/applications");
         }
 
         $record = Model::create($validated);
@@ -62,21 +62,21 @@ class ApplicationController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:careers,id',
-            'position' => 'required',
-            'referrer' => 'required',
-            'sub_agent' => 'required',
-            'broker' => 'required',
-            'partner' => 'required',
-            'image' => 'nullable',
+            'id' => 'required|exists:applications,id',
+            'career_id' => 'required|exists:careers,id',
+            'name' => 'required',
+            'email' => 'required|email',
+            'phone' => 'required',
+            'address' => 'required',
+            'resume' => 'required',
         ]);
 
         $record = Model::find($validated['id']);
 
-        $key = 'image';
+        $key = 'resume';
         if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("careers/images/$record[$key]");
-            $validated[$key] = $this->upload($request->file($key), "careers/images");
+            Storage::disk('s3')->delete("careers/applications/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), "careers/applications");
         }
 
         $record->update($validated);
@@ -89,7 +89,7 @@ class ApplicationController extends Controller
     {
         $record = Model::find($id);
         if ($record) {
-            Storage::disk('s3')->delete("careers/images/$record->image");
+            Storage::disk('s3')->delete("careers/applications/$record->resume");
             $record->delete();
             $code = 200;
             $response = ['message' => "Deleted $this->model"];
