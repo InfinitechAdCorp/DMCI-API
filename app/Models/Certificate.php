@@ -15,11 +15,11 @@ class Certificate extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'user_id',
         'title',
+        'date',
         'description',
         'image',
-        'date',
-        'user_id',
     ];
 
     public static function booted()

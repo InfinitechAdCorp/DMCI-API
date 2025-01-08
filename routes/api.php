@@ -165,9 +165,17 @@ Route::middleware('throttle:150,1')->group(function () {
     Route::prefix('certificates')->group(function () {
         Route::get('', [CertificateController::class, 'getAll']);
         Route::get('{id}', [CertificateController::class, 'get']);
-        Route::post('', [CertificateController::class, 'add']);
+        Route::post('', [CertificateController::class, 'create']);
         Route::put('', [CertificateController::class, 'update']);
         Route::delete('{id}', [CertificateController::class, 'delete']);
+    });
+
+    Route::prefix('galleries')->group(function () {
+        Route::get('', [GalleryController::class, 'getAll']);
+        Route::get('{id}', [GalleryController::class, 'get']);
+        Route::post('', [GalleryController::class, 'create']);
+        Route::put('', [GalleryController::class, 'update']);
+        Route::delete('{id}', [GalleryController::class, 'delete']);
     });
 
     Route::prefix('testimonials')->group(function () {
@@ -177,13 +185,6 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::put('', [TestimonialController::class, 'update']);
         Route::delete('{id}', [TestimonialController::class, 'delete']);
     });
-});
-
-Route::prefix('galleries')->group(function () {
-    Route::get('', [GalleryController::class, 'getAll']);
-    Route::get('{id}', [GalleryController::class, 'get']);
-    Route::post('', [GalleryController::class, 'add']);
-    Route::delete('{id}', [GalleryController::class, 'delete']);
 });
 
 // Guest Routes

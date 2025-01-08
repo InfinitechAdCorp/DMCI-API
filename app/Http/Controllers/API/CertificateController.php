@@ -3,21 +3,24 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Traits\Uploadable;
-use App\Models\Certificate as Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Traits\Uploadable;
 use Laravel\Sanctum\PersonalAccessToken;
+
+use App\Models\Certificate as Model;
 
 class CertificateController extends Controller
 {
     use Uploadable;
+
     public $model = "Certificate";
 
     public function getAll(Request $request)
     {
         if ($token = $request->bearerToken()) {
-            $user = PersonalAccessToken::findToken($token)->tokenable;
-    
+            $user =  PersonalAccessToken::findToken($token)->tokenable;
+
             if ($user) {
                 if ($user->type == "Admin") {
                     $records = Model::with('user')->get();
@@ -36,31 +39,28 @@ class CertificateController extends Controller
         }
         return response()->json($response, $code);
     }
-    
 
     public function get($id)
     {
-        $record = Model::find($id);
+        $record = Model::with('user')->where('id', $id)->first();
         if ($record) {
-            $data = ['code' => 200, 'record' => $record];
+            $code = 200;
+            $response = ['message' => "Fetched $this->model", 'record' => $record];
         } else {
-            $data = ['code' => 404, 'message' => 'Certificate Not Found'];
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
         }
-        return response($data);
+        return response()->json($response, $code);
     }
 
-    public function add(Request $request)
+    public function create(Request $request)
     {
-        if (!$request->has('user_id')) {
-            return response()->json(['message' => 'User ID is missing'], 400);
-        }
-        
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
             'user_id' => 'required|exists:users,id',
-            'description' => 'required|string|max:1000',
+            'title' => 'required',
+            'date' => 'required|date',
+            'description' => 'required',
             'image' => 'required',
-            'date' => 'required|date',  
         ]);
 
         $key = 'image';
@@ -70,8 +70,10 @@ class CertificateController extends Controller
 
         $record = Model::create($validated);
         $code = 201;
-        $response = ['message' => "Created certificate", 'record' => $record];
-
+        $response = [
+            'message' => "Created $this->model",
+            'record' => $record,
+        ];
         return response()->json($response, $code);
     }
 
@@ -80,44 +82,41 @@ class CertificateController extends Controller
         $validated = $request->validate([
             'id' => 'required|exists:certificates,id',
             'user_id' => 'required|exists:users,id',
-
-            'title' => 'required|string|max:255',
-            'description' => 'required|string|max:1000',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'title' => 'required',
             'date' => 'required|date',
+            'description' => 'required',
+            'image' => 'nullable',
         ]);
 
-        $certificate = Model::find($validated['id']);
+        $record = Model::find($validated['id']);
 
-        if ($request->hasFile('image')) {
-            $this->deleteUploadedFile($certificate->image);
-            $validated['image'] = $this->upload($request->file('image'), 'certificates');
+        $key = 'image';
+        if ($request->hasFile($key)) {
+            Storage::disk('s3')->delete("certificates/$record->image");
+            $validated[$key] = $this->upload($request->file($key), "certificates");
         }
 
-        $certificate->update([
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'image' => $validated['image'] ?? $certificate->image,
-            'date' => $validated['date'],  
-        ]);
-
-        $data = ['code' => 200, 'message' => 'Certificate Updated'];
-
-        return response()->json($data, 200);
+        $record->update($validated);
+        $code = 200;
+        $response = ['message' => "Updated $this->model", 'record' => $record];
+        return response()->json($response, $code);
     }
 
     public function delete($id)
     {
-        $certificate = Model::find($id);
-        if ($certificate) {
-            $this->deleteUploadedFile($certificate->image);
-            $certificate->delete();
+        $record = Model::find($id);
+        if ($record) {
+            Storage::disk('s3')->delete("certificates/$record->image");
 
-            $data = ['code' => 200, 'message' => 'Certificate Deleted'];
+            $record->delete();
+            $code = 200;
+            $response = [
+                'message' => "Deleted $this->model"
+            ];
         } else {
-            $data = ['code' => 404, 'message' => 'Certificate Not Found'];
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
         }
-
-        return response($data);
+        return response()->json($response, $code);
     }
 }
