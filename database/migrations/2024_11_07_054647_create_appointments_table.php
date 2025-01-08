@@ -15,8 +15,8 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
             $table->string('name');
-            $table->string('phone');
             $table->string('email');
+            $table->string('phone');
             $table->date('date');
             $table->time('time');
             $table->string('type');

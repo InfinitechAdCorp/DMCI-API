@@ -17,8 +17,8 @@ class Appointment extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'phone',
         'email',
+        'phone',
         'date',
         'time',
         'type',
@@ -26,7 +26,6 @@ class Appointment extends Model
         'message',
         'status',
     ];
-
 
     public static function booted()
     {

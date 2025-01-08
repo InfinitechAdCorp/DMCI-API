@@ -28,7 +28,7 @@ class ListingController extends Controller
                     $records = Model::with('user')->where('user_id', $user->id)->get();
                 }
                 $code = 200;
-                $response = ['message' => "Fetched Properties", 'records' => $records];
+                $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
             } else {
                 $code = 404;
                 $response = ['message' => "User Not Found"];
@@ -154,10 +154,8 @@ class ListingController extends Controller
 
         $record = Model::find($validated['id']);
         $record->update($validated);
-
         $code = 200;
         $response = ['message' => "Updated Status"];
-
         return response()->json($response, $code);
     }
 }
