@@ -22,7 +22,7 @@ use App\Http\Controllers\API\ListingController;
 use App\Http\Controllers\API\PropertyFinder;
 use App\Http\Controllers\API\CertificateController;
 use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\API\GalleryController;
+use App\Http\Controllers\API\ImageController;
 use App\Http\Controllers\API\TestimonialController;
 
 /*
@@ -170,12 +170,12 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::delete('{id}', [CertificateController::class, 'delete']);
     });
 
-    Route::prefix('galleries')->group(function () {
-        Route::get('', [GalleryController::class, 'getAll']);
-        Route::get('{id}', [GalleryController::class, 'get']);
-        Route::post('', [GalleryController::class, 'create']);
-        Route::put('', [GalleryController::class, 'update']);
-        Route::delete('{id}', [GalleryController::class, 'delete']);
+    Route::prefix('images')->group(function () {
+        Route::get('', [ImageController::class, 'getAll']);
+        Route::get('{id}', [ImageController::class, 'get']);
+        Route::post('', [ImageController::class, 'create']);
+        Route::put('', [ImageController::class, 'update']);
+        Route::delete('{id}', [ImageController::class, 'delete']);
     });
 
     Route::prefix('testimonials')->group(function () {
@@ -185,17 +185,4 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::put('', [TestimonialController::class, 'update']);
         Route::delete('{id}', [TestimonialController::class, 'delete']);
     });
-});
-
-// Guest Routes
-
-Route::prefix('giolo')->group(function () {
-    Route::get('recommended/{id}', [PropertyController::class, 'getPropertyAgent']);
-    Route::get('progress/{id}', [PropertyController::class, 'getPropertyAgent']);
-    // Route::get('listings/{id}', [ListingController::class, 'getListingsAgent']);   
-    Route::post('contact', [ContactController::class, 'contact']);
-    Route::post('submitproperty', [GuestController::class, 'AddListings']);
-
-    // Property Finder
-    Route::get('property-finder/{id}', [PropertyFinder::class, 'getPropertyFinder']);
 });
