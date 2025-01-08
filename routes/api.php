@@ -180,9 +180,18 @@ Route::middleware('throttle:150,1')->group(function () {
     });
 
     Route::prefix('user')->group(function() {
+        Route::get('profile', [UserSideController::class, 'profile']);
+
+        Route::post('submit-property', [UserSideController::class, 'submitProperty']);
+
         Route::prefix('properties')->group(function () {
             Route::get('', [UserSideController::class, 'propertiesGetAll']);
             Route::get('{id}', [UserSideController::class, 'propertiesGet']);
+        });
+
+        Route::prefix('articles')->group(function () {
+            Route::get('', [UserSideController::class, 'articlesGetAll']);
+            Route::get('{id}', [UserSideController::class, 'articlesGet']);
         });
     });
 });
