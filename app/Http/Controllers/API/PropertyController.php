@@ -43,7 +43,7 @@ class PropertyController extends Controller
 
     public function get($id)
     {
-        $record = Model::find($id);
+        $record = Model::with(['plan', 'features', 'units'])->where('id', $id)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];

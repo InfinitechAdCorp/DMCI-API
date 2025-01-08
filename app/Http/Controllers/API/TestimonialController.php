@@ -38,7 +38,7 @@ class TestimonialController extends Controller
 
     public function get($id)
     {
-        $record = Model::find($id);
+        $record = Model::with('user')->where('id', $id)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];

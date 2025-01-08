@@ -141,9 +141,11 @@ Route::middleware('throttle:150,1')->group(function () {
     Route::prefix('appointments')->group(function () {
         Route::get('', [AppointmentController::class, 'getAll']);
         Route::get('{id}', [AppointmentController::class, 'get']);
-        Route::post('', [AppointmentController::class, 'add']);
+        Route::post('', [AppointmentController::class, 'create']);
         Route::put('', [AppointmentController::class, 'update']);
         Route::delete('{id}', [AppointmentController::class, 'delete']);
+
+        Route::post('/change-status', [AppointmentController::class, 'changeStatus']);
     });
 
     Route::prefix('listings')->group(function () {
