@@ -22,7 +22,7 @@ class PropertyController extends Controller
             $user =  PersonalAccessToken::findToken($token)->tokenable;
 
             if ($user) {
-                $relations = ['plan', 'features', 'units'];
+                $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
                 if ($user->type == "Admin") {
                     $records = Model::with($relations)->get();
                 } else if ($user->type == "Agent") {
@@ -43,7 +43,7 @@ class PropertyController extends Controller
 
     public function get($id)
     {
-        $record = Model::with(['plan', 'features', 'units'])->where('id', $id)->first();
+        $record = Model::with(['user', 'plan', 'buildings', 'facilities', 'features', 'units'])->where('id', $id)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
