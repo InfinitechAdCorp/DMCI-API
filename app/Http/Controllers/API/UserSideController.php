@@ -136,7 +136,6 @@ class UserSideController extends Controller
     {
         $user_id = $request->bearerToken();
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
