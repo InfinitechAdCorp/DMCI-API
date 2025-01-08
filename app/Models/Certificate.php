@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class Certificate extends Model
@@ -18,6 +19,7 @@ class Certificate extends Model
         'description',
         'image',
         'date',
+        'user_id',
     ];
 
     public static function booted()
@@ -25,5 +27,10 @@ class Certificate extends Model
         static::creating(function (Certificate $record) {
             $record->id = Str::ulid();
         });
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class); 
     }
 }

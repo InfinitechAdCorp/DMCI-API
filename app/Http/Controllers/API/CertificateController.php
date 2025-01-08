@@ -6,24 +6,43 @@ use App\Http\Controllers\Controller;
 use App\Traits\Uploadable;
 use App\Models\Certificate as Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class CertificateController extends Controller
 {
     use Uploadable;
+    public $model = "Certificate";
 
-    public function getAll()
+    public function getAll(Request $request)
     {
-        $certificates = Model::all();
-        $data = ['code' => 200, 'records' => $certificates];
-        return response($data);
+        if ($token = $request->bearerToken()) {
+            $user = PersonalAccessToken::findToken($token)->tokenable;
+    
+            if ($user) {
+                if ($user->type == "Admin") {
+                    $records = Model::with('user')->get();
+                } else if ($user->type == "Agent") {
+                    $records = Model::with('user')->where('user_id', $user->id)->get();
+                }
+                $code = 200;
+                $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
+            } else {
+                $code = 404;
+                $response = ['message' => "User Not Found"];
+            }
+        } else {
+            $code = 401;
+            $response = ['message' => "User Not Authenticated"];
+        }
+        return response()->json($response, $code);
     }
+    
 
     public function get($id)
     {
-        $certificate = Model::find($id);
-        if ($certificate) {
-            $data = ['code' => 200, 'record' => $certificate];
+        $record = Model::find($id);
+        if ($record) {
+            $data = ['code' => 200, 'record' => $record];
         } else {
             $data = ['code' => 404, 'message' => 'Certificate Not Found'];
         }
@@ -32,11 +51,16 @@ class CertificateController extends Controller
 
     public function add(Request $request)
     {
+        if (!$request->has('user_id')) {
+            return response()->json(['message' => 'User ID is missing'], 400);
+        }
+        
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'user_id' => 'required|exists:users,id',
             'description' => 'required|string|max:1000',
             'image' => 'required',
-            'date' => 'required|date',  // Added date validation
+            'date' => 'required|date',  
         ]);
 
         $key = 'image';
@@ -44,13 +68,7 @@ class CertificateController extends Controller
             $validated[$key] = $this->upload($request->file($key), "certificates");
         }
 
-        $record = Model::create([
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'image' => $validated['image'],
-            'date' => $validated['date'],  
-        ]);
-
+        $record = Model::create($validated);
         $code = 201;
         $response = ['message' => "Created certificate", 'record' => $record];
 
@@ -61,6 +79,8 @@ class CertificateController extends Controller
     {
         $validated = $request->validate([
             'id' => 'required|exists:certificates,id',
+            'user_id' => 'required|exists:users,id',
+
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
