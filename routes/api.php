@@ -12,14 +12,10 @@ use App\Http\Controllers\API\FeatureController;
 use App\Http\Controllers\API\ApplicationController;
 use App\Http\Controllers\API\AppointmentController;
 use App\Http\Controllers\API\BuildingController;
-use App\Http\Controllers\API\ContactController;
-use App\Http\Controllers\API\DashboardController;
-use App\Http\Controllers\API\GuestController;
 use App\Http\Controllers\API\ItemController;
 use App\Http\Controllers\API\PlanController;
 use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\ListingController;
-use App\Http\Controllers\API\PropertyFinder;
 use App\Http\Controllers\API\CertificateController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\ImageController;
@@ -156,10 +152,6 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::delete('{id}', [ListingController::class, 'delete']);
 
         Route::post('/change-status', [ListingController::class, 'changeStatus']);
-    });
-
-    Route::prefix('count')->group(function () {
-        Route::get('', [DashboardController::class, 'countProperties']);
     });
 
     Route::prefix('certificates')->group(function () {
