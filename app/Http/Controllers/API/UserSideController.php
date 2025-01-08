@@ -132,42 +132,39 @@ class UserSideController extends Controller
         return response()->json($response, $code);
     }
 
-    public function submitProperty(Request $request) {
-        if ($user_id = $request->bearerToken()) {
-            $validated = $request->validate([
-                'user_id' => 'required|exists:users,id',
-                'name' => 'required',
-                'email' => 'required|email',
-                'phone' => 'required',
-                'unit_name' => 'required',
-                'unit_type' => 'required',
-                'unit_location' => 'required',
-                'unit_price' => 'required|decimal:0,2',
-                'status' => 'required',
-                'images' => 'required',
-            ]);
-            
-            $validated['user_id'] = $user_id;
+    public function submitProperty(Request $request)
+    {
+        $user_id = $request->bearerToken();
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'name' => 'required',
+            'email' => 'required|email',
+            'phone' => 'required',
+            'unit_name' => 'required',
+            'unit_type' => 'required',
+            'unit_location' => 'required',
+            'unit_price' => 'required|decimal:0,2',
+            'status' => 'required',
+            'images' => 'required',
+        ]);
 
-            $key = 'images';
-            if ($request[$key]) {
-                $images = [];
-                foreach ($request[$key] as $image) {
-                    array_push($images, $this->upload($image, "listings"));
-                }
-                $validated[$key] = json_encode($images);
+        $validated['user_id'] = $user_id;
+
+        $key = 'images';
+        if ($request[$key]) {
+            $images = [];
+            foreach ($request[$key] as $image) {
+                array_push($images, $this->upload($image, "listings"));
             }
-    
-            $record = Listing::create($validated);
-            $code = 201;
-            $response = [
-                'message' => "Submitted Property Details",
-                'record' => $record,
-            ];
-        } else {
-            $code = 401;
-            $response = ['message' => "User Not Authenticated"];
+            $validated[$key] = json_encode($images);
         }
+
+        $record = Listing::create($validated);
+        $code = 201;
+        $response = [
+            'message' => "Submitted Property Details",
+            'record' => $record,
+        ];
         return response()->json($response, $code);
     }
 }
