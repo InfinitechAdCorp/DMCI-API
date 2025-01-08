@@ -19,6 +19,7 @@ use App\Http\Controllers\API\Admin\CertificateController;
 use App\Http\Controllers\API\Admin\UserController;
 use App\Http\Controllers\API\Admin\ImageController;
 use App\Http\Controllers\API\Admin\TestimonialController;
+use App\Http\Controllers\API\Admin\AgentProfileController;
 
 use App\Http\Controllers\API\UserSideController;
 
@@ -171,6 +172,13 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::post('', [TestimonialController::class, 'create']);
             Route::put('', [TestimonialController::class, 'update']);
             Route::delete('{id}', [TestimonialController::class, 'delete']);
+        });
+
+        Route::prefix('agent-profiles')->group(function () {
+            Route::get('', [AgentProfileController::class, 'getAll']);
+            Route::get('{id}', [AgentProfileController::class, 'get']);
+            Route::post('', [AgentProfileController::class, 'add']);
+            Route::delete('{id}', [AgentProfileController::class, 'delete']);
         });
     });
 
