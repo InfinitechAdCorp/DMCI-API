@@ -18,11 +18,13 @@ class UserController extends Controller
         if ($token = $request->bearerToken()) {
             $record =  PersonalAccessToken::findToken($token)->tokenable;
             if ($record) {
+                $relations = ['certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
                 if ($record->type == "Admin") {
-                    $records = Model::all();
+                    $records = Model::with($relations)->get();
                     $code = 200;
                     $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
                 } else if ($record->type == "Agent") {
+                    $record = Model::with($relations)->where('id', $record->id)->first();
                     $code = 200;
                     $response = ['message' => "Fetched $this->model", 'record' => $record];
                 }
@@ -39,7 +41,8 @@ class UserController extends Controller
 
     public function get($id)
     {
-        $record = Model::find($id);
+        $relations = ['certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
+        $record = Model::with($relations)->where('id', $id)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
