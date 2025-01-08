@@ -31,14 +31,24 @@ class User extends Authenticatable
         });
     }   
 
+    public function certificates(): HasMany
+    {
+        return $this->hasMany(Certificate::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(Image::class);
+    }
+
+    public function testimonials(): HasMany
+    {
+        return $this->hasMany(Testimonial::class);
+    }
+
     public function properties(): HasMany
     {
         return $this->hasMany(Property::class);
-    }
-
-    public function listings(): HasMany
-    {
-        return $this->hasMany(Listings::class);
     }
 
     public function appointments(): HasMany
@@ -46,5 +56,8 @@ class User extends Authenticatable
         return $this->hasMany(Appointment::class);
     }
 
-   
+    public function listings(): HasMany
+    {
+        return $this->hasMany(Listing::class);
+    }
 }
