@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('unit_name');
             $table->string('unit_type');
             $table->string('unit_location');
-            $table->double('unit_price');
+            $table->double('unit_price', 10, 2);
             $table->string('status');
             $table->json('images');
             $table->timestamps();
