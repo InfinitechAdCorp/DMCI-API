@@ -47,6 +47,16 @@ class Property extends Model
         return $this->hasOne(Plan::class);
     }
 
+    public function buildings(): HasMany
+    {
+        return $this->hasMany(Building::class);
+    }
+
+    public function facilities(): HasMany
+    {
+        return $this->hasMany(Facility::class);
+    }
+
     public function features(): HasMany
     {
         return $this->hasMany(Feature::class);

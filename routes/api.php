@@ -101,8 +101,8 @@ Route::middleware('throttle:150,1')->group(function () {
     Route::prefix('applications')->group(function () {
         Route::get('', [ApplicationController::class, 'getAll']);
         Route::get('{id}', [ApplicationController::class, 'get']);
-        Route::post('', [ApplicationController::class, 'add']);
-        // Route::put('', [ApplicationController::class, 'update']);        
+        Route::post('', [ApplicationController::class, 'create']);
+        Route::put('', [ApplicationController::class, 'update']);        
         Route::delete('{id}', [ApplicationController::class, 'delete']);
     });
 
