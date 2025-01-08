@@ -14,11 +14,11 @@ class Career extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'position',
         'referrer',
         'sub_agent',
         'broker',
         'partner',
-        'position',
         'image',
     ];
 

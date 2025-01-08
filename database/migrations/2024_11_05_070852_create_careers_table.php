@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('careers', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->string('position');
             $table->string('referrer');
             $table->string('sub_agent');
             $table->string('broker');
             $table->string('partner');
-            $table->string('position');
             $table->string('image');
             $table->timestamps();
         });

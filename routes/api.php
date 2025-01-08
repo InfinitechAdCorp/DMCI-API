@@ -77,8 +77,8 @@ Route::middleware('throttle:150,1')->group(function () {
     Route::prefix('careers')->group(function () {
         Route::get('', [CareerController::class, 'getAll']);
         Route::get('{id}', [CareerController::class, 'get']);
-        Route::post('', [CareerController::class, 'add']);
-        // Route::put('', [CareerController::class, 'update']);        
+        Route::post('', [CareerController::class, 'create']);
+        Route::put('', [CareerController::class, 'update']);        
         Route::delete('{id}', [CareerController::class, 'delete']);
     });
 
