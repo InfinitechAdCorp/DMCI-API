@@ -1,25 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Uploadable;
 
-use App\Models\Article as Model;
+use App\Models\Facility as Model;
 
-class ArticleController extends Controller
+class FacilityController extends Controller
 {
     use Uploadable;
-
-    public $model = "Article";
+    
+    public $model = "Facility";
 
     public function getAll()
     {
         $records = Model::all();
         $code = 200;
-        $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
+        $response = ['message' => "Fetched Facilities", 'records' => $records];
         return response()->json($response, $code);
     }
 
@@ -40,15 +40,14 @@ class ArticleController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate([
-            'headline' => 'required',
-            'content' => 'required',
-            'date' => 'required|date',
+            'property_id' => 'required|exists:properties,id',
+            'name' => 'required',
             'image' => 'required',
         ]);
 
         $key = 'image';
         if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), "articles");
+            $validated[$key] = $this->upload($request->file($key), "properties/facilities");
         }
 
         $record = Model::create($validated);
@@ -60,10 +59,9 @@ class ArticleController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:articles,id',
-            'headline' => 'required',
-            'content' => 'required',
-            'date' => 'required|date',
+            'id' => 'required|exists:facilities,id',
+            'property_id' => 'required|exists:properties,id',
+            'name' => 'required',
             'image' => 'nullable',
         ]);
 
@@ -71,8 +69,8 @@ class ArticleController extends Controller
 
         $key = 'image';
         if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("articles/$record[$key]");
-            $validated[$key] = $this->upload($request->file($key), "articles");
+            Storage::disk('s3')->delete("properties/facilities/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), "properties/facilities");
         }
 
         $record->update($validated);
@@ -85,7 +83,7 @@ class ArticleController extends Controller
     {
         $record = Model::find($id);
         if ($record) {
-            Storage::disk('s3')->delete("articles/$record->image");
+            Storage::disk('s3')->delete("properties/facilities/$record->image");
             $record->delete();
             $code = 200;
             $response = ['message' => "Deleted $this->model"];

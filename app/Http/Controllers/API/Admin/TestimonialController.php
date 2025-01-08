@@ -1,20 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use App\Traits\Uploadable;
 use Laravel\Sanctum\PersonalAccessToken;
 
-use App\Models\Image as Model;
+use App\Models\Testimonial as Model;
 
-class ImageController extends Controller
+class TestimonialController extends Controller
 {
-    use Uploadable;
-
-    public $model = "Image";
+    public $model = "Testimonial";
 
     public function getAll(Request $request)
     {
@@ -58,13 +54,8 @@ class ImageController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'name' => 'required',
-            'image' => 'required',
+            'message' => 'required',
         ]);
-
-        $key = 'image';
-        if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), "images");
-        }
 
         $record = Model::create($validated);
         $code = 201;
@@ -78,20 +69,13 @@ class ImageController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:images,id',
+            'id' => 'required|exists:testimonials,id',
             'user_id' => 'required|exists:users,id',
             'name' => 'required',
-            'image' => 'nullable',
+            'message' => 'required',
         ]);
 
         $record = Model::find($validated['id']);
-
-        $key = 'image';
-        if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("images/$record->image");
-            $validated[$key] = $this->upload($request->file($key), "images");
-        }
-
         $record->update($validated);
         $code = 200;
         $response = ['message' => "Updated $this->model", 'record' => $record];
@@ -102,8 +86,6 @@ class ImageController extends Controller
     {
         $record = Model::find($id);
         if ($record) {
-            Storage::disk('s3')->delete("images/$record->image");
-
             $record->delete();
             $code = 200;
             $response = [

@@ -1,19 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use App\Traits\Uploadable;
 
-use App\Models\Plan as Model;
+use App\Models\Feature as Model;
 
-class PlanController extends Controller
+class FeatureController extends Controller
 {
-    use Uploadable;
-    
-    public $model = "Plan";
+    public $model = "Feature";
 
     public function getAll()
     {
@@ -41,15 +37,8 @@ class PlanController extends Controller
     {
         $validated = $request->validate([
             'property_id' => 'required|exists:properties,id',
-            'area' => 'required|decimal:0,2',
-            'theme' => 'required',
-            'image' => 'required',
+            'name' => 'required',
         ]);
-
-        $key = 'image';
-        if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), "properties/plans");
-        }
 
         $record = Model::create($validated);
         $code = 201;
@@ -60,20 +49,12 @@ class PlanController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:plans,id',
+            'id' => 'required|exists:features,id',
             'property_id' => 'required|exists:properties,id',
-            'area' => 'required|decimal:0,2',
-            'theme' => 'required',
-            'image' => 'nullable',
+            'name' => 'required',
         ]);
 
         $record = Model::find($validated['id']);
-
-        $key = 'image';
-        if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("properties/plans/$record[$key]");
-            $validated[$key] = $this->upload($request->file($key), "properties/plans");
-        }
 
         $record->update($validated);
         $code = 200;
@@ -85,7 +66,6 @@ class PlanController extends Controller
     {
         $record = Model::find($id);
         if ($record) {
-            Storage::disk('s3')->delete("properties/plans/$record->image");
             $record->delete();
             $code = 200;
             $response = ['message' => "Deleted $this->model"];

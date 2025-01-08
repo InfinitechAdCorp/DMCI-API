@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Unit as Model;
+use App\Models\Question as Model;
 
-class UnitController extends Controller
+class QuestionController extends Controller
 {
-    public $model = "Unit";
+    public $model = "Question";
 
     public function getAll()
     {
-        $records = Model::with('property')->get();
+        $records = Model::all();
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
@@ -21,7 +21,7 @@ class UnitController extends Controller
 
     public function get($id)
     {
-        $record = Model::with('property')->where('id',$id)->get();
+        $record = Model::find($id);
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
@@ -36,10 +36,8 @@ class UnitController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate([
-            'property_id' => 'required|exists:properties,id',
-            'type' => 'required',
-            'area' => 'required|decimal:0,2',
-            'price' => 'required',
+            'question' => 'required',
+            'answer' => 'required',
             'status' => 'required',
         ]);
 
@@ -52,11 +50,9 @@ class UnitController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:units,id',
-            'property_id' => 'required|exists:properties,id',
-            'type' => 'required',
-            'area' => 'required|decimal:0,2',
-            'price' => 'required',
+            'id' => 'required|exists:questions,id',
+            'question' => 'required',
+            'answer' => 'required',
             'status' => 'required',
         ]);
 

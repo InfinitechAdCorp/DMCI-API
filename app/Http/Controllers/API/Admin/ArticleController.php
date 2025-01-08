@@ -1,15 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Traits\Uploadable;
 
-use App\Models\Question as Model;
+use App\Models\Article as Model;
 
-class QuestionController extends Controller
+class ArticleController extends Controller
 {
-    public $model = "Question";
+    use Uploadable;
+
+    public $model = "Article";
 
     public function getAll()
     {
@@ -36,10 +40,16 @@ class QuestionController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate([
-            'question' => 'required',
-            'answer' => 'required',
-            'status' => 'required',
+            'headline' => 'required',
+            'content' => 'required',
+            'date' => 'required|date',
+            'image' => 'required',
         ]);
+
+        $key = 'image';
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($request->file($key), "articles");
+        }
 
         $record = Model::create($validated);
         $code = 201;
@@ -50,13 +60,21 @@ class QuestionController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:questions,id',
-            'question' => 'required',
-            'answer' => 'required',
-            'status' => 'required',
+            'id' => 'required|exists:articles,id',
+            'headline' => 'required',
+            'content' => 'required',
+            'date' => 'required|date',
+            'image' => 'nullable',
         ]);
 
         $record = Model::find($validated['id']);
+
+        $key = 'image';
+        if ($request->hasFile($key)) {
+            Storage::disk('s3')->delete("articles/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), "articles");
+        }
+
         $record->update($validated);
         $code = 200;
         $response = ['message' => "Updated $this->model", 'record' => $record];
@@ -67,6 +85,7 @@ class QuestionController extends Controller
     {
         $record = Model::find($id);
         if ($record) {
+            Storage::disk('s3')->delete("articles/$record->image");
             $record->delete();
             $code = 200;
             $response = ['message' => "Deleted $this->model"];
