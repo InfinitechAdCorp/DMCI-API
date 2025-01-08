@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Traits\Uploadable;
 use Laravel\Sanctum\PersonalAccessToken;
 
-use App\Models\Appointment as Model;
+use App\Models\Listing as Model;
 
-class AppointmentController extends Controller
+class ListingController extends Controller
 {
     use Uploadable;
 
-    public $model = "Appointment";
+    public $model = "Listing";
 
     public function getAll(Request $request)
     {
@@ -59,13 +60,22 @@ class AppointmentController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
-            'date' => 'required|date',
-            'time' => 'required',
-            'type' => 'required',
-            'properties' => 'required',
-            'message' => 'required',
+            'unit_name' => 'required',
+            'unit_type' => 'required',
+            'unit_location' => 'required',
+            'unit_price' => 'required|decimal:0,2',
             'status' => 'required',
+            'images' => 'required',
         ]);
+
+        $key = 'images';
+        if ($request[$key]) {
+            $images = [];
+            foreach ($request[$key] as $image) {
+                array_push($images, $this->upload($image, "listings"));
+            }
+            $validated[$key] = json_encode($images);
+        }
 
         $record = Model::create($validated);
         $code = 201;
@@ -79,20 +89,35 @@ class AppointmentController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:appointments,id',
+            'id' => 'required|exists:listings,id',
             'user_id' => 'required|exists:users,id',
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
-            'date' => 'required|date',
-            'time' => 'required',
-            'type' => 'required',
-            'properties' => 'required',
-            'message' => 'required',
+            'unit_name' => 'required',
+            'unit_type' => 'required',
+            'unit_location' => 'required',
+            'unit_price' => 'required|decimal:0,2',
             'status' => 'required',
+            'images' => 'nullable',
         ]);
 
         $record = Model::find($validated['id']);
+
+        $key = 'images';
+        if ($request[$key]) {
+            $images = json_decode($record[$key]);
+            foreach ($images as $image) {
+                Storage::disk('s3')->delete("listings/$image");
+            }
+
+            $images = [];
+            foreach ($request[$key] as $image) {
+                array_push($images, $this->upload($image, "properties/images"));
+            }
+            $validated[$key] = json_encode($images);
+        }
+
         $record->update($validated);
         $code = 200;
         $response = ['message' => "Updated $this->model", 'record' => $record];
@@ -103,6 +128,11 @@ class AppointmentController extends Controller
     {
         $record = Model::find($id);
         if ($record) {
+            $images = json_decode($record->images);
+            foreach ($images as $image) {
+                Storage::disk('s3')->delete("listings/$image");
+            }
+
             $record->delete();
             $code = 200;
             $response = [
@@ -118,7 +148,7 @@ class AppointmentController extends Controller
     public function changeStatus(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:appointments,id',
+            'id' => 'required|exists:listings,id',
             'status' => 'required',
         ]);
 

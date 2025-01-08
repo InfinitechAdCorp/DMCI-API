@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Uploadable;
 
-use App\Models\Building as Model;
+use App\Models\Plan as Model;
 
-class BuildingController extends Controller
+class PlanController extends Controller
 {
     use Uploadable;
     
-    public $model = "Building";
+    public $model = "Plan";
 
     public function getAll()
     {
-        $records = Model::all();
+        $records = Model::with('property')->get();
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
@@ -25,7 +25,7 @@ class BuildingController extends Controller
 
     public function get($id)
     {
-        $record = Model::find($id);
+        $record = Model::with('property')->where('id', $id)->get();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
@@ -41,15 +41,14 @@ class BuildingController extends Controller
     {
         $validated = $request->validate([
             'property_id' => 'required|exists:properties,id',
-            'name' => 'required',
-            'floors' => 'required|numeric|integer',
-            'parking' => 'required|numeric|integer',
+            'area' => 'required|decimal:0,2',
+            'theme' => 'required',
             'image' => 'required',
         ]);
 
         $key = 'image';
         if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), "properties/buildings");
+            $validated[$key] = $this->upload($request->file($key), "properties/plans");
         }
 
         $record = Model::create($validated);
@@ -61,11 +60,10 @@ class BuildingController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:buildings,id',
+            'id' => 'required|exists:plans,id',
             'property_id' => 'required|exists:properties,id',
-            'name' => 'required',
-            'floors' => 'required|numeric|integer',
-            'parking' => 'required|numeric|integer',
+            'area' => 'required|decimal:0,2',
+            'theme' => 'required',
             'image' => 'nullable',
         ]);
 
@@ -73,8 +71,8 @@ class BuildingController extends Controller
 
         $key = 'image';
         if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("properties/buildings/$record[$key]");
-            $validated[$key] = $this->upload($request->file($key), "properties/buildings");
+            Storage::disk('s3')->delete("properties/plans/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), "properties/plans");
         }
 
         $record->update($validated);
@@ -87,7 +85,7 @@ class BuildingController extends Controller
     {
         $record = Model::find($id);
         if ($record) {
-            Storage::disk('s3')->delete("properties/buildings/$record->image");
+            Storage::disk('s3')->delete("properties/plans/$record->image");
             $record->delete();
             $code = 200;
             $response = ['message' => "Deleted $this->model"];

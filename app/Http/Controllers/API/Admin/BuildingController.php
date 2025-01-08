@@ -1,25 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Uploadable;
 
-use App\Models\Facility as Model;
+use App\Models\Building as Model;
 
-class FacilityController extends Controller
+class BuildingController extends Controller
 {
     use Uploadable;
     
-    public $model = "Facility";
+    public $model = "Building";
 
     public function getAll()
     {
         $records = Model::all();
         $code = 200;
-        $response = ['message' => "Fetched Facilities", 'records' => $records];
+        $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
     }
 
@@ -42,12 +42,14 @@ class FacilityController extends Controller
         $validated = $request->validate([
             'property_id' => 'required|exists:properties,id',
             'name' => 'required',
+            'floors' => 'required|numeric|integer',
+            'parking' => 'required|numeric|integer',
             'image' => 'required',
         ]);
 
         $key = 'image';
         if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), "properties/facilities");
+            $validated[$key] = $this->upload($request->file($key), "properties/buildings");
         }
 
         $record = Model::create($validated);
@@ -59,9 +61,11 @@ class FacilityController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:facilities,id',
+            'id' => 'required|exists:buildings,id',
             'property_id' => 'required|exists:properties,id',
             'name' => 'required',
+            'floors' => 'required|numeric|integer',
+            'parking' => 'required|numeric|integer',
             'image' => 'nullable',
         ]);
 
@@ -69,8 +73,8 @@ class FacilityController extends Controller
 
         $key = 'image';
         if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("properties/facilities/$record[$key]");
-            $validated[$key] = $this->upload($request->file($key), "properties/facilities");
+            Storage::disk('s3')->delete("properties/buildings/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), "properties/buildings");
         }
 
         $record->update($validated);
@@ -83,7 +87,7 @@ class FacilityController extends Controller
     {
         $record = Model::find($id);
         if ($record) {
-            Storage::disk('s3')->delete("properties/facilities/$record->image");
+            Storage::disk('s3')->delete("properties/buildings/$record->image");
             $record->delete();
             $code = 200;
             $response = ['message' => "Deleted $this->model"];

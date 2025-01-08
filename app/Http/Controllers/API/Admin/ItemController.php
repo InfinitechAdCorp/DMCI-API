@@ -1,19 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Traits\Uploadable;
 
-use App\Models\Feature as Model;
+use App\Models\Item as Model;
 
-class FeatureController extends Controller
+class ItemController extends Controller
 {
-    public $model = "Feature";
+    use Uploadable;
+    
+    public $model = "Item";
 
     public function getAll()
     {
-        $records = Model::with('property')->get();
+        $records = Model::all();
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
@@ -21,7 +25,7 @@ class FeatureController extends Controller
 
     public function get($id)
     {
-        $record = Model::with('property')->where('id', $id)->get();
+        $record = Model::find($id);
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
@@ -36,9 +40,17 @@ class FeatureController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate([
-            'property_id' => 'required|exists:properties,id',
             'name' => 'required',
+            'type' => 'required',
+            'width' => 'required|decimal:0,2',
+            'height' => 'required|decimal:0,2',
+            'image' => 'required',
         ]);
+
+        $key = 'image';
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($request->file($key), "items");
+        }
 
         $record = Model::create($validated);
         $code = 201;
@@ -49,12 +61,21 @@ class FeatureController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:features,id',
-            'property_id' => 'required|exists:properties,id',
+            'id' => 'required|exists:items,id',
             'name' => 'required',
+            'type' => 'required',
+            'width' => 'required|decimal:0,2',
+            'height' => 'required|decimal:0,2',
+            'image' => 'nullable',
         ]);
 
         $record = Model::find($validated['id']);
+
+        $key = 'image';
+        if ($request->hasFile($key)) {
+            Storage::disk('s3')->delete("items/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), "items");
+        }
 
         $record->update($validated);
         $code = 200;
@@ -66,6 +87,7 @@ class FeatureController extends Controller
     {
         $record = Model::find($id);
         if ($record) {
+            Storage::disk('s3')->delete("items/$record->image");
             $record->delete();
             $code = 200;
             $response = ['message' => "Deleted $this->model"];
