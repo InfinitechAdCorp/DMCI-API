@@ -9,6 +9,7 @@ use App\Traits\Uploadable;
 use App\Models\User;
 use App\Models\Property;
 use App\Models\Article;
+use App\Models\Career;
 use App\Models\Listing;
 
 class UserSideController extends Controller
@@ -92,6 +93,37 @@ class UserSideController extends Controller
             } else {
                 $code = 404;
                 $response = ['message' => "Article Not Found"];
+            }
+        } else {
+            $code = 401;
+            $response = ['message' => "User Not Authenticated"];
+        }
+        return response()->json($response, $code);
+    }
+
+    public function careersGetAll(Request $request)
+    {
+        if ($request->bearerToken()) {
+            $records = Career::with('applications')->get();
+            $code = 200;
+            $response = ['message' => "Fetched Careers", 'records' => $records];
+        } else {
+            $code = 401;
+            $response = ['message' => "User Not Authenticated"];
+        }
+        return response()->json($response, $code);
+    }
+
+    public function careersGet(Request $request)
+    {
+        if ($request->bearerToken()) {
+            $record = Career::with('applications')->where('id', $request->id)->first();
+            if ($record) {
+                $code = 200;
+                $response = ['message' => "Fetched Career", 'record' => $record];
+            } else {
+                $code = 404;
+                $response = ['message' => "Career Not Found"];
             }
         } else {
             $code = 401;

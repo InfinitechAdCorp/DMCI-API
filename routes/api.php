@@ -199,5 +199,10 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::get('', [UserSideController::class, 'articlesGetAll']);
             Route::get('{id}', [UserSideController::class, 'articlesGet']);
         });
+
+        Route::prefix('careers')->group(function () {
+            Route::get('', [UserSideController::class, 'careersGetAll']);
+            Route::get('{id}', [UserSideController::class, 'careersGet']);
+        });
     });
 });

@@ -17,7 +17,7 @@ class CareerController extends Controller
 
     public function getAll()
     {
-        $records = Model::all();
+        $records = Model::with('applications')->get();
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
@@ -25,7 +25,7 @@ class CareerController extends Controller
 
     public function get($id)
     {
-        $record = Model::find($id);
+        $record = Model::with('applications')->where('id', $id)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];

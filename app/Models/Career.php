@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Career extends Model
@@ -26,5 +27,10 @@ class Career extends Model
         static::creating(function (Career $record) {
             $record->id = Str::ulid();
         });
+    }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class); 
     }
 }
