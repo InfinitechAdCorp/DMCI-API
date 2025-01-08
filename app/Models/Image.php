@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
-class Gallery extends Model
+class Image extends Model
 {
     use HasFactory;
 
@@ -14,14 +15,20 @@ class Gallery extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'user_id',
         'name',
         'image',
     ];
 
     public static function booted()
     {
-        static::creating(function (Gallery $record) {
+        static::creating(function (Image $record) {
             $record->id = Str::ulid();
         });
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class); 
     }
 }
