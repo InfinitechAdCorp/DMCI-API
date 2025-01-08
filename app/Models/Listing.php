@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
-class Listings extends Model
+class Listing extends Model
 {
     use HasFactory;
 
@@ -29,16 +29,13 @@ class Listings extends Model
     ];
 
     public static function booted(){
-        static::creating(function (Listings $record){
+        static::creating(function (Listing $record){
             $record->id = Str::ulid();
         });
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id'); 
+        return $this->belongsTo(User::class); 
     }
-
-
-
 }
