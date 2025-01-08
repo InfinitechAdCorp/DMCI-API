@@ -12,9 +12,9 @@ class CreateCertificatesTable extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
             $table->string('title');
+            $table->date('date'); 
             $table->text('description');
             $table->string('image');
-            $table->date('date'); 
             $table->timestamps(); 
         });
     }

@@ -120,7 +120,7 @@ class ListingController extends Controller
 
         $record->update($validated);
         $code = 200;
-        $response = ['message' => "Updated $this->model"];
+        $response = ['message' => "Updated $this->model", 'record' => $record];
         return response()->json($response, $code);
     }
 
