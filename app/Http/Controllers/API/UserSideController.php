@@ -187,6 +187,8 @@ class UserSideController extends Controller
                 'images' => 'required',
             ]);
 
+            $validated['user_id'] = $user_id;
+
             $key = 'images';
             if ($request[$key]) {
                 $images = [];
@@ -225,6 +227,8 @@ class UserSideController extends Controller
                 'message' => 'required',
                 'status' => 'required',
             ]);
+
+            $validated['user_id'] = $user_id;
 
             $record = Appointment::create($validated);
             $code = 201;
