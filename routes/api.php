@@ -20,7 +20,7 @@ use App\Http\Controllers\API\Admin\UserController;
 use App\Http\Controllers\API\Admin\ImageController;
 use App\Http\Controllers\API\Admin\TestimonialController;
 use App\Http\Controllers\API\Admin\ProfileController;
-use App\Http\Controllers\API\Admin\SubscriptionController;
+use App\Http\Controllers\API\Admin\SubscriberController;
 
 use App\Http\Controllers\API\UserSideController;
 
@@ -75,7 +75,7 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::get('', [CareerController::class, 'getAll']);
         Route::get('{id}', [CareerController::class, 'get']);
         Route::post('', [CareerController::class, 'create']);
-        Route::put('', [CareerController::class, 'update']);        
+        Route::put('', [CareerController::class, 'update']);
         Route::delete('{id}', [CareerController::class, 'delete']);
     });
 
@@ -99,7 +99,7 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::get('', [ApplicationController::class, 'getAll']);
         Route::get('{id}', [ApplicationController::class, 'get']);
         Route::post('', [ApplicationController::class, 'create']);
-        Route::put('', [ApplicationController::class, 'update']);        
+        Route::put('', [ApplicationController::class, 'update']);
         Route::delete('{id}', [ApplicationController::class, 'delete']);
     });
 
@@ -187,19 +187,20 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::delete('{id}', [ProfileController::class, 'delete']);
     });
 
-    Route::prefix('subscriptions')->group(function () {
-        Route::get('', [SubscriptionController::class, 'getAll']);
-        Route::get('{id}', [SubscriptionController::class, 'get']);
-        Route::post('', [SubscriptionController::class, 'create']);
-        Route::put('', [SubscriptionController::class, 'update']);
-        Route::delete('{id}', [SubscriptionController::class, 'delete']);
+    Route::prefix('subscribers')->group(function () {
+        Route::get('', [SubscriberController::class, 'getAll']);
+        Route::get('{id}', [SubscriberController::class, 'get']);
+        Route::post('', [SubscriberController::class, 'create']);
+        Route::put('', [SubscriberController::class, 'update']);
+        Route::delete('{id}', [SubscriberController::class, 'delete']);
     });
 
-    Route::prefix('user')->group(function() {
+    Route::prefix('user')->group(function () {
         Route::get('', [UserSideController::class, 'getUser']);
         Route::post('submit-property', [UserSideController::class, 'submitProperty']);
         Route::post('request-viewing', [UserSideController::class, 'requestViewing']);
         Route::post('submit-application', [UserSideController::class, 'submitApplication']);
+        Route::post('subscribe', [UserSideController::class, 'subscribe']);
 
         Route::prefix('properties')->group(function () {
             Route::get('', [UserSideController::class, 'propertiesGetAll']);

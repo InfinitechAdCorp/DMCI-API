@@ -18,7 +18,7 @@ class UserController extends Controller
         if ($token = $request->bearerToken()) {
             $record =  PersonalAccessToken::findToken($token)->tokenable;
             if ($record) {
-                $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
+                $relations = ['profile', 'certificates', 'images', 'testimonials', 'subscribers', 'properties', 'appointments', 'listings'];
                 if ($record->type == "Admin") {
                     $records = Model::with($relations)->get();
                     $code = 200;
@@ -41,7 +41,7 @@ class UserController extends Controller
 
     public function get($id)
     {
-        $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
+        $relations = ['profile', 'certificates', 'images', 'testimonials', 'subscribers', 'properties', 'appointments', 'listings'];
         $record = Model::with($relations)->where('id', $id)->first();
         if ($record) {
             $code = 200;
@@ -81,7 +81,7 @@ class UserController extends Controller
             'password' => 'required|min:8',
         ]);
 
-        $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
+        $relations = ['profile', 'certificates', 'images', 'testimonials', 'subscribers', 'properties', 'appointments', 'listings'];
         $record = Model::with($relations)->where('email', $request->email)->first();
 
         if ($record && Hash::check($request->password, $record->password)) {

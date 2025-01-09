@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
-class Subscription extends Model
+class Subscriber extends Model
 {
     use HasFactory;
 
@@ -21,7 +21,7 @@ class Subscription extends Model
 
     public static function booted()
     {
-        static::creating(function (Subscription $record) {
+        static::creating(function (Subscriber $record) {
             $record->id = Str::ulid();
         });
     }

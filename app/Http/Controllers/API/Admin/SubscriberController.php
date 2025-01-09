@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\PersonalAccessToken;
 
-use App\Models\Subscription as Model;
+use App\Models\Subscriber as Model;
 
-class SubscriptionController extends Controller
+class SubscriberController extends Controller
 {
-    public $model = "Subscription";
+    public $model = "Subscriber";
 
     public function getAll(Request $request)
     {

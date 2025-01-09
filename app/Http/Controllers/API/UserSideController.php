@@ -13,6 +13,7 @@ use App\Models\Article;
 use App\Models\Career;
 use App\Models\Appointment;
 use App\Models\Application;
+use App\Models\Subscriber;
 
 class UserSideController extends Controller
 {
@@ -246,23 +247,51 @@ class UserSideController extends Controller
 
     public function submitApplication(Request $request)
     {
-        $validated = $request->validate([
-            'career_id' => 'required|exists:careers,id',
-            'name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required',
-            'address' => 'required',
-            'resume' => 'required',
-        ]);
+        $user_id = $request->header('user-id');
+        if (User::find($user_id)) {
+            $validated = $request->validate([
+                'career_id' => 'required|exists:careers,id',
+                'name' => 'required',
+                'email' => 'required|email',
+                'phone' => 'required',
+                'address' => 'required',
+                'resume' => 'required',
+            ]);
 
-        $key = 'resume';
-        if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), "careers/applications");
+            $key = 'resume';
+            if ($request->hasFile($key)) {
+                $validated[$key] = $this->upload($request->file($key), "careers/applications");
+            }
+
+            $record = Application::create($validated);
+            $code = 201;
+            $response = ['message' => "Submitted Application", 'record' => $record];
+        } else {
+            $code = 401;
+            $response = ['message' => "User Not Authenticated"];
         }
+        return response()->json($response, $code);
+    }
 
-        $record = Application::create($validated);
-        $code = 201;
-        $response = ['message' => "Submitted Application", 'record' => $record];
+    public function subscribe(Request $request)
+    {
+        $user_id = $request->header('user-id');
+        if (User::find($user_id)) {
+            $validated = $request->validate([
+                'user_id' => 'required|exists:users,id',
+                'email' => 'required|email',
+            ]);
+
+            $record = Subscriber::create($validated);
+            $code = 201;
+            $response = [
+                'message' => "Subscribed To Newsletter",
+                'record' => $record,
+            ];
+        } else {
+            $code = 401;
+            $response = ['message' => "User Not Authenticated"];
+        }
         return response()->json($response, $code);
     }
 }
