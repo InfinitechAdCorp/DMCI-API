@@ -90,8 +90,8 @@ class UserController extends Controller
             $code = 200;
             $response = [
                 'message' => 'Login Successful',
-                'record' => $record,
                 'token' => $token,
+                'record' => $record,
             ];
         } else {
             $code = 401;
