@@ -62,9 +62,9 @@ class ProfileController extends Controller
             'phone' => 'required',
             'facebook' => 'nullable|url',
             'instagram' => 'nullable|url',
-            'telegram' => 'nullable|url',
-            'viber' => 'nullable|url',
-            'whatsapp' => 'nullable|url',
+            'telegram' => 'nullable',
+            'viber' => 'nullable',
+            'whatsapp' => 'nullable',
             'about' => 'required',
             'image' => 'required',
         ]);
