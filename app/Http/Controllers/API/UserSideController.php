@@ -29,7 +29,7 @@ class UserSideController extends Controller
         //     $response = ['message' => "User Not Authenticated"];
         // }
         // return response()->json($response, $code);
-        return response()->json(User::find($user_id), $user_id);
+        return response()->json(['user' => User::find($user_id), 'user_id' => $user_id]);
     }
 
     public function propertiesGetAll(Request $request)
