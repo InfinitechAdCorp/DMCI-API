@@ -177,7 +177,6 @@ class UserSideController extends Controller
         $user_id = $request->header('user-id');
         if (User::find($user_id)) {
             $validated = $request->validate([
-                'user_id' => 'required|exists:users,id',
                 'name' => 'required',
                 'email' => 'required|email',
                 'phone' => 'required',
@@ -218,7 +217,6 @@ class UserSideController extends Controller
         $user_id = $request->header('user-id');
         if (User::find($user_id)) {
             $validated = $request->validate([
-                'user_id' => 'required|exists:users,id',
                 'name' => 'required',
                 'email' => 'required|email',
                 'phone' => 'required',
@@ -278,9 +276,10 @@ class UserSideController extends Controller
         $user_id = $request->header('user-id');
         if (User::find($user_id)) {
             $validated = $request->validate([
-                'user_id' => 'required|exists:users,id',
                 'email' => 'required|email',
             ]);
+
+            $validated['user_id'] = $user_id;
 
             $record = Subscriber::create($validated);
             $code = 201;
