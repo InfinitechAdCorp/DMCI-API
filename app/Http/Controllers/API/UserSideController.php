@@ -18,21 +18,22 @@ class UserSideController extends Controller
 
     public function getUser(Request $request)
     {
-        if ($user_id = $request->bearerToken()) {
-            $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
-            $record = User::with($relations)->where('id', $user_id)->first();
-            if ($record) {
-                $code = 200;
-                $response = ['message' => "Fetched User", 'record' => $record];
-            } else {
-                $code = 404;
-                $response = ['message' => "User Not Found"];
-            }
-        } else {
-            $code = 401;
-            $response = ['message' => "User Not Authenticated"];
-        }
-        return response()->json($response, $code);
+        // if ($user_id = $request->bearerToken()) {
+        //     $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
+        //     $record = User::with($relations)->where('id', $user_id)->first();
+        //     if ($record) {
+        //         $code = 200;
+        //         $response = ['message' => "Fetched User", 'record' => $record];
+        //     } else {
+        //         $code = 404;
+        //         $response = ['message' => "User Not Found"];
+        //     }
+        // } else {
+        //     $code = 401;
+        //     $response = ['message' => "User Not Authenticated"];
+        // }
+        // return response()->json($response, $code);
+        return response()->json($request->bearerToken());
     }
 
     public function propertiesGetAll(Request $request)
