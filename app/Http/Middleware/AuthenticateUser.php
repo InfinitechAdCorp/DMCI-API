@@ -5,9 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Laravel\Sanctum\PersonalAccessToken;
+use App\Models\User;
 
-class AuthenticateAdmin
+class AuthenticateUser
 {
     /**
      * Handle an incoming request.
@@ -16,11 +16,11 @@ class AuthenticateAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $token = $request->bearerToken();
-        $record = PersonalAccessToken::findToken($token);
-        if ($record) {
+        $user_id = $request->header('user-id');
+        $user = User::find($user_id);
+        if ($user) {
             return $next($request);
         }
-        return response()->json(['message' => "Invalid Token"], 401);
+        return response()->json(['message' => "Invalid User ID"], 401);
     }
 }
