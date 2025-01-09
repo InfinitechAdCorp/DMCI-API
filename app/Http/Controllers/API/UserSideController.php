@@ -12,6 +12,7 @@ use App\Models\Listing;
 use App\Models\Article;
 use App\Models\Career;
 use App\Models\Appointment;
+use App\Models\Application;
 
 class UserSideController extends Controller
 {
@@ -240,6 +241,28 @@ class UserSideController extends Controller
             $code = 401;
             $response = ['message' => "User Not Authenticated"];
         }
+        return response()->json($response, $code);
+    }
+
+    public function submitApplication(Request $request)
+    {
+        $validated = $request->validate([
+            'career_id' => 'required|exists:careers,id',
+            'name' => 'required',
+            'email' => 'required|email',
+            'phone' => 'required',
+            'address' => 'required',
+            'resume' => 'required',
+        ]);
+
+        $key = 'resume';
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($request->file($key), "careers/applications");
+        }
+
+        $record = Application::create($validated);
+        $code = 201;
+        $response = ['message' => "Submitted Application", 'record' => $record];
         return response()->json($response, $code);
     }
 }
