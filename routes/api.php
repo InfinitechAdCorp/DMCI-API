@@ -189,6 +189,8 @@ Route::middleware('throttle:150,1')->group(function () {
     Route::prefix('user')->group(function() {
         Route::get('', [UserSideController::class, 'getUser']);
         Route::post('submit-property', [UserSideController::class, 'submitProperty']);
+        Route::post('request-viewing', [UserSideController::class, 'requestViewing']);
+
 
         Route::prefix('properties')->group(function () {
             Route::get('', [UserSideController::class, 'propertiesGetAll']);

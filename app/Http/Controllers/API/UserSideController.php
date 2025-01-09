@@ -11,6 +11,7 @@ use App\Models\Property;
 use App\Models\Listing;
 use App\Models\Article;
 use App\Models\Career;
+use App\Models\Appointment;
 
 class UserSideController extends Controller
 {
@@ -199,6 +200,36 @@ class UserSideController extends Controller
             $code = 201;
             $response = [
                 'message' => "Submitted Property Details",
+                'record' => $record,
+            ];
+        } else {
+            $code = 401;
+            $response = ['message' => "User Not Authenticated"];
+        }
+        return response()->json($response, $code);
+    }
+
+    public function requestViewing(Request $request)
+    {
+        $user_id = $request->header('user-id');
+        if (User::find($user_id)) {
+            $validated = $request->validate([
+                'user_id' => 'required|exists:users,id',
+                'name' => 'required',
+                'email' => 'required|email',
+                'phone' => 'required',
+                'date' => 'required|date',
+                'time' => 'required',
+                'type' => 'required',
+                'properties' => 'required',
+                'message' => 'required',
+                'status' => 'required',
+            ]);
+
+            $record = Appointment::create($validated);
+            $code = 201;
+            $response = [
+                'message' => "Submitted Viewing Request",
                 'record' => $record,
             ];
         } else {
