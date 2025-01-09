@@ -41,7 +41,7 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::post('/login', [UserController::class, 'login']);
     });
 
-    Route::middleware('auth.admin')->group(function () {
+    // Route::middleware('auth.admin')->group(function () {
         Route::prefix('users')->group(function () {
             Route::get('', [UserController::class, 'getAll']);
             Route::get('{id}', [UserController::class, 'get']);
@@ -196,7 +196,7 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::put('', [SubscriberController::class, 'update']);
             Route::delete('{id}', [SubscriberController::class, 'delete']);
         });    
-    });
+    // });
 
     Route::prefix('user')->middleware('auth.user')->group(function () {
         Route::get('', [UserSideController::class, 'getUser']);
