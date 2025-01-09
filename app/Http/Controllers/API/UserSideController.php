@@ -18,7 +18,7 @@ class UserSideController extends Controller
 
     public function getUser(Request $request)
     {
-        $user_id = $request->header('user_id');
+        $user_id = $request->header('user-id');
         // if (User::find($user_id)) {
         //     $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
         //     $record = User::with($relations)->where('id', $user_id)->first();
