@@ -19,16 +19,17 @@ class UserSideController extends Controller
     public function getUser(Request $request)
     {
         $user_id = $request->header('user_id');
-        if (User::find($user_id)) {
-            $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
-            $record = User::with($relations)->where('id', $user_id)->first();
-            $code = 200;
-            $response = ['message' => "Fetched User", 'record' => $record];
-        } else {
-            $code = 401;
-            $response = ['message' => "User Not Authenticated"];
-        }
-        return response()->json($response, $code);
+        // if (User::find($user_id)) {
+        //     $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
+        //     $record = User::with($relations)->where('id', $user_id)->first();
+        //     $code = 200;
+        //     $response = ['message' => "Fetched User", 'record' => $record];
+        // } else {
+        //     $code = 401;
+        //     $response = ['message' => "User Not Authenticated"];
+        // }
+        // return response()->json($response, $code);
+        return response()->json(User::find($user_id), $user_id);
     }
 
     public function propertiesGetAll(Request $request)
