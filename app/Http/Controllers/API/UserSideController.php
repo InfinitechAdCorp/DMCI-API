@@ -73,7 +73,8 @@ class UserSideController extends Controller
     {
         $user_id = $request->header('user-id');
         if (User::find($user_id)) {
-            $records = Listing::with('user')->where('user_id', $user_id)->get();
+            $where = [['user_id', $user_id], ['status', '!=', 'Pending']];
+            $records = Listing::with('user')->where($where)->get();
             $code = 200;
             $response = ['message' => "Fetched Listings", 'records' => $records];
         } else {
@@ -87,8 +88,7 @@ class UserSideController extends Controller
     {
         $user_id = $request->header('user-id');
         if (User::find($user_id)) {
-            $where = [['id', $request->id], ['user_id', $user_id]];
-
+            $where = [['id', $request->id], ['user_id', $user_id], ['status', '!=', 'Pending']];
             $record = Listing::with('user')->where($where)->first();
             if ($record) {
                 $code = 200;
