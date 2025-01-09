@@ -19,7 +19,7 @@ use App\Http\Controllers\API\Admin\CertificateController;
 use App\Http\Controllers\API\Admin\UserController;
 use App\Http\Controllers\API\Admin\ImageController;
 use App\Http\Controllers\API\Admin\TestimonialController;
-use App\Http\Controllers\API\Admin\AgentProfileController;
+use App\Http\Controllers\API\Admin\ProfileController;
 
 use App\Http\Controllers\API\UserSideController;
 
@@ -173,11 +173,12 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::delete('{id}', [TestimonialController::class, 'delete']);
     });
 
-    Route::prefix('agent-profiles')->group(function () {
-        Route::get('', [AgentProfileController::class, 'getAll']);
-        Route::get('{id}', [AgentProfileController::class, 'get']);
-        Route::post('', [AgentProfileController::class, 'add']);
-        Route::delete('{id}', [AgentProfileController::class, 'delete']);
+    Route::prefix('profiles')->group(function () {
+        Route::get('', [ProfileController::class, 'getAll']);
+        Route::get('{id}', [ProfileController::class, 'get']);
+        Route::post('', [ProfileController::class, 'create']);
+        Route::put('', [ProfileController::class, 'update']);
+        Route::delete('{id}', [ProfileController::class, 'delete']);
     });
 
     Route::prefix('users')->group(function () {
@@ -186,8 +187,7 @@ Route::middleware('throttle:150,1')->group(function () {
     });
 
     Route::prefix('user')->group(function() {
-        Route::get('profile', [UserSideController::class, 'profile']);
-
+        Route::get('', [UserSideController::class, 'getUser']);
         Route::post('submit-property', [UserSideController::class, 'submitProperty']);
 
         Route::prefix('properties')->group(function () {

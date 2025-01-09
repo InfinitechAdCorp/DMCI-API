@@ -18,7 +18,7 @@ class UserController extends Controller
         if ($token = $request->bearerToken()) {
             $record =  PersonalAccessToken::findToken($token)->tokenable;
             if ($record) {
-                $relations = ['certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
+                $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
                 if ($record->type == "Admin") {
                     $records = Model::with($relations)->get();
                     $code = 200;
@@ -41,7 +41,7 @@ class UserController extends Controller
 
     public function get($id)
     {
-        $relations = ['certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
+        $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
         $record = Model::with($relations)->where('id', $id)->first();
         if ($record) {
             $code = 200;

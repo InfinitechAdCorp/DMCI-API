@@ -16,10 +16,10 @@ class UserSideController extends Controller
 {
     use Uploadable;
 
-    public function profile(Request $request)
+    public function getUser(Request $request)
     {
         if ($user_id = $request->bearerToken()) {
-            $relations = ['certificates', 'images', 'testimonials'];
+            $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
             $record = User::with($relations)->where('id', $user_id)->first();
             if ($record) {
                 $code = 200;
