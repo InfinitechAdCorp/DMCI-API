@@ -19,22 +19,21 @@ class UserSideController extends Controller
     public function getUser(Request $request)
     {
         $user_id = $request->header('user-id');
-        // if (User::find($user_id)) {
-        //     $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
-        //     $record = User::with($relations)->where('id', $user_id)->first();
-        //     $code = 200;
-        //     $response = ['message' => "Fetched User", 'record' => $record];
-        // } else {
-        //     $code = 401;
-        //     $response = ['message' => "User Not Authenticated"];
-        // }
-        // return response()->json($response, $code);
-        return response()->json(['user' => User::find($user_id), 'user_id' => $user_id]);
+        if (User::find($user_id)) {
+            $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
+            $record = User::with($relations)->where('id', $user_id)->first();
+            $code = 200;
+            $response = ['message' => "Fetched User", 'record' => $record];
+        } else {
+            $code = 401;
+            $response = ['message' => "User Not Authenticated"];
+        }
+        return response()->json($response, $code);
     }
 
     public function propertiesGetAll(Request $request)
     {
-        $user_id = $request->header('user_id');
+        $user_id = $request->header('user-id');
         if (User::find($user_id)) {
             $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
             $records = Property::with($relations)->where('user_id', $user_id)->get();
@@ -49,7 +48,7 @@ class UserSideController extends Controller
 
     public function propertiesGet(Request $request)
     {
-        $user_id = $request->header('user_id');
+        $user_id = $request->header('user-id');
         if (User::find($user_id)) {
             $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
             $where = [['id', $request->id], ['user_id', $user_id]];
@@ -71,7 +70,7 @@ class UserSideController extends Controller
 
     public function articlesGetAll(Request $request)
     {
-        $user_id = $request->header('user_id');
+        $user_id = $request->header('user-id');
         if (User::find($user_id)) {
             $records = Article::all();
             $code = 200;
@@ -85,7 +84,7 @@ class UserSideController extends Controller
 
     public function articlesGet(Request $request)
     {
-        $user_id = $request->header('user_id');
+        $user_id = $request->header('user-id');
         if (User::find($user_id)) {
             $record = Article::find($request->id);
             if ($record) {
@@ -104,7 +103,7 @@ class UserSideController extends Controller
 
     public function careersGetAll(Request $request)
     {
-        $user_id = $request->header('user_id');
+        $user_id = $request->header('user-id');
         if (User::find($user_id)) {
             $records = Career::with('applications')->get();
             $code = 200;
@@ -118,7 +117,7 @@ class UserSideController extends Controller
 
     public function careersGet(Request $request)
     {
-        $user_id = $request->header('user_id');
+        $user_id = $request->header('user-id');
         if (User::find($user_id)) {
             $record = Career::with('applications')->where('id', $request->id)->first();
             if ($record) {
@@ -137,7 +136,7 @@ class UserSideController extends Controller
 
     public function submitProperty(Request $request)
     {
-        $user_id = $request->header('user_id');
+        $user_id = $request->header('user-id');
         if (User::find($user_id)) {
             $validated = $request->validate([
                 'user_id' => 'required|exists:users,id',
