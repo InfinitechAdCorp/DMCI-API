@@ -8,9 +8,9 @@ use App\Traits\Uploadable;
 
 use App\Models\User;
 use App\Models\Property;
+use App\Models\Listing;
 use App\Models\Article;
 use App\Models\Career;
-use App\Models\Listing;
 
 class UserSideController extends Controller
 {
@@ -60,6 +60,41 @@ class UserSideController extends Controller
             } else {
                 $code = 404;
                 $response = ['message' => "Property Not Found"];
+            }
+        } else {
+            $code = 401;
+            $response = ['message' => "User Not Authenticated"];
+        }
+        return response()->json($response, $code);
+    }
+
+    public function listingsGetAll(Request $request)
+    {
+        $user_id = $request->header('user-id');
+        if (User::find($user_id)) {
+            $records = Listing::with('user')->where('user_id', $user_id)->get();
+            $code = 200;
+            $response = ['message' => "Fetched Listings", 'records' => $records];
+        } else {
+            $code = 401;
+            $response = ['message' => "User Not Authenticated"];
+        }
+        return response()->json($response, $code);
+    }
+
+    public function listingsGet(Request $request)
+    {
+        $user_id = $request->header('user-id');
+        if (User::find($user_id)) {
+            $where = [['id', $request->id], ['user_id', $user_id]];
+
+            $record = Listing::with('user')->where($where)->first();
+            if ($record) {
+                $code = 200;
+                $response = ['message' => "Fetched Listing", 'record' => $record];
+            } else {
+                $code = 404;
+                $response = ['message' => "Listing Not Found"];
             }
         } else {
             $code = 401;
