@@ -20,6 +20,7 @@ use App\Http\Controllers\API\Admin\UserController;
 use App\Http\Controllers\API\Admin\ImageController;
 use App\Http\Controllers\API\Admin\TestimonialController;
 use App\Http\Controllers\API\Admin\ProfileController;
+use App\Http\Controllers\API\Admin\SubscriptionController;
 
 use App\Http\Controllers\API\UserSideController;
 
@@ -35,6 +36,11 @@ use App\Http\Controllers\API\UserSideController;
 */
 
 Route::middleware('throttle:150,1')->group(function () {
+    Route::prefix('users')->group(function () {
+        Route::post('', [UserController::class, 'create']);
+        Route::post('/login', [UserController::class, 'login']);
+    });
+
     Route::prefix('users')->group(function () {
         Route::get('', [UserController::class, 'getAll']);
         Route::get('{id}', [UserController::class, 'get']);
@@ -181,9 +187,12 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::delete('{id}', [ProfileController::class, 'delete']);
     });
 
-    Route::prefix('users')->group(function () {
-        Route::post('', [UserController::class, 'create']);
-        Route::post('/login', [UserController::class, 'login']);
+    Route::prefix('subscriptions')->group(function () {
+        Route::get('', [SubscriptionController::class, 'getAll']);
+        Route::get('{id}', [SubscriptionController::class, 'get']);
+        Route::post('', [SubscriptionController::class, 'create']);
+        Route::put('', [SubscriptionController::class, 'update']);
+        Route::delete('{id}', [SubscriptionController::class, 'delete']);
     });
 
     Route::prefix('user')->group(function() {

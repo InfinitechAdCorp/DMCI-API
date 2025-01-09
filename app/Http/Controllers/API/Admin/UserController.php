@@ -81,7 +81,8 @@ class UserController extends Controller
             'password' => 'required|min:8',
         ]);
 
-        $record = Model::where('email', $request->email)->first();
+        $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
+        $record = Model::with($relations)->where('email', $request->email)->first();
 
         if ($record && Hash::check($request->password, $record->password)) {
             $record->tokens()->delete();
