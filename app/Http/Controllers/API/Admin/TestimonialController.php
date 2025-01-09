@@ -14,25 +14,14 @@ class TestimonialController extends Controller
 
     public function getAll(Request $request)
     {
-        if ($token = $request->bearerToken()) {
-            $user =  PersonalAccessToken::findToken($token)->tokenable;
-
-            if ($user) {
-                if ($user->type == "Admin") {
-                    $records = Model::with('user')->get();
-                } else if ($user->type == "Agent") {
-                    $records = Model::with('user')->where('user_id', $user->id)->get();
-                }
-                $code = 200;
-                $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
-            } else {
-                $code = 404;
-                $response = ['message' => "User Not Found"];
-            }
-        } else {
-            $code = 401;
-            $response = ['message' => "User Not Authenticated"];
+        $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
+        if ($user->type == "Admin") {
+            $records = Model::with('user')->get();
+        } else if ($user->type == "Agent") {
+            $records = Model::with('user')->where('user_id', $user->id)->get();
         }
+        $code = 200;
+        $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
     }
 

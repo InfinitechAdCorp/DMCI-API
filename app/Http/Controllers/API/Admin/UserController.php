@@ -16,20 +16,15 @@ class UserController extends Controller
     public function getAll(Request $request)
     {
         $record =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
-        if ($record) {
-            $relations = ['profile', 'certificates', 'images', 'testimonials', 'subscribers', 'properties', 'appointments', 'listings'];
-            if ($record->type == "Admin") {
-                $records = Model::with($relations)->get();
-                $code = 200;
-                $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
-            } else if ($record->type == "Agent") {
-                $record = Model::with($relations)->where('id', $record->id)->first();
-                $code = 200;
-                $response = ['message' => "Fetched $this->model", 'record' => $record];
-            }
-        } else {
-            $code = 404;
-            $response = ['message' => "$this->model Not Found"];
+        $relations = ['profile', 'certificates', 'images', 'testimonials', 'subscribers', 'properties', 'appointments', 'listings'];
+        if ($record->type == "Admin") {
+            $records = Model::with($relations)->get();
+            $code = 200;
+            $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
+        } else if ($record->type == "Agent") {
+            $record = Model::with($relations)->where('id', $record->id)->first();
+            $code = 200;
+            $response = ['message' => "Fetched $this->model", 'record' => $record];
         }
         return response()->json($response, $code);
     }
@@ -89,17 +84,18 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:8',
         ]);
 
         $relations = ['profile', 'certificates', 'images', 'testimonials', 'subscribers', 'properties', 'appointments', 'listings'];
-        $record = Model::with($relations)->where('email', $request->email)->first();
+        $record = Model::with($relations)->where('email', $validated['email'])->first();
+        $validPassword = Hash::check($validated['password'], $record->password);
 
-        if ($record && Hash::check($request->password, $record->password)) {
+        if ($record && $validPassword) {
             $record->tokens()->delete();
-            $token = $record->createToken($record->name . '-AuthToken')->plainTextToken;
+            $token = $record->createToken("$record->name-AuthToken")->plainTextToken;
             $code = 200;
             $response = [
                 'message' => 'Login Successful',

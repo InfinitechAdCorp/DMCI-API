@@ -18,26 +18,15 @@ class ProfileController extends Controller
 
     public function getAll(Request $request)
     {
-        if ($token = $request->bearerToken()) {
-            $user =  PersonalAccessToken::findToken($token)->tokenable;
-
-            if ($user) {
-                if ($user->type == "Admin") {
-                    $records = Model::with('user')->get();
-                    $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
-                } else if ($user->type == "Agent") {
-                    $record = Model::with('user')->where('user_id', $user->id)->first();
-                    $response = ['message' => "Fetched $this->model", 'record' => $record];
-                }
-                $code = 200;
-            } else {
-                $code = 404;
-                $response = ['message' => "User Not Found"];
-            }
-        } else {
-            $code = 401;
-            $response = ['message' => "User Not Authenticated"];
+        $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
+        if ($user->type == "Admin") {
+            $records = Model::with('user')->get();
+            $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
+        } else if ($user->type == "Agent") {
+            $record = Model::with('user')->where('user_id', $user->id)->first();
+            $response = ['message' => "Fetched $this->model", 'record' => $record];
         }
+        $code = 200;
         return response()->json($response, $code);
     }
 
@@ -103,7 +92,7 @@ class ProfileController extends Controller
 
         $key = 'image';
         if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("profiles/$record->image");
+            Storage::disk('s3')->delete("profiles/$record[$key]");
             $validated[$key] = $this->upload($request->file($key), "profiles");
         }
 
