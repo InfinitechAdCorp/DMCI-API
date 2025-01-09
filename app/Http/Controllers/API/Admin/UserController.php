@@ -15,26 +15,21 @@ class UserController extends Controller
 
     public function getAll(Request $request)
     {
-        if ($token = $request->bearerToken()) {
-            $record =  PersonalAccessToken::findToken($token)->tokenable;
-            if ($record) {
-                $relations = ['profile', 'certificates', 'images', 'testimonials', 'subscribers', 'properties', 'appointments', 'listings'];
-                if ($record->type == "Admin") {
-                    $records = Model::with($relations)->get();
-                    $code = 200;
-                    $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
-                } else if ($record->type == "Agent") {
-                    $record = Model::with($relations)->where('id', $record->id)->first();
-                    $code = 200;
-                    $response = ['message' => "Fetched $this->model", 'record' => $record];
-                }
-            } else {
-                $code = 404;
-                $response = ['message' => "$this->model Not Found"];
+        $record =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
+        if ($record) {
+            $relations = ['profile', 'certificates', 'images', 'testimonials', 'subscribers', 'properties', 'appointments', 'listings'];
+            if ($record->type == "Admin") {
+                $records = Model::with($relations)->get();
+                $code = 200;
+                $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
+            } else if ($record->type == "Agent") {
+                $record = Model::with($relations)->where('id', $record->id)->first();
+                $code = 200;
+                $response = ['message' => "Fetched $this->model", 'record' => $record];
             }
         } else {
-            $code = 401;
-            $response = ['message' => "$this->model Not Authenticated"];
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
         }
         return response()->json($response, $code);
     }
@@ -69,6 +64,24 @@ class UserController extends Controller
         $code = 201;
         $response = [
             'message' => "Created $this->model",
+            'record' => $record,
+        ];
+        return response()->json($response, $code);
+    }
+
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:users,id',
+            'name' => 'required',
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $record = Model::find($validated['id']);
+        $record->update($validated);
+        $code = 200;
+        $response = [
+            'message' => "Updated $this->model",
             'record' => $record,
         ];
         return response()->json($response, $code);
