@@ -15,6 +15,7 @@ use App\Models\Appointment;
 use App\Models\Application;
 use App\Models\Subscriber;
 use App\Models\Inquiry;
+use App\Models\Testimonial;
 
 class UserSideController extends Controller
 {
@@ -249,6 +250,26 @@ class UserSideController extends Controller
         $code = 201;
         $response = [
             'message' => "Submitted Inquiry",
+            'record' => $record,
+        ];
+        return response()->json($response, $code);
+    }
+
+    public function submitTestimonial(Request $request)
+    {
+        $user_id = $request->header('user-id');
+        
+        $validated = $request->validate([
+            'name' => 'required',
+            'message' => 'required',
+        ]);
+
+        $validated['user_id'] = $user_id;
+
+        $record = Testimonial::create($validated);
+        $code = 201;
+        $response = [
+            'message' => "Submitted Testimonial",
             'record' => $record,
         ];
         return response()->json($response, $code);

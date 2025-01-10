@@ -46,7 +46,7 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required',
+            'name' => 'required|unique:users,name',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
             'type' => 'required'
@@ -69,7 +69,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'id' => 'required|exists:users,id',
             'name' => 'required',
-            'email' => 'required|email|exists:users,email',
+            'email' => 'required|email',
         ]);
 
         $record = Model::find($validated['id']);
@@ -113,12 +113,11 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
-        $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
-        $token = $user;
-        // $request->user()->currentAccessToken()->delete();
-        // $code = 200;
-        // $response = ['message' => 'Logged Out Successfully'];
-        return response()->json($token);
+        $record =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
+        PersonalAccessToken::where('tokenable_id', $record->id)->delete();
+        $code = 200;
+        $response = ['message' => 'Logged Out Successfully'];
+        return response()->json($response, $code);
     }
 
     public function getAdminEmails()
