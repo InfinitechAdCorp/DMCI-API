@@ -25,11 +25,38 @@ class UserSideController extends Controller
     public function getUser(Request $request)
     {
         $user_id = $request->header('user-id');
+        $analyzer = new Analyzer();
+
         $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
-        $record = User::with($relations)->where('id', $user_id)->first();
+        $record = User::with($relations)
+            ->where('id', $user_id)
+            ->whereHas('testimonials', function ($testimonial) use ($analyzer) {
+                $sentiment = $analyzer->getSentiment($testimonial->message);
+                if ($sentiment['compound'] > 0.5) {
+                    return $testimonial;
+                }
+            })
+            ->first();
+
         $code = 200;
         $response = ['message' => "Fetched User", 'record' => $record];
         return response()->json($response, $code);
+    }
+
+    public function test(Request $request)
+    {
+        $user_id = $request->header('user-id');
+        $records = [];
+        $analyzer = new Analyzer();
+
+        $where = [['user_id', $user_id]];
+        $testimonials = Testimonial::with('user')->where($where)->get();
+        foreach ($testimonials as $testimonial) {
+            $sentiment = $analyzer->getSentiment($testimonial->message);
+            if ($sentiment['compound'] > 0.5) {
+                array_push($records, $testimonial);
+            }
+        }
     }
 
     public function propertiesGetAll(Request $request)
@@ -161,7 +188,8 @@ class UserSideController extends Controller
         return response()->json($response, $code);
     }
 
-    public function filterProperties(Request $request) {
+    public function filterProperties(Request $request)
+    {
         $user_id = $request->header('user-id');
 
         $where = [['user_id', $user_id]];
@@ -186,8 +214,8 @@ class UserSideController extends Controller
 
         $unit_type = $request->query('unit_type');
         if ($unit_type) {
-            $records->whereHas('units', function($result) use ($unit_type) {
-                 $result->where('type', $unit_type);
+            $records->whereHas('units', function ($result) use ($unit_type) {
+                $result->where('type', $unit_type);
             });
         }
 
@@ -285,7 +313,7 @@ class UserSideController extends Controller
     public function subscribe(Request $request)
     {
         $user_id = $request->header('user-id');
-        
+
         $validated = $request->validate([
             'email' => 'required|email',
         ]);
