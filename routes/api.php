@@ -212,13 +212,13 @@ Route::middleware('throttle:150,1')->group(function () {
     Route::prefix('user')->middleware('auth.user')->group(function () {
         Route::get('', [UserSideController::class, 'getUser']);
 
+        Route::get('filter-properties', [UserSideController::class, 'filterProperties']);
         Route::post('submit-property', [UserSideController::class, 'submitProperty']);
         Route::post('request-viewing', [UserSideController::class, 'requestViewing']);
         Route::post('submit-application', [UserSideController::class, 'submitApplication']);
         Route::post('subscribe', [UserSideController::class, 'subscribe']);
         Route::post('submit-inquiry', [UserSideController::class, 'submitInquiry']);
         Route::post('submit-testimonial', [UserSideController::class, 'submitTestimonial']);
-        Route::get('filter-properties', [UserSideController::class, 'filterProperties']);
 
         Route::prefix('properties')->group(function () {
             Route::get('', [UserSideController::class, 'propertiesGetAll']);
