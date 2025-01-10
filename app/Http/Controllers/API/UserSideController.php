@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
+use Sentiment\Analyzer;
 
 use App\Models\User;
 use App\Models\Property;
@@ -121,6 +122,41 @@ class UserSideController extends Controller
         } else {
             $code = 404;
             $response = ['message' => "Career Not Found"];
+        }
+        return response()->json($response, $code);
+    }
+
+    public function testimonialsGetAll(Request $request)
+    {
+        $user_id = $request->header('user-id');
+        $records = [];
+        $analyzer = new Analyzer();
+
+        $where = [['user_id', $user_id]];
+        $testimonials = Testimonial::with('user')->where($where)->get();
+        foreach ($testimonials as $testimonial) {
+            $sentiment = $analyzer->getSentiment($testimonial->message);
+            if ($sentiment['compound'] > 0.5) {
+                array_push($records, $testimonial);
+            }
+        }
+
+        $code = 200;
+        $response = ['message' => "Fetched Testimonials", 'records' => $records];
+        return response()->json($response, $code);
+    }
+
+    public function testimonialsGet(Request $request)
+    {
+        $user_id = $request->header('user-id');
+        $where = [['id', $request->id], ['user_id', $user_id]];
+        $record = Testimonial::with('user')->where($where)->first();
+        if ($record) {
+            $code = 200;
+            $response = ['message' => "Fetched Testimonial", 'record' => $record];
+        } else {
+            $code = 404;
+            $response = ['message' => "Testimonial Not Found"];
         }
         return response()->json($response, $code);
     }
@@ -258,7 +294,7 @@ class UserSideController extends Controller
     public function submitTestimonial(Request $request)
     {
         $user_id = $request->header('user-id');
-        
+
         $validated = $request->validate([
             'name' => 'required',
             'message' => 'required',
