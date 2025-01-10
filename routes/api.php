@@ -239,10 +239,5 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::get('', [UserSideController::class, 'careersGetAll']);
             Route::get('{id}', [UserSideController::class, 'careersGet']);
         });
-
-        Route::prefix('testimonials')->group(function () {
-            Route::get('', [UserSideController::class, 'testimonialsGetAll']);
-            Route::get('{id}', [UserSideController::class, 'testimonialsGet']);
-        });
     });
 });
