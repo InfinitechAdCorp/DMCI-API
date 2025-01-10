@@ -52,6 +52,7 @@ class InquiryController extends Controller
             'property_name' => 'required',
             'property_location' => 'required',
             'unit_type' => 'required',
+            'message' => 'required',
         ]);
 
         $record = Model::create($validated);
@@ -75,6 +76,7 @@ class InquiryController extends Controller
             'property_name' => 'required',
             'property_location' => 'required',
             'unit_type' => 'required',
+            'message' => 'required',
         ]);
 
         $record = Model::find($validated['id']);

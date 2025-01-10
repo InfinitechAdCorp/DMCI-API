@@ -14,6 +14,7 @@ use App\Models\Career;
 use App\Models\Appointment;
 use App\Models\Application;
 use App\Models\Subscriber;
+use App\Models\Inquiry;
 
 class UserSideController extends Controller
 {
@@ -222,6 +223,32 @@ class UserSideController extends Controller
         $code = 201;
         $response = [
             'message' => "Subscribed To Newsletter",
+            'record' => $record,
+        ];
+        return response()->json($response, $code);
+    }
+
+    public function submitInquiry(Request $request)
+    {
+        $user_id = $request->header('user-id');
+
+        $validated = $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email',
+            'phone' => 'required',
+            'property_name' => 'required',
+            'property_location' => 'required',
+            'unit_type' => 'required',
+            'message' => 'required',
+        ]);
+
+        $validated['user_id'] = $user_id;
+
+        $record = Inquiry::create($validated);
+        $code = 201;
+        $response = [
+            'message' => "Submitted Inquiry",
             'record' => $record,
         ];
         return response()->json($response, $code);
