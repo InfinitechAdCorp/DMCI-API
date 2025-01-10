@@ -182,7 +182,6 @@ class UserSideController extends Controller
         }
 
         $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
-        
         $records = Property::with($relations)->where($where);
 
         $unit_type = $request->query('unit_type');
