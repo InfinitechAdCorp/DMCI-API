@@ -120,4 +120,16 @@ class UserController extends Controller
         // $response = ['message' => 'Logged Out Successfully'];
         return response()->json($token);
     }
+
+    public function getAdminEmails()
+    {
+        $records = Model::select('email')->where('type', 'Admin')->get();
+        $emails = [];
+        foreach ($records as $record) {
+            array_push($emails, $record->email);
+        }
+        $code = 200;
+        $response = ['message' => "Fetched $this->model" . "s", 'records' => $emails];
+        return response()->json($response, $code);
+    }
 }

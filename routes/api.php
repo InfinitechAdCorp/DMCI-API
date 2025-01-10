@@ -47,6 +47,8 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::get('{id}', [UserController::class, 'get']);
             Route::put('', [UserController::class, 'update']);
             Route::post('/logout', [UserController::class, 'logout']);
+
+            Route::post('/admin-emails', [UserController::class, 'getAdminEmails']);
         });
     
         Route::prefix('properties')->group(function () {
