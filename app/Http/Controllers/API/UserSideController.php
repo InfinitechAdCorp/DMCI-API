@@ -26,37 +26,24 @@ class UserSideController extends Controller
     {
         $user_id = $request->header('user-id');
         $analyzer = new Analyzer();
+        $testimonials = [];
 
         $relations = ['profile', 'certificates', 'images', 'testimonials', 'properties', 'appointments', 'listings'];
-        $record = User::with($relations)
-            ->where('id', $user_id)
-            ->whereHas('testimonials', function ($testimonial) use ($analyzer) {
-                $sentiment = $analyzer->getSentiment($testimonial->message);
-                if ($sentiment['compound'] > 0.5) {
-                    return $testimonial;
-                }
-            })
-            ->first();
+        $record = User::with($relations)->where('id', $user_id)->first();
+
+        // foreach ($record['testimonials'] as $testimonial) {
+        //     $sentiment = $analyzer->getSentiment($testimonial->message);
+        //     return response()->json([$sentiment]);
+        //     if ($sentiment['compound'] > 0.5) {
+        //         array_push($testimonials, $testimonial);
+        //     }
+        // }
+
+        // $record['testimonials'] = $testimonials;
 
         $code = 200;
-        $response = ['message' => "Fetched User", 'record' => $record];
+        $response = ['message' => "Fetched User", 'record' => $record, 'testimonials' => $record['testimonials']];
         return response()->json($response, $code);
-    }
-
-    public function test(Request $request)
-    {
-        $user_id = $request->header('user-id');
-        $records = [];
-        $analyzer = new Analyzer();
-
-        $where = [['user_id', $user_id]];
-        $testimonials = Testimonial::with('user')->where($where)->get();
-        foreach ($testimonials as $testimonial) {
-            $sentiment = $analyzer->getSentiment($testimonial->message);
-            if ($sentiment['compound'] > 0.5) {
-                array_push($records, $testimonial);
-            }
-        }
     }
 
     public function propertiesGetAll(Request $request)
