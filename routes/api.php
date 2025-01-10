@@ -218,6 +218,7 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::post('subscribe', [UserSideController::class, 'subscribe']);
         Route::post('submit-inquiry', [UserSideController::class, 'submitInquiry']);
         Route::post('submit-testimonial', [UserSideController::class, 'submitTestimonial']);
+        Route::get('filter-properties', [UserSideController::class, 'filterProperties']);
 
         Route::prefix('properties')->group(function () {
             Route::get('', [UserSideController::class, 'propertiesGetAll']);
