@@ -123,11 +123,7 @@ class UserController extends Controller
 
     public function getAdminEmails()
     {
-        $users = Model::select('email')->where('type', 'Admin')->get();
-        $records = [];
-        foreach ($users as $user) {
-            array_push($records, $user->email);
-        }
+        $records = Model::select('email')->where('type', 'Admin')->pluck('email');
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);

@@ -21,6 +21,7 @@ use App\Http\Controllers\API\Admin\ImageController;
 use App\Http\Controllers\API\Admin\TestimonialController;
 use App\Http\Controllers\API\Admin\ProfileController;
 use App\Http\Controllers\API\Admin\SubscriberController;
+use App\Http\Controllers\API\Admin\InquiryController;
 
 use App\Http\Controllers\API\UserSideController;
 
@@ -57,6 +58,14 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::post('', [PropertyController::class, 'create']);
             Route::put('', [PropertyController::class, 'update']);
             Route::delete('{id}', [PropertyController::class, 'delete']);
+        });
+
+        Route::prefix('inquiries')->group(function () {
+            Route::get('', [InquiryController::class, 'getAll']);
+            Route::get('{id}', [InquiryController::class, 'get']);
+            Route::post('', [InquiryController::class, 'create']);
+            Route::put('', [InquiryController::class, 'update']);
+            Route::delete('{id}', [InquiryController::class, 'delete']);
         });
     
         Route::prefix('questions')->group(function () {
