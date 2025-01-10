@@ -166,6 +166,7 @@ class UserSideController extends Controller
 
         $unit_type = $request->query('unit_type');
         if ($unit_type) {
+            $unit_type = str_replace("+", " ", $unit_type);
             $records->whereHas('units', function ($result) use ($unit_type) {
                 $result->where('type', $unit_type);
             });
