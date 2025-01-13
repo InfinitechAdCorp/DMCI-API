@@ -9,7 +9,7 @@ use App\Models\Property;
 use App\Models\Listing;
 use App\Models\Inquiry;
 use App\Models\Appointment;
-
+use App\Models\Application;
 
 class DashboardController extends Controller
 {
@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $listings = Listing::get()->count();
         $inquiries = Inquiry::get()->count();
         $viewings = Appointment::get()->count();
-        $propertyInquiries = 0;
+        $applications = Application::get()->count();
 
         $records = [
             'properties' => $properties,
@@ -32,7 +32,7 @@ class DashboardController extends Controller
             'listings' => $listings,
             'inquiries' => $inquiries,
             'viewings' => $viewings,
-            'propertyInquiries' => $propertyInquiries,
+            'applications' => $applications,
         ];
         $code = 200;
         $response = ['message' => "Fetched Counts", 'records' => $records];
