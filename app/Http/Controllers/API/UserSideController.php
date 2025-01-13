@@ -28,7 +28,7 @@ class UserSideController extends Controller
         $analyzer = new Analyzer();
         $testimonials = [];
 
-        $relations = ['profile', 'certificates', 'images', 'testimonials', 'videos', 'properties', 'appointments', 'listings'];
+        $relations = ['profile', 'certificates', 'images', 'testimonials', 'contracts', 'videos', 'properties', 'appointments', 'listings'];
         $record = User::with($relations)->where('id', $user_id)->first();
 
         foreach ($record['testimonials'] as $testimonial) {

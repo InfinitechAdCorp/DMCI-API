@@ -24,6 +24,7 @@ use App\Http\Controllers\API\Admin\ProfileController;
 use App\Http\Controllers\API\Admin\SubscriberController;
 use App\Http\Controllers\API\Admin\InquiryController;
 use App\Http\Controllers\API\Admin\VideoController;
+use App\Http\Controllers\API\Admin\ContractController;
 
 use App\Http\Controllers\API\UserSideController;
 
@@ -220,6 +221,14 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::post('', [VideoController::class, 'create']);
             Route::put('', [VideoController::class, 'update']);
             Route::delete('{id}', [VideoController::class, 'delete']);
+        });   
+
+        Route::prefix('contracts')->group(function () {
+            Route::get('', [ContractController::class, 'getAll']);
+            Route::get('{id}', [ContractController::class, 'get']);
+            Route::post('', [ContractController::class, 'create']);
+            Route::put('', [ContractController::class, 'update']);
+            Route::delete('{id}', [ContractController::class, 'delete']);
         });   
     });
 
