@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\API\Admin\PropertyController;
 use App\Http\Controllers\API\Admin\QuestionController;
 use App\Http\Controllers\API\Admin\ArticleController;
@@ -43,6 +44,10 @@ Route::middleware('throttle:150,1')->group(function () {
     });
 
     // Route::middleware('auth.admin')->group(function () {
+        Route::prefix('dashboard')->group(function () {
+            Route::get('/get-counts', [DashboardController::class, 'getCounts']);
+        });
+
         Route::prefix('users')->group(function () {
             Route::get('', [UserController::class, 'getAll']);
             Route::get('{id}', [UserController::class, 'get']);
