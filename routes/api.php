@@ -23,6 +23,7 @@ use App\Http\Controllers\API\Admin\TestimonialController;
 use App\Http\Controllers\API\Admin\ProfileController;
 use App\Http\Controllers\API\Admin\SubscriberController;
 use App\Http\Controllers\API\Admin\InquiryController;
+use App\Http\Controllers\API\Admin\VideoController;
 
 use App\Http\Controllers\API\UserSideController;
 
@@ -211,7 +212,15 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::post('', [SubscriberController::class, 'create']);
             Route::put('', [SubscriberController::class, 'update']);
             Route::delete('{id}', [SubscriberController::class, 'delete']);
-        });    
+        });   
+        
+        Route::prefix('videos')->group(function () {
+            Route::get('', [VideoController::class, 'getAll']);
+            Route::get('{id}', [VideoController::class, 'get']);
+            Route::post('', [VideoController::class, 'create']);
+            Route::put('', [VideoController::class, 'update']);
+            Route::delete('{id}', [VideoController::class, 'delete']);
+        });   
     });
 
     Route::prefix('user')->middleware('auth.user')->group(function () {

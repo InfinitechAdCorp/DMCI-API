@@ -17,7 +17,7 @@ class UserController extends Controller
     public function getAll(Request $request)
     {
         $record =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
-        $relations = ['profile', 'certificates', 'images', 'testimonials', 'subscribers', 'properties', 'appointments', 'listings'];
+        $relations = ['profile', 'certificates', 'images', 'testimonials', 'videos', 'subscribers', 'properties', 'appointments', 'listings'];
         if ($record->type == "Admin") {
             $records = Model::with($relations)->orderBy('updated_at', 'desc')->get();
             $code = 200;
@@ -32,7 +32,7 @@ class UserController extends Controller
 
     public function get($id)
     {
-        $relations = ['profile', 'certificates', 'images', 'testimonials', 'subscribers', 'properties', 'appointments', 'listings'];
+        $relations = ['profile', 'certificates', 'images', 'testimonials', 'videos', 'subscribers', 'properties', 'appointments', 'listings'];
         $record = Model::with($relations)->where('id', $id)->first();
         if ($record) {
             $code = 200;
