@@ -203,8 +203,6 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::post('', [ProfileController::class, 'create']);
             Route::put('', [ProfileController::class, 'update']);
             Route::delete('{id}', [ProfileController::class, 'delete']);
-
-            Route::post('update-create', [ProfileController::class, 'updateOrCreate']);
         });
     
         Route::prefix('subscribers')->group(function () {
