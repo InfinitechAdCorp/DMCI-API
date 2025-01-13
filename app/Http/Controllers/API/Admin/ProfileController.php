@@ -77,14 +77,14 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'id' => 'required|exists:profiles,id',
             'user_id' => 'required|exists:users,id',
-            'position' => 'required',
-            'phone' => 'required',
+            'position' => 'nullable',
+            'phone' => 'nullable',
             'facebook' => 'nullable',
             'instagram' => 'nullable',
             'telegram' => 'nullable',
             'viber' => 'nullable',
             'whatsapp' => 'nullable',
-            'about' => 'required',
+            'about' => 'nullable',
             'image' => 'nullable',
         ]);
 
