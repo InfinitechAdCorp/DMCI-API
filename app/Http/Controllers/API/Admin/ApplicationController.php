@@ -17,7 +17,7 @@ class ApplicationController extends Controller
 
     public function getAll()
     {
-        $records = Model::with('career')->get();
+        $records = Model::with('career')->orderBy('updated_at', 'desc')->get();
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);

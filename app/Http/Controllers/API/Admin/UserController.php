@@ -19,7 +19,7 @@ class UserController extends Controller
         $record =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
         $relations = ['profile', 'certificates', 'images', 'testimonials', 'subscribers', 'properties', 'appointments', 'listings'];
         if ($record->type == "Admin") {
-            $records = Model::with($relations)->get();
+            $records = Model::with($relations)->orderBy('updated_at', 'desc')->get();
             $code = 200;
             $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         } else if ($record->type == "Agent") {

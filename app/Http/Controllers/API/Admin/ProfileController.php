@@ -20,7 +20,7 @@ class ProfileController extends Controller
     {
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
         if ($user->type == "Admin") {
-            $records = Model::with('user')->get();
+            $records = Model::with('user')->orderBy('updated_at', 'desc')->get();
             $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         } else if ($user->type == "Agent") {
             $record = Model::with('user')->where('user_id', $user->id)->first();

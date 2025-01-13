@@ -16,9 +16,9 @@ class TestimonialController extends Controller
     {
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
         if ($user->type == "Admin") {
-            $records = Model::with('user')->get();
+            $records = Model::with('user')->orderBy('updated_at', 'desc')->get();
         } else if ($user->type == "Agent") {
-            $records = Model::with('user')->where('user_id', $user->id)->get();
+            $records = Model::with('user')->where('user_id', $user->id)->orderBy('updated_at', 'desc')->get();
         }
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];

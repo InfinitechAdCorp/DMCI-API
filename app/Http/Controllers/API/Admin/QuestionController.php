@@ -13,7 +13,7 @@ class QuestionController extends Controller
 
     public function getAll()
     {
-        $records = Model::all();
+        $records = Model::orderBy('updated_at', 'desc')->get();
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);

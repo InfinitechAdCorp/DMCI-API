@@ -17,7 +17,7 @@ class CareerController extends Controller
 
     public function getAll()
     {
-        $records = Model::with('applications')->get();
+        $records = Model::with('applications')->orderBy('updated_at', 'desc')->get();
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
