@@ -40,21 +40,21 @@ use App\Http\Controllers\API\UserSideController;
 Route::middleware('throttle:150,1')->group(function () {
     Route::prefix('users')->group(function () {
         Route::post('', [UserController::class, 'create']);
-        Route::post('/login', [UserController::class, 'login']);
+        Route::post('login', [UserController::class, 'login']);
     });
 
     Route::middleware('auth.admin')->group(function () {
         Route::prefix('dashboard')->group(function () {
-            Route::get('/get-counts', [DashboardController::class, 'getCounts']);
+            Route::get('get-counts', [DashboardController::class, 'getCounts']);
         });
 
         Route::prefix('users')->group(function () {
             Route::get('', [UserController::class, 'getAll']);
             Route::get('{id}', [UserController::class, 'get']);
             Route::put('', [UserController::class, 'update']);
-            Route::post('/logout', [UserController::class, 'logout']);
+            Route::post('logout', [UserController::class, 'logout']);
 
-            Route::post('/admin-emails', [UserController::class, 'getAdminEmails']);
+            Route::post('admin-emails', [UserController::class, 'getAdminEmails']);
         });
     
         Route::prefix('properties')->group(function () {
@@ -160,7 +160,7 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::put('', [AppointmentController::class, 'update']);
             Route::delete('{id}', [AppointmentController::class, 'delete']);
     
-            Route::post('/change-status', [AppointmentController::class, 'changeStatus']);
+            Route::post('change-status', [AppointmentController::class, 'changeStatus']);
         });
     
         Route::prefix('listings')->group(function () {
@@ -170,7 +170,7 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::put('', [ListingController::class, 'update']);
             Route::delete('{id}', [ListingController::class, 'delete']);
     
-            Route::post('/change-status', [ListingController::class, 'changeStatus']);
+            Route::post('change-status', [ListingController::class, 'changeStatus']);
         });
     
         Route::prefix('certificates')->group(function () {
@@ -203,6 +203,8 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::post('', [ProfileController::class, 'create']);
             Route::put('', [ProfileController::class, 'update']);
             Route::delete('{id}', [ProfileController::class, 'delete']);
+
+            Route::post('update-create', [ProfileController::class, 'updateOrCreate']);
         });
     
         Route::prefix('subscribers')->group(function () {

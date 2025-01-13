@@ -118,4 +118,29 @@ class ProfileController extends Controller
         }
         return response()->json($response, $code);
     }
+
+    public function updateOrCreate(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'nullable',
+            'user_id' => 'required|exists:users,id',
+            'position' => 'required',
+            'phone' => 'required',
+            'facebook' => 'nullable|url',
+            'instagram' => 'nullable|url',
+            'telegram' => 'nullable',
+            'viber' => 'nullable',
+            'whatsapp' => 'nullable',
+            'about' => 'required',
+            'image' => 'nullable',
+        ]);
+
+        $record = Model::updateOrCreate(['id' => $validated['id']], $validated);
+        $code = 200;
+        $response = [
+            'message' => "Updated $this->model",
+            'record' => $record,
+        ];
+        return response()->json($response, $code);
+    }
 }
