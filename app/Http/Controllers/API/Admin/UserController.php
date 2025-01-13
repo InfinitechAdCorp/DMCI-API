@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 
 use App\Models\User as Model;
+use App\Models\Profile;
 
 class UserController extends Controller
 {
@@ -56,6 +57,8 @@ class UserController extends Controller
         $validated[$key] = Hash::make($validated[$key]);
 
         $record = Model::create($validated);
+        Profile::create(['user_id' => $record->id]);
+
         $code = 201;
         $response = [
             'message' => "Created $this->model",
