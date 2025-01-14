@@ -260,14 +260,14 @@ class UserSideController extends Controller
         $availableSlots = $parent->slots - count($parent['applications']);
 
         if ($availableSlots <= 0) {
-            $code = 204;
+            $code = 200;
             $response = ['message' => "Out Of Slots"];
         } else {
             $key = 'resume';
             if ($request->hasFile($key)) {
                 $validated[$key] = $this->upload($request->file($key), "careers/applications");
             }
-            
+
             $record = Application::create($validated);
             $code = 201;
             $response = ['message' => "Submitted Application", 'record' => $record];

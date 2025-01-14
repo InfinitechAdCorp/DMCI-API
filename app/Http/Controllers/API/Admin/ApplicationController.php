@@ -52,7 +52,7 @@ class ApplicationController extends Controller
         $availableSlots = $parent->slots - count($parent['applications']);
 
         if ($availableSlots <= 0) {
-            $code = 204;
+            $code = 200;
             $response = ['message' => "Out Of Slots"];
         } else {
             $key = 'resume';
@@ -84,7 +84,7 @@ class ApplicationController extends Controller
         $availableSlots = $parent->slots - count($parent['applications']);
 
         if ($availableSlots <= 0) {
-            $code = 204;
+            $code = 200;
             $response = ['message' => "Out Of Slots"];
         } else {
             $record = Model::find($validated['id']);
