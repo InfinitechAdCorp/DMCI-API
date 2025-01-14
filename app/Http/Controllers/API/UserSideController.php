@@ -147,7 +147,7 @@ class UserSideController extends Controller
     public function featuredProperty(Request $request) {
         $user_id = $request->header('user-id');
         $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
-        $where = [['id', $request->id], ['user_id', $user_id], ['featured', true]];
+        $where = [['user_id', $user_id], ['featured', true]];
 
         $record = Property::with($relations)->where($where)->first();
         if ($record) {
