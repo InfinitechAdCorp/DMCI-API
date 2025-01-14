@@ -48,7 +48,7 @@ class ApplicationController extends Controller
             'resume' => 'required',
         ]);
 
-        $parent = Parent::with('applications')->where('id', $validated['career_id'])->first();
+        $parent = Career::with('applications')->where('id', $validated['career_id'])->first();
         $availableSlots = $parent->slots - count($parent['applications']);
 
         if ($availableSlots <= 0) {
