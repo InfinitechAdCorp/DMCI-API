@@ -122,6 +122,9 @@ class UserSideController extends Controller
     public function careersGetAll()
     {
         $records = Career::with('applications')->get();
+        foreach ($records as $record) {
+            $record['available_slots'] = $record->slots - count($record['applications']);
+        }
         $code = 200;
         $response = ['message' => "Fetched Careers", 'records' => $records];
         return response()->json($response, $code);
@@ -130,6 +133,7 @@ class UserSideController extends Controller
     public function careersGet(Request $request)
     {
         $record = Career::with('applications')->where('id', $request->id)->first();
+        $record['available_slots'] = $record->slots - count($record['applications']);
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched Career", 'record' => $record];

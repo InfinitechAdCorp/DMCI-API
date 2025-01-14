@@ -18,6 +18,9 @@ class CareerController extends Controller
     public function getAll()
     {
         $records = Model::with('applications')->orderBy('updated_at', 'desc')->get();
+        foreach ($records as $record) {
+            $record['available_slots'] = $record->slots - count($record['applications']);
+        }
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
@@ -26,6 +29,7 @@ class CareerController extends Controller
     public function get($id)
     {
         $record = Model::with('applications')->where('id', $id)->first();
+        $record['available_slots'] = $record->slots - count($record['applications']);
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
@@ -41,10 +45,7 @@ class CareerController extends Controller
     {
         $validated = $request->validate([
             'position' => 'required',
-            'referrer' => 'required',
-            'sub_agent' => 'required',
-            'broker' => 'required',
-            'partner' => 'required',
+            'slots' => 'required|numeric|integer',
             'image' => 'required',
         ]);
 
@@ -64,10 +65,7 @@ class CareerController extends Controller
         $validated = $request->validate([
             'id' => 'required|exists:careers,id',
             'position' => 'required',
-            'referrer' => 'required',
-            'sub_agent' => 'required',
-            'broker' => 'required',
-            'partner' => 'required',
+            'slots' => 'required|numeric|integer',
             'image' => 'nullable',
         ]);
 

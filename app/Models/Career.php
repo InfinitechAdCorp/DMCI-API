@@ -16,10 +16,7 @@ class Career extends Model
 
     protected $fillable = [
         'position',
-        'referrer',
-        'sub_agent',
-        'broker',
-        'partner',
+        'slots',
         'image',
     ];
 
