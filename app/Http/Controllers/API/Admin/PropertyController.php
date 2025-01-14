@@ -21,9 +21,9 @@ class PropertyController extends Controller
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
         $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
         if ($user->type == "Admin") {
-            $records = Model::with($relations)->orderBy('updated_at', 'desc')->get();
+            $records = Model::with($relations)->orderBy('status')->get();
         } else if ($user->type == "Agent") {
-            $records = Model::with($relations)->where('user_id', $user->id)->orderBy('updated_at', 'desc')->get();
+            $records = Model::with($relations)->where('user_id', $user->id)->orderBy('status')->get();
         }
         $code = 200;
         $response = ['message' => "Fetched Properties", 'records' => $records];
