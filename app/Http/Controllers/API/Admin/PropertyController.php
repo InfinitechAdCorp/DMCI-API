@@ -158,7 +158,6 @@ class PropertyController extends Controller
     {
         $validated = $request->validate([
             'id' => 'required|exists:properties,id',
-            'featured' => 'required|boolean',
         ]);
 
         $record = Model::find($validated['id']);
