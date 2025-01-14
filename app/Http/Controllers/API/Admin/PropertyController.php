@@ -158,12 +158,12 @@ class PropertyController extends Controller
     {
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
 
-        Model::where('user_id', $user->id)->update(['featured', false]);
+        Model::where('user_id', $user->id)->update(['featured' => false]);
 
         $record = Model::find($request['id']);
 
         if ($record) {
-            $record->update(['featured', true]);
+            $record->update(['featured' => true]);
             $code = 200;
             $response = ['message' => "Set $this->model as Featured", 'record' => $record];
         }
