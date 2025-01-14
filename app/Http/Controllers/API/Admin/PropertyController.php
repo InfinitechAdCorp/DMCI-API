@@ -158,16 +158,20 @@ class PropertyController extends Controller
     {
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
 
-        $validated = $request->validate([
-            'id' => 'required|exists:properties,id',
-        ]);
-
         Model::where('user_id', $user->id)->update(['featured', false]);
 
-        $record = Model::find($validated['id']);
-        $record->update(['featured', true]);
-        $code = 200;
-        $response = ['message' => "Set $this->model as Featured", 'record' => $record];
+        $record = Model::find($request['id']);
+
+        if ($record) {
+            $record->update(['featured', true]);
+            $code = 200;
+            $response = ['message' => "Set $this->model as Featured", 'record' => $record];
+        }
+        else {
+            $code = 404;
+            $response = ['message' => "Property Not Found", 'record' => $record];
+        }
+
         return response()->json($response, $code);
     }
 }

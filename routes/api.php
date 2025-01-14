@@ -66,7 +66,7 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::put('', [PropertyController::class, 'update']);
             Route::delete('{id}', [PropertyController::class, 'delete']);
 
-            Route::post('set', [PropertyController::class, 'set']);
+            Route::post('set/{id}', [PropertyController::class, 'set']);
         });
 
         Route::prefix('inquiries')->group(function () {
