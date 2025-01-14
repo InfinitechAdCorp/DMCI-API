@@ -8,11 +8,12 @@ use Illuminate\Support\Facades\Storage;
 use App\Traits\Uploadable;
 
 use App\Models\Application as Model;
+use App\Models\Career as Parent;
 
 class ApplicationController extends Controller
 {
     use Uploadable;
-    
+
     public $model = "Application";
 
     public function getAll()
@@ -29,8 +30,7 @@ class ApplicationController extends Controller
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
-        }
-        else {
+        } else {
             $code = 404;
             $response = ['message' => "$this->model Not Found"];
         }
@@ -48,14 +48,23 @@ class ApplicationController extends Controller
             'resume' => 'required',
         ]);
 
-        $key = 'resume';
-        if ($request->hasFile($key)) {
-            $validated[$key] = $this->upload($request->file($key), "careers/applications");
+        $parent = Parent::with('applications')->where('id', $validated['career_id'])->first();
+        $availableSlots = $parent->slots - count($parent['applications']);
+
+        if ($availableSlots <= 0) {
+            $code = 204;
+            $response = ['message' => "Out Of Slots"];
+        } else {
+            $key = 'resume';
+            if ($request->hasFile($key)) {
+                $validated[$key] = $this->upload($request->file($key), "careers/applications");
+            }
+            
+            $record = Model::create($validated);
+            $code = 201;
+            $response = ['message' => "Created $this->model", 'record' => $record];
         }
 
-        $record = Model::create($validated);
-        $code = 201;
-        $response = ['message' => "Created $this->model", 'record' => $record];
         return response()->json($response, $code);
     }
 
@@ -71,17 +80,26 @@ class ApplicationController extends Controller
             'resume' => 'required',
         ]);
 
-        $record = Model::find($validated['id']);
+        $parent = Parent::with('applications')->where('id', $validated['career_id'])->first();
+        $availableSlots = $parent->slots - count($parent['applications']);
 
-        $key = 'resume';
-        if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("careers/applications/$record[$key]");
-            $validated[$key] = $this->upload($request->file($key), "careers/applications");
+        if ($availableSlots <= 0) {
+            $code = 204;
+            $response = ['message' => "Out Of Slots"];
+        } else {
+            $record = Model::find($validated['id']);
+
+            $key = 'resume';
+            if ($request->hasFile($key)) {
+                Storage::disk('s3')->delete("careers/applications/$record[$key]");
+                $validated[$key] = $this->upload($request->file($key), "careers/applications");
+            }
+
+            $record->update($validated);
+            $code = 200;
+            $response = ['message' => "Updated $this->model", 'record' => $record];
         }
 
-        $record->update($validated);
-        $code = 200;
-        $response = ['message' => "Updated $this->model", 'record' => $record];
         return response()->json($response, $code);
     }
 
@@ -93,8 +111,7 @@ class ApplicationController extends Controller
             $record->delete();
             $code = 200;
             $response = ['message' => "Deleted $this->model"];
-        }
-        else {
+        } else {
             $code = 404;
             $response = ['message' => "$this->model Not Found"];
         }
