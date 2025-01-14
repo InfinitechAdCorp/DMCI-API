@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Traits\Uploadable;
 
 use App\Models\Application as Model;
-use App\Models\Career as Parent;
+use App\Models\Career;
 
 class ApplicationController extends Controller
 {
@@ -59,7 +59,7 @@ class ApplicationController extends Controller
             if ($request->hasFile($key)) {
                 $validated[$key] = $this->upload($request->file($key), "careers/applications");
             }
-            
+
             $record = Model::create($validated);
             $code = 201;
             $response = ['message' => "Created $this->model", 'record' => $record];
@@ -80,7 +80,7 @@ class ApplicationController extends Controller
             'resume' => 'required',
         ]);
 
-        $parent = Parent::with('applications')->where('id', $validated['career_id'])->first();
+        $parent = Career::with('applications')->where('id', $validated['career_id'])->first();
         $availableSlots = $parent->slots - count($parent['applications']);
 
         if ($availableSlots <= 0) {
