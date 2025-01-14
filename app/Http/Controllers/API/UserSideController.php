@@ -144,6 +144,22 @@ class UserSideController extends Controller
         return response()->json($response, $code);
     }
 
+    public function featuredProperty(Request $request) {
+        $user_id = $request->header('user-id');
+        $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
+        $where = [['id', $request->id], ['user_id', $user_id], ['featured', true]];
+
+        $record = Property::with($relations)->where($where)->first();
+        if ($record) {
+            $code = 200;
+            $response = ['message' => "Fetched Featured Property", 'record' => $record];
+        } else {
+            $code = 404;
+            $response = ['message' => "Featured Property Not Found"];
+        }
+        return response()->json($response, $code);
+    }
+
     public function filterProperties(Request $request)
     {
         $user_id = $request->header('user-id');

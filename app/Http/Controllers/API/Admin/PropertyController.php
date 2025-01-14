@@ -156,9 +156,13 @@ class PropertyController extends Controller
 
     public function set(Request $request)
     {
+        $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
+
         $validated = $request->validate([
             'id' => 'required|exists:properties,id',
         ]);
+
+        Model::where('user_id', $user->id)->update(['featured', false]);
 
         $record = Model::find($validated['id']);
         $record->update(['featured', true]);
