@@ -27,6 +27,7 @@ class Property extends Model
         'percent',
         'description',
         'logo',
+        'featured',
         'images',
     ];
 

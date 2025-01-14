@@ -59,6 +59,8 @@ class PropertyController extends Controller
             'images' => 'required',
         ]);
 
+        $validated['featured'] = false;
+
         $key = 'logo';
         if ($request->hasFile($key)) {
             $validated[$key] = $this->upload($request->file($key), "properties/logos");
@@ -100,6 +102,8 @@ class PropertyController extends Controller
         ]);
 
         $record = Model::find($validated['id']);
+
+        $validated['featured'] = false;
 
         $key = 'logo';
         if ($request->hasFile($key)) {
@@ -147,6 +151,20 @@ class PropertyController extends Controller
             $code = 404;
             $response = ['message' => "$this->model Not Found"];
         }
+        return response()->json($response, $code);
+    }
+
+    public function set(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:properties,id',
+            'featured' => 'required|boolean',
+        ]);
+
+        $record = Model::find($validated['id']);
+        $record->update(['featured', true]);
+        $code = 200;
+        $response = ['message' => "Set $this->model as Featured", 'record' => $record];
         return response()->json($response, $code);
     }
 }

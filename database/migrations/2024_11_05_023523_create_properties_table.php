@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('percent');
             $table->text('description');
             $table->string('logo');
+            $table->boolean('featured');
             $table->json('images');
             $table->timestamps();
         });
