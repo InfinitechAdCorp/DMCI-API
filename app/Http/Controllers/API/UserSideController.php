@@ -122,9 +122,6 @@ class UserSideController extends Controller
     public function careersGetAll()
     {
         $records = Career::with('applications')->get();
-        foreach ($records as $record) {
-            $record['available_slots'] = $record->slots - count($record['applications']);
-        }
         $code = 200;
         $response = ['message' => "Fetched Careers", 'records' => $records];
         return response()->json($response, $code);
@@ -133,7 +130,6 @@ class UserSideController extends Controller
     public function careersGet(Request $request)
     {
         $record = Career::with('applications')->where('id', $request->id)->first();
-        $record['available_slots'] = $record->slots - count($record['applications']);
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched Career", 'record' => $record];
@@ -272,23 +268,14 @@ class UserSideController extends Controller
             'resume' => 'required',
         ]);
 
-        $parent = Career::with('applications')->where('id', $validated['career_id'])->first();
-        $availableSlots = $parent->slots - count($parent['applications']);
-
-        if ($availableSlots <= 0) {
-            $code = 200;
-            $response = ['message' => "Out Of Slots"];
-        } else {
-            $key = 'resume';
-            if ($request->hasFile($key)) {
-                $validated[$key] = $this->upload($request->file($key), "careers/applications");
-            }
-
-            $record = Application::create($validated);
-            $code = 201;
-            $response = ['message' => "Submitted Application", 'record' => $record];
+        $key = 'resume';
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($request->file($key), "careers/applications");
         }
 
+        $record = Application::create($validated);
+        $code = 201;
+        $response = ['message' => "Submitted Application", 'record' => $record];
         return response()->json($response, $code);
     }
 
