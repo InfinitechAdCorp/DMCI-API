@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 
 use App\Models\Property;
 use App\Models\Listing;
-use App\Models\Inquiry;
 use App\Models\Appointment;
+use App\Models\Inquiry;
 use App\Models\Application;
+use App\Models\Plan;
+use App\Models\Question;
+use App\Models\Article;
 
 class DashboardController extends Controller
 {
@@ -23,6 +26,10 @@ class DashboardController extends Controller
         $inquiries = Inquiry::get()->count();
         $viewings = Appointment::get()->count();
         $applications = Application::get()->count();
+        $plans = Plan::get()->count();
+        $questions = Question::get()->count();
+        $article = Article::get()->count();
+
 
         $records = [
             'properties' => $properties,
@@ -33,6 +40,9 @@ class DashboardController extends Controller
             'inquiries' => $inquiries,
             'viewings' => $viewings,
             'applications' => $applications,
+            'plans' => $plans,
+            'questions' => $questions,
+            'article' => $article,
         ];
         $code = 200;
         $response = ['message' => "Fetched Counts", 'records' => $records];
