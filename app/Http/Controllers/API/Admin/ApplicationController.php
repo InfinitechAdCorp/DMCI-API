@@ -68,7 +68,7 @@ class ApplicationController extends Controller
             'email' => 'required|email',
             'phone' => 'required',
             'address' => 'required',
-            'resume' => 'required',
+            'resume' => 'nullable',
         ]);
 
         $record = Model::find($validated['id']);
