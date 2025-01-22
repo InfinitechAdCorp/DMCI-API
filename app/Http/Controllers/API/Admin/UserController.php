@@ -147,13 +147,11 @@ class UserController extends Controller
     public function resetPassword(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|email',
             'password' => 'required|min:8',
             'reset_token' => 'required',
         ]);
 
-        $where = [['email', $validated['email']], ['reset_token', $validated['reset_token']]];
-        $record = Model::where($where)->first();
+        $record = Model::where('reset_token', $validated['reset_token'])->first();
 
         if ($record) {
             $validated['password'] = Hash::make($validated['password']);
