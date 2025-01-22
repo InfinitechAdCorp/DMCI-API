@@ -21,13 +21,15 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'type',    
+        'type', 
+        'reset_token',   
     ];
 
     public static function booted()
     {
         static::creating(function (User $record) {
             $record->id = Str::ulid();
+            $record->reset_token = Str::random();
         });
     }   
 

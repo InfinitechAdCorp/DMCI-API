@@ -43,6 +43,7 @@ Route::middleware('throttle:150,1')->group(function () {
     Route::prefix('users')->group(function () {
         Route::post('', [UserController::class, 'create']);
         Route::post('login', [UserController::class, 'login']);
+        Route::post('/reset-password', [UserController::class, 'resetPassword']);
     });
 
     Route::middleware('auth.admin')->group(function () {
