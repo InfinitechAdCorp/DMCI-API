@@ -133,7 +133,7 @@ class UserController extends Controller
 
         if ($record) {
             $code = 200;
-            $response = ['message' => 'Reset Password Successfully', 'token' => $record->token];
+            $response = ['message' => 'Request Sent Successfully', 'token' => $record->token];
         }
         else {
             $code = 401;
