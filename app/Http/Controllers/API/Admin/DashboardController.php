@@ -13,6 +13,7 @@ use App\Models\Application;
 use App\Models\Plan;
 use App\Models\Question;
 use App\Models\Article;
+use App\Models\Testimonial;
 
 class DashboardController extends Controller
 {
@@ -28,8 +29,8 @@ class DashboardController extends Controller
         $applications = Application::get()->count();
         $plans = Plan::get()->count();
         $questions = Question::get()->count();
-        $article = Article::get()->count();
-
+        $articles = Article::get()->count();
+        $testimonials = Testimonial::get()->count();
 
         $records = [
             'properties' => $properties,
@@ -42,7 +43,8 @@ class DashboardController extends Controller
             'applications' => $applications,
             'plans' => $plans,
             'questions' => $questions,
-            'article' => $article,
+            'articles' => $articles,
+            'testimonials' => $testimonials,
         ];
         $code = 200;
         $response = ['message' => "Fetched Counts", 'records' => $records];
