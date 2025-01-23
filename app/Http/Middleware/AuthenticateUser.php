@@ -20,7 +20,8 @@ class AuthenticateUser
         $user = User::find($user_id);
         if ($user) {
             return $next($request);
+        } else {
+            return response()->json(['message' => "Invalid User ID"], 401);
         }
-        return response()->json(['message' => "Invalid User ID"], 401);
     }
 }
