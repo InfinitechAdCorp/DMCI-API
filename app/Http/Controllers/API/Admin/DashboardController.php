@@ -37,6 +37,7 @@ class DashboardController extends Controller
         $videos = Video::get()->count();
         $contracts = Contract::get()->count();
         $careers = Career::get()->count();
+        $appointments = Appointment::get()->count();
 
         $records = [
             'properties' => $properties,
@@ -54,6 +55,7 @@ class DashboardController extends Controller
             'videos' => $videos,
             'contracts' => $contracts,
             'careers' => $careers,
+            'appointments' => $appointments,
         ];
         $code = 200;
         $response = ['message' => "Fetched Counts", 'records' => $records];
