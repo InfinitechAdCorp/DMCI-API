@@ -16,6 +16,7 @@ use App\Models\Article;
 use App\Models\Testimonial;
 use App\Models\Video;
 use App\Models\Contract;
+use App\Models\Career;
 
 class DashboardController extends Controller
 {
@@ -35,6 +36,7 @@ class DashboardController extends Controller
         $testimonials = Testimonial::get()->count();
         $videos = Video::get()->count();
         $contracts = Contract::get()->count();
+        $careers = Career::get()->count();
 
         $records = [
             'properties' => $properties,
@@ -51,6 +53,7 @@ class DashboardController extends Controller
             'testimonials' => $testimonials,
             'videos' => $videos,
             'contracts' => $contracts,
+            'careers' => $careers,
         ];
         $code = 200;
         $response = ['message' => "Fetched Counts", 'records' => $records];
