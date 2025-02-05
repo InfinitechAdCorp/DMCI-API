@@ -267,5 +267,9 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::get('', [UserSideController::class, 'careersGetAll']);
             Route::get('{id}', [UserSideController::class, 'careersGet']);
         });
+
+        Route::prefix('applications')->group(function () {
+            Route::post('', [ApplicationController::class, 'create']);
+        });
     });
 });
