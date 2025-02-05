@@ -174,7 +174,7 @@ class UserSideController extends Controller
 
         $max_price = $request->query('max_price');
         if ($max_price) {
-            array_push($where, ['max_price', '<=', $max_price]);
+            array_push($where, ['min_price', '<=', $max_price]);
         }
 
         $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
