@@ -17,7 +17,7 @@ class ApplicationController extends Controller
 
     public function getAll()
     {
-        $records = Model::with('career')->orderBy('updated_at', 'desc')->get();
+        $records = Model::orderBy('created_at', 'desc')->get();
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
         return response()->json($response, $code);
@@ -40,7 +40,7 @@ class ApplicationController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate([
-            'career_id' => 'required|exists:careers,id',
+            'position' => 'required',
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
@@ -63,7 +63,7 @@ class ApplicationController extends Controller
     {
         $validated = $request->validate([
             'id' => 'required|exists:applications,id',
-            'career_id' => 'required|exists:careers,id',
+            'position' => 'required',
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',

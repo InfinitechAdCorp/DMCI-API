@@ -15,7 +15,7 @@ class Application extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'career_id',
+        'position',
         'name',
         'email',
         'phone',
@@ -28,10 +28,5 @@ class Application extends Model
         static::creating(function (Application $record) {
             $record->id = Str::ulid();
         });
-    }
-
-    public function career(): BelongsTo
-    {
-        return $this->belongsTo(Career::class);
     }
 }
