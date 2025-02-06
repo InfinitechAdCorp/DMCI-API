@@ -102,7 +102,7 @@ class ListingController extends Controller
 
             $images = [];
             foreach ($request[$key] as $image) {
-                array_push($images, $this->upload($image, "listings/images"));
+                array_push($images, $this->upload($image, "listings"));
             }
             $validated[$key] = json_encode($images);
         }
