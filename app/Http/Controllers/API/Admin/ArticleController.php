@@ -41,6 +41,7 @@ class ArticleController extends Controller
     {
         $validated = $request->validate([
             'headline' => 'required',
+            'url' => 'required',
             'content' => 'required',
             'date' => 'required|date',
             'image' => 'required',
@@ -62,6 +63,7 @@ class ArticleController extends Controller
         $validated = $request->validate([
             'id' => 'required|exists:articles,id',
             'headline' => 'required',
+            'url' => 'required',
             'content' => 'required',
             'date' => 'required|date',
             'image' => 'nullable',

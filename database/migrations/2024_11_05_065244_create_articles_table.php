@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('headline');
+            $table->string('url');
             $table->text('content');
             $table->date('date');
             $table->string('image');
