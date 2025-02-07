@@ -54,6 +54,7 @@ class ListingController extends Controller
             'unit_location' => 'required',
             'unit_price' => 'required|decimal:0,2',
             'status' => 'required',
+            'description' => 'required',
             'images' => 'required',
         ]);
 
@@ -88,6 +89,7 @@ class ListingController extends Controller
             'unit_location' => 'required',
             'unit_price' => 'required|decimal:0,2',
             'status' => 'required',
+            'description' => 'required',
             'images' => 'nullable',
         ]);
 

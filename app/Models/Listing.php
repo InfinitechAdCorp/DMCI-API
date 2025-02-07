@@ -24,6 +24,7 @@ class Listing extends Model
       'unit_location',
       'unit_price',
       'status',
+      'description',
       'images',
      
     ];
