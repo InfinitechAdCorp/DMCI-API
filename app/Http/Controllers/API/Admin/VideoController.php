@@ -48,12 +48,18 @@ class VideoController extends Controller
             'user_id' => 'required|exists:users,id',
             'name' => 'required',
             'video' => 'required',
+            'thumbnail' => 'required',
         ]);
 
         $key = 'video';
         if ($request->hasFile($key)) {
             $validated[$key] = $this->upload($request->file($key), "videos");
         }
+        $key = 'thumbnail';
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($request->file($key), "videos");
+        }
+
 
         $record = Model::create($validated);
         $code = 201;
@@ -71,11 +77,18 @@ class VideoController extends Controller
             'user_id' => 'required|exists:users,id',
             'name' => 'required',
             'video' => 'nullable',
+            'thumbnail' => 'nullable',
         ]);
 
         $record = Model::find($validated['id']);
 
         $key = 'video';
+        if ($request->hasFile($key)) {
+            Storage::disk('s3')->delete("videos/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), "videos");
+        }
+
+        $key = 'thumbnail';
         if ($request->hasFile($key)) {
             Storage::disk('s3')->delete("videos/$record[$key]");
             $validated[$key] = $this->upload($request->file($key), "videos");

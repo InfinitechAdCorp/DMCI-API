@@ -18,6 +18,7 @@ class Video extends Model
         'user_id',
         'name',
         'video',
+        'thumbnail',
     ];
 
     public static function booted()
