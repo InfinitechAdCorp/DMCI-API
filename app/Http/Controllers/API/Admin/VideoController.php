@@ -105,6 +105,8 @@ class VideoController extends Controller
         $record = Model::find($id);
         if ($record) {
             Storage::disk('s3')->delete("videos/$record->video");
+            Storage::disk('s3')->delete("videos/$record->thumbnail");
+
 
             $record->delete();
             $code = 200;
