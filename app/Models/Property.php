@@ -67,4 +67,9 @@ class Property extends Model
     {
         return $this->hasMany(Unit::class);
     }
+
+    public function Listings(): HasOne
+    {
+        return $this->hasOne(Listing::class);
+    }
 }

@@ -27,7 +27,6 @@ class Listing extends Model
       'status',
       'description',
       'images',
-     
     ];
 
     public static function booted(){
@@ -39,5 +38,10 @@ class Listing extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class); 
+    }
+
+    public function property(): BelongsTo
+    {
+        return $this->belongsTo(Property::class); 
     }
 }
