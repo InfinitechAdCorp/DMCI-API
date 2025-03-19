@@ -16,6 +16,7 @@ class Listing extends Model
     protected $fillable = [
       'id',
       'user_id',
+      'property_id',
       'name',
       'email',
       'phone',

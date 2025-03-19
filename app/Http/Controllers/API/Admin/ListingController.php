@@ -46,6 +46,7 @@ class ListingController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
+            'property_id' => 'required|exists:properties,id',
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
