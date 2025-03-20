@@ -57,7 +57,7 @@ class ListingController extends Controller
             'status' => 'required',
             'description' => 'required',
             'images' => 'required',
-            'furnishing_status' => 'required',
+            'furnish_status' => 'required',
             'item' => 'required',
         ]);
 
