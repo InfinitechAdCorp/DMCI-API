@@ -57,16 +57,32 @@ class ListingController extends Controller
             'status' => 'required',
             'description' => 'required',
             'images' => 'required',
+            'furnishing_status' => 'required',
+            'item' => 'required',
         ]);
 
-        $key = 'images';
-        if ($request[$key]) {
+        $keyImages = 'images'; 
+        $keyItems = 'item';    
+        
+        // Handle images
+        if ($request[$keyImages]) {
             $images = [];
-            foreach ($request[$key] as $image) {
-                array_push($images, $this->upload($image, "listings"));
+            foreach ($request[$keyImages] as $image) {
+                array_push($images, $this->upload($image, "listings")); // Upload and add to array
             }
-            $validated[$key] = json_encode($images);
+            $validated[$keyImages] = json_encode($images);
         }
+        
+        // Handle items
+        elseif ($request[$keyItems]) {
+            $items = [];
+            foreach ($request[$keyItems] as $item) {
+                array_push($items, $item);
+            }
+            $validated[$keyItems] = json_encode($items); 
+        }
+        
+        
 
         $record = Model::create($validated);
         $code = 201;

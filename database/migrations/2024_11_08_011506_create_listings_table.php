@@ -25,6 +25,8 @@ return new class extends Migration
             $table->string('status');
             $table->string('description');
             $table->json('images');
+            $table->string('furnish_status');
+            $table->json('item');
             $table->timestamps();
         });
     }

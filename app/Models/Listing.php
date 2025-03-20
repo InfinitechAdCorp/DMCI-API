@@ -27,6 +27,8 @@ class Listing extends Model
       'status',
       'description',
       'images',
+      'furnish_status',
+      'item',
     ];
 
     public static function booted(){
