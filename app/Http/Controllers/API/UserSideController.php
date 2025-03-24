@@ -77,7 +77,7 @@ class UserSideController extends Controller
     {
         $user_id = $request->header('user-id');
         $where = [['user_id', $user_id]];
-        $records = Listing::with('user', 'property', 'buildings')->where($where)->get();
+        $records = Listing::with('user', 'property')->where($where)->get();
         $code = 200;
         $response = ['message' => "Fetched Listings", 'records' => $records];
         return response()->json($response, $code);
@@ -87,7 +87,7 @@ class UserSideController extends Controller
     {
         $user_id = $request->header('user-id');
         $where = [['id', $request->id], ['user_id', $user_id], ['status', '!=', 'Pending']];
-        $record = Listing::with('user', 'property', 'property.plan', 'property.facilities')->where($where)->first();
+        $record = Listing::with('user', 'property', 'property.plan', 'property.facilities', 'building')->where($where)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched Listing", 'record' => $record];
