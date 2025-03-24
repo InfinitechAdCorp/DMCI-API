@@ -47,18 +47,19 @@ class ListingController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'property_id' => 'required|exists:properties,id',
+            'building_id' => 'required|exists:buildings,id',
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
-            'unit_name' => 'required',
             'unit_type' => 'required',
-            'unit_location' => 'required',
             'unit_price' => 'required|decimal:0,2',
             'status' => 'required',
             'description' => 'required',
             'images' => 'required',
             'furnish_status' => 'required',
             'item' => 'required',
+            'unit_area' => 'required',
+            'unit_cut' => 'required',
         ]);
 
         $keyImages = 'images'; 

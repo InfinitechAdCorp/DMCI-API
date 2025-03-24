@@ -18,15 +18,16 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('phone');
-            $table->string('unit_name');
             $table->string('unit_type');
-            $table->string('unit_location');
             $table->double('unit_price', 10, 2);
             $table->string('status');
             $table->string('description');
             $table->json('images');
             $table->string('furnish_status');
             $table->json('item');
+            $table->string('unit_area');
+            $table->foreignUlid('building_id');
+            $table->string('unit_cut');
             $table->timestamps();
         });
     }

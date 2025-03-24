@@ -20,15 +20,16 @@ class Listing extends Model
       'name',
       'email',
       'phone',
-      'unit_name',
       'unit_type',
-      'unit_location',
       'unit_price',
       'status',
       'description',
       'images',
       'furnish_status',
       'item',
+      'unit_area',
+      'building_id',
+      'unit_cut',
     ];
 
     public static function booted(){
