@@ -76,8 +76,8 @@ class UserSideController extends Controller
     public function listingsGetAll(Request $request)
     {
         $user_id = $request->header('user-id');
-        $where = [['user_id', $user_id], ['status', '!=', 'Pending']];
-        $records = Listing::with('user', 'property')->where($where)->get();
+        $where = [['user_id', $user_id]];
+        $records = Listing::with('user', 'property', 'buildings')->where($where)->get();
         $code = 200;
         $response = ['message' => "Fetched Listings", 'records' => $records];
         return response()->json($response, $code);

@@ -47,4 +47,9 @@ class Listing extends Model
     {
         return $this->belongsTo(Property::class); 
     }
+
+    public function buildings(): BelongsTo
+    {
+        return $this->belongsTo(Building::class); 
+    }
 }
