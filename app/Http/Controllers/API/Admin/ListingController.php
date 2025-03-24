@@ -22,7 +22,7 @@ class ListingController extends Controller
         if ($user->type == "Admin") {
             $records = Model::with('user')->orderBy('updated_at', 'desc')->get();
         } else if ($user->type == "Agent") {
-            $records = Model::with('user', "property" )->where('user_id', $user->id)->orderBy('updated_at', 'desc')->get();
+            $records = Model::with('user')->where('user_id', $user->id)->orderBy('updated_at', 'desc')->get();
         }
         $code = 200;
         $response = ['message' => "Fetched $this->model" . "s", 'records' => $records];
