@@ -173,15 +173,15 @@ class UserSideController extends Controller
             array_push($where, ['max_price', $unit_type]);
         }
 
-        // $min_price = $request->query('min_price');
-        // if ($min_price) {
-        //     array_push($where, ['min_price', '>=', $min_price]);
-        // }
+        $min_price = $request->query('min_price');
+        if ($min_price) {
+            array_push($where, ['min_price', '>=', $min_price]);
+        }
 
-        // $max_price = $request->query('max_price');
-        // if ($max_price) {
-        //     array_push($where, ['min_price', '<=', $max_price]);
-        // }
+        $max_price = $request->query('max_price');
+        if ($max_price) {
+            array_push($where, ['min_price', '<=', $max_price]);
+        }
 
         $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
         $records = Property::with($relations)->where($where);
