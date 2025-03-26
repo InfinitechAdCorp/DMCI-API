@@ -178,16 +178,13 @@ class UserSideController extends Controller
             array_push($where, ['min_price', '<=', $max_price]);
         }
 
-        $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
-        $records = Property::with($relations)->where($where);
-
         $unit_type = $request->query('unit_type');
         if ($unit_type) {
-            $unit_type = str_replace("+", " ", $unit_type);
-            $records->whereHas('units', function ($result) use ($unit_type) {
-                $result->where('type', $unit_type);
-            });
+            array_push($where, ['max_price', $unit_type]);
         }
+
+        $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
+        $records = Property::with($relations)->where($where);
 
         $records = $records->get();
         $code = 200;
