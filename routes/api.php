@@ -271,5 +271,9 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::prefix('applications')->group(function () {
             Route::post('', [ApplicationController::class, 'create']);
         });
+
+        Route::prefix('questions')->group(function () {
+            Route::get('', [UserSideController::class, 'questionsGetAll']);
+        });
     });
 });

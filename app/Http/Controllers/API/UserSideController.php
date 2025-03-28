@@ -17,6 +17,7 @@ use App\Models\Application;
 use App\Models\Subscriber;
 use App\Models\Inquiry;
 use App\Models\Testimonial;
+use App\Models\Question;
 
 class UserSideController extends Controller
 {
@@ -339,6 +340,14 @@ class UserSideController extends Controller
             'message' => "Submitted Testimonial",
             'record' => $record,
         ];
+        return response()->json($response, $code);
+    }
+
+    public function questionsGetAll()
+    {
+        $records = Question::orderBy('updated_at', 'desc')->get();
+        $code = 200;
+        $response = ['message' => "Fetched Questions", 'records' => $records];
         return response()->json($response, $code);
     }
 }
