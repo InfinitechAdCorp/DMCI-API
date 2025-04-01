@@ -10,6 +10,7 @@ use App\Models\PropertyListings as Model;
 
 class PropertyListingsController extends Controller
 {
+    use Uploadable;
 
     public $model = "PropertyListings";
 
