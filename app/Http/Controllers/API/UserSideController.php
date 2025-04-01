@@ -17,6 +17,7 @@ use App\Models\Application;
 use App\Models\Subscriber;
 use App\Models\Inquiry;
 use App\Models\Testimonial;
+use App\Models\Question;
 
 class UserSideController extends Controller
 {
@@ -140,7 +141,8 @@ class UserSideController extends Controller
         return response()->json($response, $code);
     }
 
-    public function featuredProperty(Request $request) {
+    public function featuredProperty(Request $request)
+    {
         $user_id = $request->header('user-id');
         $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
         $where = [['user_id', $user_id], ['featured', true]];
@@ -159,58 +161,37 @@ class UserSideController extends Controller
     public function filterProperties(Request $request)
     {
         $user_id = $request->header('user-id');
-    
-        // Initial where clause with user_id
+
         $where = [['user_id', $user_id]];
-    
-        // Filter by location if provided
+
         $location = $request->query('location');
         if ($location) {
             array_push($where, ['location', 'LIKE', "%$location%"]);
         }
-    
-        // Filter by min_price if provided
+
+        $unit_type = $request->query('unit_type');
+        if ($unit_type) {
+            array_push($where, ['max_price', $unit_type]);
+        }
+
         $min_price = $request->query('min_price');
         if ($min_price) {
             array_push($where, ['min_price', '>=', $min_price]);
         }
-    
-    
-        // Eager load relationships
+
+        $max_price = $request->query('max_price');
+        if ($max_price) {
+            array_push($where, ['min_price', '<=', $max_price]);
+        }
+
         $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
         $records = Property::with($relations)->where($where);
-    
-        // Handle unit_type by checking the value in max_price
-        $unit_type = $request->query('unit_type');
-        if ($unit_type) {
-            // Map unit_type to corresponding max_price value
-            $unitTypeMap = [
-                "1" => "1BR",
-                "2" => "2BR",
-                "3" => "Studio Type",
-                "4" => "Loft",
-            ];
-    
-            if (isset($unitTypeMap[$unit_type])) {
-                $mappedUnitType = $unitTypeMap[$unit_type];
-                array_push($where, ['max_price', '=', $mappedUnitType]);
-            }
-        }
-    
-        // Apply filters with the corrected conditions
-        $records = Property::with($relations)->where($where)->get();
-    
-        // Prepare response
+
+        $records = $records->get();
         $code = 200;
-        $response = [
-            'message' => "Filtered Properties",
-            'records' => $records,
-        ];
-    
+        $response = ['message' => "Filtered Properties", 'records' => $records];
         return response()->json($response, $code);
     }
-    
-    
 
     public function submitProperty(Request $request)
     {
@@ -359,6 +340,14 @@ class UserSideController extends Controller
             'message' => "Submitted Testimonial",
             'record' => $record,
         ];
+        return response()->json($response, $code);
+    }
+
+    public function questionsGetAll()
+    {
+        $records = Question::orderBy('updated_at', 'desc')->get();
+        $code = 200;
+        $response = ['message' => "Fetched Questions", 'records' => $records];
         return response()->json($response, $code);
     }
 }
