@@ -65,7 +65,7 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::prefix('properties')->group(function () {
             Route::get('', [PropertyController::class, 'getAll']);
             Route::get('{id}', [PropertyController::class, 'get']);
-            Route::post('', [PropertyController::class, 'create']);
+            Route::post('', [PropertyListingsController::class, 'create']);
             Route::put('', [PropertyController::class, 'update']);
             Route::delete('{id}', [PropertyController::class, 'delete']);
 
