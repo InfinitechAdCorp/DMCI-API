@@ -34,11 +34,11 @@ class PropertyListingsController extends Controller
 
         $key = 'property_images';
         if ($request[$key]) {
-            $images = [];
+            $property_images = [];
             foreach ($request[$key] as $image) {
-                array_push($images, $this->upload($image, "properties/images"));
+                array_push($property_images, $this->upload($property_images, "properties/images"));
             }
-            $validated[$key] = json_encode($images);
+            $validated[$key] = json_encode($property_images);
         }
 
         $record = Model::create($validated);
