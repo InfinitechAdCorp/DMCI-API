@@ -31,7 +31,7 @@ class PropertyListings extends Model
 
     public static function booted()
     {
-        static::creating(function (Property $record) {
+        static::creating(function (PropertyListings $record) {
             $record->id = Str::ulid();
         });
     }
