@@ -27,6 +27,7 @@ use App\Http\Controllers\API\Admin\VideoController;
 use App\Http\Controllers\API\Admin\ContractController;
 
 use App\Http\Controllers\API\UserSideController;
+use App\Models\PropertyListings;
 
 /*
 |---------------------------------------------------------------------- ----
@@ -65,6 +66,16 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::get('', [PropertyController::class, 'getAll']);
             Route::get('{id}', [PropertyController::class, 'get']);
             Route::post('', [PropertyController::class, 'create']);
+            Route::put('', [PropertyController::class, 'update']);
+            Route::delete('{id}', [PropertyController::class, 'delete']);
+
+            Route::post('set/{id}', [PropertyController::class, 'set']);
+        });
+
+        Route::prefix('property')->group(function () {
+            Route::get('', [PropertyController::class, 'getAll']);
+            Route::get('{id}', [PropertyController::class, 'get']);
+            Route::post('', [PropertyListings::class, 'create']);
             Route::put('', [PropertyController::class, 'update']);
             Route::delete('{id}', [PropertyController::class, 'delete']);
 
