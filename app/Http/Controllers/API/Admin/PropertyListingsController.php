@@ -36,7 +36,7 @@ class PropertyListingsController extends Controller
         if ($request[$key]) {
             $property_images = [];
             foreach ($request[$key] as $image) {
-                array_push($property_images, $this->upload($property_images, "properties/images"));
+                array_push($property_images, $this->upload($image, "properties/images"));
             }
             $validated[$key] = json_encode($property_images);
         }
