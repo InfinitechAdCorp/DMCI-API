@@ -25,9 +25,9 @@ use App\Http\Controllers\API\Admin\SubscriberController;
 use App\Http\Controllers\API\Admin\InquiryController;
 use App\Http\Controllers\API\Admin\VideoController;
 use App\Http\Controllers\API\Admin\ContractController;
-
+use App\Http\Controllers\API\Admin\PropertyListingsController;
 use App\Http\Controllers\API\UserSideController;
-use App\Models\PropertyListings;
+
 
 /*
 |---------------------------------------------------------------------- ----
@@ -75,7 +75,7 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::prefix('property')->group(function () {
             Route::get('', [PropertyController::class, 'getAll']);
             Route::get('{id}', [PropertyController::class, 'get']);
-            Route::post('', [PropertyListings::class, 'create']);
+            Route::post('', [PropertyListingsController::class, 'create']);
             Route::put('', [PropertyController::class, 'update']);
             Route::delete('{id}', [PropertyController::class, 'delete']);
 

@@ -16,7 +16,7 @@ class PropertyListingsController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate([
-           'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:users,id',
             'property_name' => 'required',
             'property_location' => 'required',
             'property_price' => 'required',
