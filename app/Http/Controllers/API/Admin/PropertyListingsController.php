@@ -26,19 +26,19 @@ class PropertyListingsController extends Controller
             'property_level' => 'required|numeric|integer',
             'property_amenities' => 'required',
             'property_parking' => 'required',
-            'property_images' => 'required',
+            'images' => 'required',
             'property_description' => 'required',
         ]);
 
         $validated['property_featured'] = false;
 
-        $key = 'property_images';
+        $key = 'images';
         if ($request[$key]) {
-            $property_images = [];
+            $images = [];
             foreach ($request[$key] as $image) {
-                array_push($property_images, $this->upload($image, "properties/images"));
+                array_push($images, $this->upload($image, "properties/images"));
             }
-            $validated[$key] = json_encode($property_images);
+            $validated[$key] = json_encode($images);
         }
 
         $record = Model::create($validated);

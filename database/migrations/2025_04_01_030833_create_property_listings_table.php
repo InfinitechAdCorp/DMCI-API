@@ -24,7 +24,7 @@ return new class extends Migration
             $table->json('property_amenities');
             $table->boolean('property_parking');
             $table->boolean('property_featured');
-            $table->json('property_images');
+            $table->json('images');
             $table->string('property_description');
             $table->timestamps();
         });

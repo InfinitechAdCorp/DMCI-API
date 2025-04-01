@@ -25,7 +25,7 @@ class PropertyListings extends Model
         'property_amenities',
         'property_parking',
         'property_featured',
-        'property_images',
+        'images',
         'property_description'
     ];
 
