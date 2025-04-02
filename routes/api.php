@@ -264,6 +264,12 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::get('{id}', [UserSideController::class, 'propertiesGet']);
         });
 
+        Route::prefix('property')->group(function () {
+            Route::get('', [UserSideController::class, 'propertyGetAll']);
+            Route::get('{id}', [UserSideController::class, 'propertiesGet']);
+        });
+
+
         Route::prefix('listings')->group(function () {
             Route::get('', [UserSideController::class, 'listingsGetAll']);
             Route::get('{id}', [UserSideController::class, 'listingsGet']);
