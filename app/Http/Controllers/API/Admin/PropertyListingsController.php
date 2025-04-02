@@ -57,8 +57,6 @@ class PropertyListingsController extends Controller
             $validated[$key] = json_encode($images);
         }
 
-        return response($validated[$key]);
-
         $record = Model::create($validated);
         $code = 201;
         $response = [
