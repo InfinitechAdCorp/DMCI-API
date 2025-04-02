@@ -18,7 +18,7 @@ class PropertyListingsController extends Controller
     public function getAll(Request $request)
     {
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
-        $relations = ['user', 'property'];
+        $relations = ['user', 'property.buildings', 'property.features'];
         if ($user->type == "Admin") {
             $records = Model::with($relations)->orderBy('created_at', 'desc')->get();
         } else if ($user->type == "Agent") {
