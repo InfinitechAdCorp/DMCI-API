@@ -266,7 +266,7 @@ Route::middleware('throttle:150,1')->group(function () {
 
         Route::prefix('property')->group(function () {
             Route::get('', [UserSideController::class, 'propertyGetAll']);
-            Route::get('{id}', [UserSideController::class, 'propertiesGet']);
+            Route::get('{id}', [UserSideController::class, 'propertyGet']);
         });
 
 
