@@ -74,12 +74,12 @@ Route::middleware('throttle:150,1')->group(function () {
 
         Route::prefix('property')->group(function () {
             Route::get('', [PropertyListingsController::class, 'getAll']);
-            Route::get('{id}', [PropertyController::class, 'get']);
+            Route::get('{id}', [PropertyListingsController::class, 'get']);
             Route::post('', [PropertyListingsController::class, 'create']);
-            Route::put('', [PropertyController::class, 'update']);
-            Route::delete('{id}', [PropertyController::class, 'delete']);
+            Route::put('', [PropertyListingsController::class, 'update']);
+            Route::delete('{id}', [PropertyListingsController::class, 'delete']);
 
-            Route::post('set/{id}', [PropertyController::class, 'set']);
+            Route::post('set/{id}', [PropertyListingsController::class, 'set']);
         });
 
         Route::prefix('inquiries')->group(function () {

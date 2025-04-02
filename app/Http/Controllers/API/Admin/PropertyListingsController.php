@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
 use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Support\Facades\Storage;
 use App\Models\PropertyListings as Model;
 
 class PropertyListingsController extends Controller
@@ -63,6 +64,31 @@ class PropertyListingsController extends Controller
             'message' => "Created $this->model",
             'record' => $record,
         ];
+        return response()->json($response, $code);
+    }
+
+    // Delete Property
+
+    public function delete($id)
+    {
+        $record = Model::find($id);
+        if ($record) {
+            Storage::disk('s3')->delete("properties/logos/$record->logo");
+
+            $images = json_decode($record->images);
+            foreach ($images as $image) {
+                Storage::disk('s3')->delete("properties/images/$image");
+            }
+
+            $record->delete();
+            $code = 200;
+            $response = [
+                'message' => "Deleted $this->model"
+            ];
+        } else {
+            $code = 404;
+            $response = ['message' => "$this->model Not Found"];
+        }
         return response()->json($response, $code);
     }
 }
