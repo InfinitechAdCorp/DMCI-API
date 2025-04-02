@@ -63,7 +63,7 @@ class UserSideController extends Controller
     {
         $user_id = $request->header('user-id');
         $relations = ['user'];
-        $records = PropertyListings::with($relations)->where('user_id', $user_id)->orderBy('created_by')->get();
+        $records = PropertyListings::with($relations)->where('user_id', $user_id)->orderBy('created_at')->get();
         $code = 200;
         $response = ['message' => "Fetched Properties", 'records' => $records];
         return response()->json($response, $code);
