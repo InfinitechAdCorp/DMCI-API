@@ -13,7 +13,7 @@ class PropertyListingsController extends Controller
 {
     use Uploadable;
 
-    public $model = "PropertyListings";
+    public $model = "Property Listings";
 
     public function getAll(Request $request)
     {
@@ -56,6 +56,8 @@ class PropertyListingsController extends Controller
             }
             $validated[$key] = json_encode($images);
         }
+
+        return response($validated[$key]);
 
         $record = Model::create($validated);
         $code = 201;
