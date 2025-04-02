@@ -201,7 +201,8 @@ class UserSideController extends Controller
 
         $unit_type = $request->query('unit_type');
         if ($unit_type) {
-            array_push($where, ['property_type', $unit_type]);
+            $unitOptions = ["1 Bedroom", "2 Bedroom", "Studio"];
+            array_push($where, ['property_type', $unitOptions[$unit_type - 1]]);
         }
 
         $min_price = $request->query('min_price');
