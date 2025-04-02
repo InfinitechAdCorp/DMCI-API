@@ -86,6 +86,24 @@ class UserSideController extends Controller
         return response()->json($response, $code);
     }
 
+    // New get property
+    public function propertyGet(Request $request)
+    {
+        $user_id = $request->header('user-id');
+        $relations = ['user'];
+        $where = [['id', $request->id], ['user_id', $user_id]];
+
+        $record = PropertyListings::with($relations)->where($where)->first();
+        if ($record) {
+            $code = 200;
+            $response = ['message' => "Fetched Property", 'record' => $record];
+        } else {
+            $code = 404;
+            $response = ['message' => "Property Not Found"];
+        }
+        return response()->json($response, $code);
+    }
+
     public function listingsGetAll(Request $request)
     {
         $user_id = $request->header('user-id');
