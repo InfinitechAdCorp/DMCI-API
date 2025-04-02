@@ -34,17 +34,16 @@ class PropertyListingsController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
-            'property_name' => 'required',
-            'property_location' => 'required',
-            'property_price' => 'required',
-            'property_type' => 'required',
+            'property_id' => 'required|exists:properties,id',
+            'property_location' => 'required|max:255',
+            'property_price' => 'required|decimal:0,2',
+            'property_type' => 'required|max:255',
             'property_size' => 'required|decimal:0,2',
-            'property_bldg' => 'required',
-            'property_level' => 'required|numeric|integer',
-            'property_amenities' => 'required',
-            'property_parking' => 'required',
-            'images' => 'required',
+            'property_parking' => 'required|boolean',
             'property_description' => 'required',
+            'property_level' => 'required|max:255',
+            'property_amenities' => 'required',
+            'images' => 'required',
         ]);
 
         $validated['property_featured'] = false;

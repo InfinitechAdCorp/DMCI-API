@@ -14,18 +14,17 @@ return new class extends Migration
         Schema::create('property_listings', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id');
-            $table->string('property_name');
+            $table->foreignUlid('property_id');
             $table->string('property_location');
-            $table->integer('property_price');
+            $table->double('property_price', 15, 2);
             $table->string('property_type');
-            $table->string('property_size');
-            $table->string('property_bldg');
-            $table->string('property_level');
-            $table->json('property_amenities');
+            $table->double('property_size', 15, 2);
             $table->boolean('property_parking');
-            $table->boolean('property_featured');
-            $table->json('images');
             $table->string('property_description');
+            $table->string('property_level');
+            $table->boolean('property_featured');
+            $table->json('property_amenities');
+            $table->json('images');
             $table->timestamps();
         });
     }

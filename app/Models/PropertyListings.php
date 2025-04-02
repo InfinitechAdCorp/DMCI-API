@@ -16,18 +16,17 @@ class PropertyListings extends Model
 
     protected $fillable = [
         'user_id',
-        'property_name',
+        'property_id',
         'property_location',
         'property_price',
         'property_type',
         'property_size',
-        'property_bldg',
+        'property_parking',
+        'property_description',
         'property_level',
         'property_amenities',
-        'property_parking',
         'property_featured',
         'images',
-        'property_description'
     ];
 
     public static function booted()
