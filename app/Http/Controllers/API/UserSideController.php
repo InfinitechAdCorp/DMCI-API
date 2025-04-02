@@ -50,7 +50,7 @@ class UserSideController extends Controller
     public function propertiesGetAll(Request $request)
     {
         $user_id = $request->header('user-id');
-        $relations = ['user'];
+        $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
         $records = Property::with($relations)->where('user_id', $user_id)->orderBy('status')->get();
         $code = 200;
         $response = ['message' => "Fetched Properties", 'records' => $records];
@@ -61,7 +61,7 @@ class UserSideController extends Controller
     public function propertyGetAll(Request $request)
     {
         $user_id = $request->header('user-id');
-        $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
+        $relations = ['user'];
         $records = Property::with($relations)->where('user_id', $user_id)->orderBy('status')->get();
         $code = 200;
         $response = ['message' => "Fetched Properties", 'records' => $records];
