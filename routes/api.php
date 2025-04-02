@@ -259,10 +259,10 @@ Route::middleware('throttle:150,1')->group(function () {
         Route::post('submit-inquiry', [UserSideController::class, 'submitInquiry']);
         Route::post('submit-testimonial', [UserSideController::class, 'submitTestimonial']);
 
-        // Route::prefix('properties')->group(function () {
-        //     Route::get('', [UserSideController::class, 'propertiesGetAll']);
-        //     Route::get('{id}', [UserSideController::class, 'propertiesGet']);
-        // });
+        Route::prefix('properties')->group(function () {
+            Route::get('', [UserSideController::class, 'propertiesGetAll']);
+            Route::get('{id}', [UserSideController::class, 'propertiesGet']);
+        });
 
         Route::prefix('property')->group(function () {
             Route::get('', [UserSideController::class, 'propertyGetAll']);
