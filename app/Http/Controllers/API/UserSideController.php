@@ -47,15 +47,15 @@ class UserSideController extends Controller
         return response()->json($response, $code);
     }
 
-    public function propertiesGetAll(Request $request)
-    {
-        $user_id = $request->header('user-id');
-        $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
-        $records = Property::with($relations)->where('user_id', $user_id)->orderBy('status')->get();
-        $code = 200;
-        $response = ['message' => "Fetched Properties", 'records' => $records];
-        return response()->json($response, $code);
-    }
+    // public function propertiesGetAll(Request $request)
+    // {
+    //     $user_id = $request->header('user-id');
+    //     $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
+    //     $records = Property::with($relations)->where('user_id', $user_id)->orderBy('status')->get();
+    //     $code = 200;
+    //     $response = ['message' => "Fetched Properties", 'records' => $records];
+    //     return response()->json($response, $code);
+    // }
 
     // new get all properties
     public function propertyGetAll(Request $request)
