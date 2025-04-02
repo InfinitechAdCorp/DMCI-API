@@ -82,4 +82,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Listing::class);
     }
+
+    public function property(): HasMany
+    {
+        return $this->hasMany(PropertyListings::class);
+    }
 }

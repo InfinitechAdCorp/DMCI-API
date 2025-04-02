@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
-
+use Laravel\Sanctum\PersonalAccessToken;
 use App\Models\PropertyListings as Model;
 
 class PropertyListingsController extends Controller
@@ -13,6 +13,20 @@ class PropertyListingsController extends Controller
     use Uploadable;
 
     public $model = "PropertyListings";
+
+    public function getAll(Request $request)
+    {
+        $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
+        $relations = ['user'];
+        if ($user->type == "Admin") {
+            $records = Model::with($relations)->orderBy('created_at', 'desc')->get();
+        } else if ($user->type == "Agent") {
+            $records = Model::with($relations)->where('user_id', $user->id)->orderBy('status')->get();
+        }
+        $code = 200;
+        $response = ['message' => "Fetched Properties", 'records' => $records];
+        return response()->json($response, $code);
+    }
 
     // Create New Properties
     public function create(Request $request)

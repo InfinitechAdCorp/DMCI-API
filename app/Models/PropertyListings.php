@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class PropertyListings extends Model
@@ -34,6 +35,11 @@ class PropertyListings extends Model
         static::creating(function (PropertyListings $record) {
             $record->id = Str::ulid();
         });
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class); 
     }
 }
 
