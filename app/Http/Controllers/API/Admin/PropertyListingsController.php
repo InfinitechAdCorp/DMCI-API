@@ -58,6 +58,10 @@ class PropertyListingsController extends Controller
         }
 
         $record = Model::create($validated);
+
+        $relations = ['user', 'property.buildings', 'property.features'];
+        $record = Model::with($relations)->where('id', $record->id)->first();
+
         $code = 201;
         $response = [
             'message' => "Created $this->model",

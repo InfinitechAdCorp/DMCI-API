@@ -196,26 +196,27 @@ class UserSideController extends Controller
 
         $location = $request->query('location');
         if ($location) {
-            array_push($where, ['location', 'LIKE', "%$location%"]);
+            array_push($where, ['property_location', 'LIKE', "%$location%"]);
         }
 
         $unit_type = $request->query('unit_type');
         if ($unit_type) {
-            array_push($where, ['max_price', $unit_type]);
+            $unitOptions = ["1 Bedroom", "2 Bedroom", "Studio"];
+            array_push($where, ['property_type', $unitOptions[$unit_type - 1]]);
         }
 
         $min_price = $request->query('min_price');
         if ($min_price) {
-            array_push($where, ['min_price', '>=', $min_price]);
+            array_push($where, ['property_price', '>=', $min_price]);
         }
 
         $max_price = $request->query('max_price');
         if ($max_price) {
-            array_push($where, ['min_price', '<=', $max_price]);
+            array_push($where, ['property_price', '<=', $max_price]);
         }
 
-        $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
-        $records = Property::with($relations)->where($where);
+        $relations = ['user', 'property.buildings', 'property.features'];
+        $records = PropertyListings::with($relations)->where($where);
 
         $records = $records->get();
         $code = 200;
