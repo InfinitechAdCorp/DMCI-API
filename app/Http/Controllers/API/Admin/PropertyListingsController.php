@@ -90,4 +90,25 @@ class PropertyListingsController extends Controller
         }
         return response()->json($response, $code);
     }
+
+    public function set(Request $request)
+    {
+        $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
+
+        Model::where('user_id', $user->id)->update(['featured' => false]);
+
+        $record = Model::find($request['id']);
+
+        if ($record) {
+            $record->update(['property_featured' => true]);
+            $code = 200;
+            $response = ['message' => "Set $this->model as Featured", 'record' => $record];
+        }
+        else {
+            $code = 404;
+            $response = ['message' => "Property Not Found", 'record' => $record];
+        }
+
+        return response()->json($response, $code);
+    }
 }
