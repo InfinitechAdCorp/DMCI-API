@@ -18,7 +18,7 @@ class DashboardController extends Controller
     {
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
 
-        if ($user->type == "Admin") {
+        if ($user->type == "Agent") {
             $where = [['user_id', $user->id]];
         } else {
             $where = [];
