@@ -14,7 +14,7 @@ use App\Models\Application;
 
 class DashboardController extends Controller
 {
-    public function getCounts($request)
+    public function getCounts(Request $request)
     {
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
 
