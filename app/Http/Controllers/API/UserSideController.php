@@ -198,7 +198,7 @@ class UserSideController extends Controller
         if ($location) {
             array_push($where, ['property_location', 'LIKE', "%$location%"]);
         }
-
+            
         $unit_type = $request->query('unit_type');
         if ($unit_type) {
             $unitOptions = ["1BR", "2BR", "Studio"];
