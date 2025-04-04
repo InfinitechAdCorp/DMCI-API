@@ -21,7 +21,7 @@ return new class extends Migration
             $table->double('property_price', 15, 2);
             $table->string('property_building');
             $table->boolean('property_parking');
-            $table->string('property_description');
+            $table->text('property_description');
             $table->string('property_level');
             $table->boolean('property_featured');
             $table->json('property_amenities');
