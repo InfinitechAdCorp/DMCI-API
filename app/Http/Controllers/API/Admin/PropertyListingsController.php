@@ -158,14 +158,15 @@ class PropertyListingsController extends Controller
 
     public function set(Request $request, $id)
     {
-        $record = Model::find($request['id']);
-
-        Model::where('id', $id)->update(['property_featured' => $record->property_featured == 0 ? 1 : 0]);
+        $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
 
         $record = Model::find($request['id']);
+        $isFeatured = $record->property_featured;
+
+        Model::where('user_id', $user->id)->update(['property_featured' => false]);
 
         if ($record) {
-            $record->update(['property_featured' => true]);
+            $record->update(['property_featured' => !$isFeatured]);
             $code = 200;
             $response = ['message' => "Set $this->model as Featured", 'record' => $record];
         } else {
