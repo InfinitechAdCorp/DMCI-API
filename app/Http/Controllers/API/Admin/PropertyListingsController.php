@@ -160,7 +160,7 @@ class PropertyListingsController extends Controller
     {
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
 
-        $record = Model::find($request['id']);
+        $record = Model::find($id);
         $isFeatured = $record->property_featured;
 
         Model::where('user_id', $user->id)->update(['property_featured' => false]);
