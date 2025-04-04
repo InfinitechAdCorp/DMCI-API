@@ -18,10 +18,16 @@ class DashboardController extends Controller
     {
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
 
-        $properties = Property::get()->count();
-        $inquiries = Inquiry::get()->count();
-        $viewings = Appointment::get()->count();
-        $applications = Application::get()->count();
+        if ($user->type == "Admin") {
+            $where = [['user_id', $user->id]];
+        } else {
+            $where = [];
+        }
+
+        $properties = Property::where($where)->get()->count();
+        $inquiries = Inquiry::where($where)->get()->count();
+        $viewings = Appointment::where($where)->get()->count();
+        $applications = Application::where($where)->get()->count();
 
         $records = [
             'properties' => $properties,
