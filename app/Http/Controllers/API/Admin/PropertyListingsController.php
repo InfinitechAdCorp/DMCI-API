@@ -70,6 +70,48 @@ class PropertyListingsController extends Controller
         return response()->json($response, $code);
     }
 
+    // Update
+
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'property_id' => 'required|exists:properties,id',
+            'property_location' => 'required|max:255',
+            'property_price' => 'required|decimal:0,2',
+            'property_type' => 'required|max:255',
+            'property_size' => 'required|decimal:0,2',
+            'property_parking' => 'required|boolean',
+            'property_description' => 'required',
+            'property_level' => 'required|max:255',
+            'property_amenities' => 'required',
+            'images' => 'required',
+        ]);
+
+        $record = Model::find($validated['id']);
+
+        $validated['property_featured'] = false;
+
+        $key = 'images';
+        if ($request[$key]) {
+            $images = json_decode($record[$key]);
+            foreach ($images as $image) {
+                Storage::disk('s3')->delete("properties/images/$image");
+            }
+
+            $images = [];
+            foreach ($request[$key] as $image) {
+                array_push($images, $this->upload($image, "properties/images"));
+            }
+            $validated[$key] = json_encode($images);
+        }
+
+        $record->update($validated);
+        $code = 200;
+        $response = ['message' => "Updated $this->model", 'record' => $record];
+        return response()->json($response, $code);
+    }
+
     // Delete Property
 
     public function delete($id)
