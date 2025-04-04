@@ -17,6 +17,7 @@ class PropertyListings extends Model
     protected $fillable = [
         'user_id',
         'property_id',
+        'property_building',
         'property_location',
         'property_price',
         'property_type',
