@@ -156,11 +156,11 @@ class PropertyListingsController extends Controller
         return response()->json($response, $code);
     }
 
-    public function set(Request $request)
+    public function set(Request $request, $id)
     {
-        $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
+        $record = Model::find($request['id']);
 
-        Model::where('user_id', $user->id)->update(['featured' => false]);
+        Model::where('id', $id)->update(['property_featured' => !$record->property_featured]);
 
         $record = Model::find($request['id']);
 
