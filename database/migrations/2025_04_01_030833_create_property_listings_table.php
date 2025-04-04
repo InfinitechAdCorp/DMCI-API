@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignUlid('user_id');
             $table->foreignUlid('property_id');
             $table->string('property_location');
-            $table->double('property_price', 15, 2);
-            $table->string('property_building');
             $table->string('property_type');
             $table->double('property_size', 15, 2);
+            $table->double('property_price', 15, 2);
+            $table->string('property_building');
             $table->boolean('property_parking');
             $table->string('property_description');
             $table->string('property_level');

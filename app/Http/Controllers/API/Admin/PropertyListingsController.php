@@ -36,10 +36,10 @@ class PropertyListingsController extends Controller
             'user_id' => 'required|exists:users,id',
             'property_id' => 'required|exists:properties,id',
             'property_location' => 'required|max:255',
-            'property_price' => 'required|decimal:0,2',
-            'property_building' => 'required|max:255',
             'property_type' => 'required|max:255',
             'property_size' => 'required|decimal:0,2',
+            'property_price' => 'required|decimal:0,2',
+            'property_building' => 'required|max:255',
             'property_parking' => 'required|boolean',
             'property_description' => 'required',
             'property_level' => 'required|max:255',
@@ -150,8 +150,7 @@ class PropertyListingsController extends Controller
             $record->update(['property_featured' => true]);
             $code = 200;
             $response = ['message' => "Set $this->model as Featured", 'record' => $record];
-        }
-        else {
+        } else {
             $code = 404;
             $response = ['message' => "Property Not Found", 'record' => $record];
         }
