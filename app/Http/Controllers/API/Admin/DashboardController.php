@@ -26,15 +26,37 @@ class DashboardController extends Controller
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
 
         $properties = Property::get()->count();
+        $rfoProperties = Property::where('status', 'Ready For Occupancy')->get()->count();
+        $underConstructionProperties = Property::where('status', 'Under Construction')->get()->count();
+        $newProperties = Property::where('status', 'New')->get()->count();
+        $listings = Listing::get()->count();
         $inquiries = Inquiry::get()->count();
         $viewings = Appointment::get()->count();
         $applications = Application::get()->count();
+        $plans = Plan::get()->count();
+        $questions = Question::get()->count();
+        $articles = Article::get()->count();
+        $testimonials = Testimonial::get()->count();
+        $videos = Video::get()->count();
+        $contracts = Contract::get()->count();
+        $careers = Career::get()->count();
 
         $records = [
             'properties' => $properties,
+            'rfoProperties' => $rfoProperties,
+            'underConstructionProperties' => $underConstructionProperties,
+            'newProperties' => $newProperties,
+            'listings' => $listings,
             'inquiries' => $inquiries,
             'viewings' => $viewings,
             'applications' => $applications,
+            'plans' => $plans,
+            'questions' => $questions,
+            'articles' => $articles,
+            'testimonials' => $testimonials,
+            'videos' => $videos,
+            'contracts' => $contracts,
+            'careers' => $careers,
         ];
         $code = 200;
         $response = ['message' => "Fetched Counts", 'records' => $records];
