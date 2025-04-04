@@ -18,7 +18,7 @@ class PropertyListingsController extends Controller
     public function getAll(Request $request)
     {
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
-        $relations = ['user', 'property.buildings', 'property.features'];
+        $relations = ['user', 'property.buildings', 'property.features', 'property.facilities', 'property.plan', 'property.units'];
         if ($user->type == "Admin") {
             $records = Model::with($relations)->orderBy('created_at', 'desc')->get();
         } else if ($user->type == "Agent") {
@@ -31,7 +31,7 @@ class PropertyListingsController extends Controller
 
     public function get($id)
     {
-        $relations = ['user', 'property.buildings', 'property.features'];
+        $relations = ['user', 'property.buildings', 'property.features', 'property.facilities', 'property.plan', 'property.units'];
         $record = Model::with($relations)->where('id', $id)->first();
         if ($record) {
             $code = 200;

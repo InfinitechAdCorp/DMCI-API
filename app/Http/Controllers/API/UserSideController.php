@@ -62,7 +62,7 @@ class UserSideController extends Controller
     public function propertyGetAll(Request $request)
     {
         $user_id = $request->header('user-id');
-        $relations = ['user', 'property.buildings', 'property.features', 'property.facilities'];
+        $relations = ['user', 'property.buildings', 'property.features', 'property.facilities', 'property.plan', 'property.units'];
         $records = PropertyListings::with($relations)->where('user_id', $user_id)->orderBy('created_at')->get();
         $code = 200;
         $response = ['message' => "Fetched Properties", 'records' => $records];
@@ -198,7 +198,7 @@ class UserSideController extends Controller
         if ($location) {
             array_push($where, ['property_location', 'LIKE', "%$location%"]);
         }
-            
+
         $unit_type = $request->query('unit_type');
         if ($unit_type) {
             $unitOptions = ["1BR", "2BR", "Studio"];
