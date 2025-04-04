@@ -201,7 +201,7 @@ class UserSideController extends Controller
 
         $unit_type = $request->query('unit_type');
         if ($unit_type) {
-            $unitOptions = ["1 Bedroom", "2 Bedroom", "Studio"];
+            $unitOptions = ["1BR", "2BR", "Studio"];
             array_push($where, ['property_type', $unitOptions[$unit_type - 1]]);
         }
 
