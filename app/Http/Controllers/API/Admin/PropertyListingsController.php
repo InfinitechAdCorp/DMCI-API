@@ -32,7 +32,7 @@ class PropertyListingsController extends Controller
     public function get($id)
     {
         $relations = ['user', 'property.buildings', 'property.features'];
-        $record = Model::with($relations)->where('id', $id)->get();
+        $record = Model::with($relations)->where('id', $id)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
