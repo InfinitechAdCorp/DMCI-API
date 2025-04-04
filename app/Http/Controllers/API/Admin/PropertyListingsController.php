@@ -35,9 +35,9 @@ class PropertyListingsController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'property_id' => 'required|exists:properties,id',
-            'property_building' => 'required|max:255',
             'property_location' => 'required|max:255',
             'property_price' => 'required|decimal:0,2',
+            'property_building' => 'required|max:255',
             'property_type' => 'required|max:255',
             'property_size' => 'required|decimal:0,2',
             'property_parking' => 'required|boolean',
