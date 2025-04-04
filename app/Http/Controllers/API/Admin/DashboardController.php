@@ -27,7 +27,7 @@ class DashboardController extends Controller
         $properties = Property::where($where)->get()->count();
         $inquiries = Inquiry::where($where)->get()->count();
         $viewings = Appointment::where($where)->get()->count();
-        $applications = Application::where($where)->get()->count();
+        $applications = Application::get()->count();
 
         $records = [
             'properties' => $properties,
