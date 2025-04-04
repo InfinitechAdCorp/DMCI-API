@@ -160,7 +160,7 @@ class PropertyListingsController extends Controller
     {
         $record = Model::find($request['id']);
 
-        Model::where('id', $id)->update(['property_featured' => false]);
+        Model::where('id', $id)->update(['property_featured' => $record->property_featured == 0 ? 1 : 0]);
 
         $record = Model::find($request['id']);
 
