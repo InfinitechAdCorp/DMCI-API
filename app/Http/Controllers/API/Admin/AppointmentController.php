@@ -12,7 +12,7 @@ use App\Models\Appointment as Model;
 class AppointmentController extends Controller
 {
     use Uploadable;
-
+    
     public $model = "Appointment";
 
     public function getAll(Request $request)
