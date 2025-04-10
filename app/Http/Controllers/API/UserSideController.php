@@ -201,8 +201,16 @@ class UserSideController extends Controller
 
         $unit_type = $request->query('unit_type');
         if ($unit_type) {
-            $unitOptions = ["1BR", "2BR", "Studio"];
-            array_push($where, ['property_type', $unitOptions[$unit_type - 1]]);
+            $unitOptions = [
+                "Studio",
+                "1BR",
+                "2BR",
+                "3BR",
+                "Tandem",
+            ];
+
+            array_push($where, ['property_type', $unitOptions[$unit_type >= 5 ? $unit_type - 5 : $unit_type]]);
+            array_push($where, ['property_parking', $unit_type >= 5 ? 1 : 0]);
         }
 
         $min_price = $request->query('min_price');
