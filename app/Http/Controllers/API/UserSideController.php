@@ -209,8 +209,11 @@ class UserSideController extends Controller
                 "Tandem",
             ];
 
-            array_push($where, ['property_type', $unitOptions[$unit_type >= 5 ? $unit_type - 5 : $unit_type]]);
-            array_push($where, ['property_parking', $unit_type >= 5 ? 1 : 0]);
+            $type = $unitOptions[$unit_type >= 5 ? $unit_type - 5 : $unit_type];
+            $parking = $unit_type >= 5 ? 1 : 0;
+
+            array_push($where, ['property_type', $type]);
+            array_push($where, ['property_parking', $parking]);
         }
 
         $min_price = $request->query('min_price');
