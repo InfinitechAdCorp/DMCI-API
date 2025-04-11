@@ -296,5 +296,5 @@ Route::middleware('throttle:150,1')->group(function () {
         });
     });
 
-    Route::delete('user/unsubscribe/{email}', [UserSideController::class, 'unsubscribe']);
+    Route::get('user/unsubscribe/{email}', [UserSideController::class, 'unsubscribe']);
 });
