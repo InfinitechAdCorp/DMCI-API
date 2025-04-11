@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Uploadable;
-use Sentiment\Analyzer;
 
 use App\Models\User;
 use App\Models\Property;
@@ -27,21 +26,9 @@ class UserSideController extends Controller
     public function getUser(Request $request)
     {
         $user_id = $request->header('user-id');
-        $analyzer = new Analyzer();
-        $testimonials = [];
 
         $relations = ['profile', 'certificates', 'images', 'testimonials', 'contracts', 'videos', 'properties', 'appointments', 'listings'];
         $record = User::with($relations)->where('id', $user_id)->first();
-
-        foreach ($record['testimonials'] as $testimonial) {
-            $sentiment = $analyzer->getSentiment($testimonial->message);
-            if ($sentiment['compound'] > 0.5) {
-                array_push($testimonials, $testimonial);
-            }
-        }
-
-        unset($record['testimonials']);
-        $record['testimonials'] = $testimonials;
 
         $code = 200;
         $response = ['message' => "Fetched User", 'record' => $record];
