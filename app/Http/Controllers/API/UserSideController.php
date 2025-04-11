@@ -215,7 +215,7 @@ class UserSideController extends Controller
         $records = PropertyListings::with($relations)->where($where);
 
         if ($unit_type != "") {
-            $parking = $unit_type >= 5 ? ["With Parking", "With Tandem Parking"] : ["Without Parking"];
+            $parking = $unit_type >= 5 ? ["With Parking", "With Tandem Parking"] : ["N/A"];
             $records->whereIn('property_parking', $parking);
         }
 
