@@ -295,4 +295,6 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::get('', [UserSideController::class, 'questionsGetAll']);
         });
     });
+
+    Route::delete('user/unsubscribe', [SubscriberController::class, 'delete']);
 });
