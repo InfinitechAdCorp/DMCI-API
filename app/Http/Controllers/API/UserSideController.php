@@ -200,7 +200,7 @@ class UserSideController extends Controller
         }
 
         $unit_type = $request->query('unit_type');
-        if ($unit_type || $unit_type >= 0) {
+        if ($unit_type != "" && $unit_type >= 0) {
             $unitOptions = [
                 "Studio",
                 "1BR",
