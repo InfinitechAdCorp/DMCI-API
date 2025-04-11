@@ -337,6 +337,17 @@ class UserSideController extends Controller
         return response()->json($response, $code);
     }
 
+    public function unsubscribe($email)
+    {
+        $record = Subscriber::where('email', $email)->delete();
+        $code = 200;
+        $response = [
+            'message' => "Unsubscribed To Newsletter",
+            'record' => $record,
+        ];
+        return response()->json($response, $code);
+    }
+
     public function submitInquiry(Request $request)
     {
         $user_id = $request->header('user-id');
