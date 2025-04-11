@@ -198,9 +198,7 @@ class UserSideController extends Controller
             ];
 
             $type = $unitOptions[$unit_type >= 5 ? $unit_type - 5 : $unit_type];
-            $parking = $unit_type >= 5 ? ["With Parking", "With Tandem Parking"] : ["Without Parking"];
             array_push($where, ['property_type', $type]);
-            array_push($whereIn, ["property_parking", $parking]);
         }
 
         $min_price = $request->query('min_price');
@@ -215,6 +213,11 @@ class UserSideController extends Controller
 
         $relations = ['user', 'property.buildings', 'property.features'];
         $records = PropertyListings::with($relations)->where($where);
+
+        if ($unit_type != "") {
+            $parking = $unit_type >= 5 ? ["With Parking", "With Tandem Parking"] : ["Without Parking"];
+            $records->whereIn('property_parking', $parking);
+        }
 
         $records = $records->get();
         $code = 200;
