@@ -53,7 +53,7 @@ class PropertyController extends Controller
             'min_price' => 'required|decimal:0,2',
             'max_price' => 'required|decimal:0,2',
             'status' => 'required',
-            'percent' => 'required|numeric|integer',
+            'percent' => 'required|decimal:0,2',
             'description' => 'required',
             'logo' => 'required',
             'images' => 'required',
@@ -166,8 +166,7 @@ class PropertyController extends Controller
             $record->update(['featured' => true]);
             $code = 200;
             $response = ['message' => "Set $this->model as Featured", 'record' => $record];
-        }
-        else {
+        } else {
             $code = 404;
             $response = ['message' => "Property Not Found", 'record' => $record];
         }
