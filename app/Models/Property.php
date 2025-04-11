@@ -40,7 +40,7 @@ class Property extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class); 
+        return $this->belongsTo(User::class);
     }
 
     public function plan(): HasOne
@@ -70,6 +70,6 @@ class Property extends Model
 
     public function Listings(): HasOne
     {
-        return $this->hasOne(Listing::class);
+        return $this->hasOne(PropertyListings::class);
     }
 }

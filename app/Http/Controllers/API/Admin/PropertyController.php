@@ -19,7 +19,7 @@ class PropertyController extends Controller
     public function getAll(Request $request)
     {
         $user =  PersonalAccessToken::findToken($request->bearerToken())->tokenable;
-        $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units'];
+        $relations = ['user', 'plan', 'buildings', 'facilities', 'features', 'units', 'listings'];
         if ($user->type == "Admin") {
             $records = Model::with($relations)->orderBy('created_at', 'desc')->get();
         } else if ($user->type == "Agent") {
@@ -32,7 +32,7 @@ class PropertyController extends Controller
 
     public function get($id)
     {
-        $record = Model::with(['user', 'plan', 'buildings', 'facilities', 'features', 'units'])->where('id', $id)->first();
+        $record = Model::with(['user', 'plan', 'buildings', 'facilities', 'features', 'units', 'listings'])->where('id', $id)->first();
         if ($record) {
             $code = 200;
             $response = ['message' => "Fetched $this->model", 'record' => $record];
