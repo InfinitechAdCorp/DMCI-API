@@ -354,6 +354,7 @@ class UserSideController extends Controller
         ]);
 
         $validated['user_id'] = $user_id;
+        $validated['status'] = "Pending";
 
         $record = Inquiry::create($validated);
         $code = 201;
