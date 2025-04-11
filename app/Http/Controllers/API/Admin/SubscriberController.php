@@ -53,7 +53,7 @@ class SubscriberController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:subscribers,email',
         ]);
 
         $record = Model::create($validated);
