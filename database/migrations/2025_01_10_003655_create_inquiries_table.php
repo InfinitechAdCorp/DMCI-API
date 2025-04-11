@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('property_location');
             $table->string('unit_type');
             $table->text('message');
+            $table->string('status');
             $table->timestamps();
         });
     }

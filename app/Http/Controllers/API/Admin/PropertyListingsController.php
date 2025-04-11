@@ -106,8 +106,6 @@ class PropertyListingsController extends Controller
             'images' => 'nullable',
         ]);
 
-        $validated['property_featured'] = false;
-
         $key = 'images';
         if ($request[$key]) {
             $images = [];

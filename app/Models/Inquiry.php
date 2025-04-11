@@ -24,6 +24,7 @@ class Inquiry extends Model
         'property_location',
         'unit_type',
         'message',
+        'status',
     ];
 
     public static function booted()

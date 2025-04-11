@@ -88,6 +88,8 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::post('', [InquiryController::class, 'create']);
             Route::put('', [InquiryController::class, 'update']);
             Route::delete('{id}', [InquiryController::class, 'delete']);
+
+            Route::post('change-status', [InquiryController::class, 'changeStatus']);
         });
 
         Route::prefix('questions')->group(function () {
