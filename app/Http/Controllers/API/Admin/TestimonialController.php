@@ -44,6 +44,7 @@ class TestimonialController extends Controller
             'user_id' => 'required|exists:users,id',
             'name' => 'required',
             'message' => 'required',
+            'status' => 'required',
         ]);
 
         $validated['status'] = "in-active";
@@ -64,6 +65,7 @@ class TestimonialController extends Controller
             'user_id' => 'required|exists:users,id',
             'name' => 'required',
             'message' => 'required',
+            'status' => 'required',
         ]);
 
         $record = Model::find($validated['id']);
@@ -86,20 +88,6 @@ class TestimonialController extends Controller
             $code = 404;
             $response = ['message' => "$this->model Not Found"];
         }
-        return response()->json($response, $code);
-    }
-
-    public function changeStatus(Request $request)
-    {
-        $validated = $request->validate([
-            'id' => 'required|exists:testimonials,id',
-            'status' => 'required',
-        ]);
-
-        $record = Model::find($validated['id']);
-        $record->update($validated);
-        $code = 200;
-        $response = ['message' => "Updated Status"];
         return response()->json($response, $code);
     }
 }
