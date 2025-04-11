@@ -9,6 +9,7 @@ use App\Traits\Uploadable;
 use Laravel\Sanctum\PersonalAccessToken;
 
 use App\Models\Profile as Model;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -47,6 +48,7 @@ class ProfileController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
+            'email' => 'nullable',
             'position' => 'nullable',
             'phone' => 'nullable',
             'facebook' => 'nullable',
@@ -64,6 +66,9 @@ class ProfileController extends Controller
         }
 
         $record = Model::create($validated);
+
+        User::find($validated['user_id'])->update(['email' => $validated['email']]);
+        
         $code = 201;
         $response = [
             'message' => "Created $this->model",
@@ -77,6 +82,7 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'id' => 'required|exists:profiles,id',
             'user_id' => 'required|exists:users,id',
+            'email' => 'nullable',
             'position' => 'nullable',
             'phone' => 'nullable',
             'facebook' => 'nullable',
@@ -97,6 +103,9 @@ class ProfileController extends Controller
         }
 
         $record->update($validated);
+
+        User::find($validated['user_id'])->update(['email' => $validated['email']]);
+
         $code = 200;
         $response = ['message' => "Updated $this->model", 'record' => $record];
         return response()->json($response, $code);
