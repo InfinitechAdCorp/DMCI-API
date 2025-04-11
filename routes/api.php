@@ -214,6 +214,8 @@ Route::middleware('throttle:150,1')->group(function () {
             Route::post('', [TestimonialController::class, 'create']);
             Route::put('', [TestimonialController::class, 'update']);
             Route::delete('{id}', [TestimonialController::class, 'delete']);
+
+            Route::post('change-status', [TestimonialController::class, 'changeStatus']);
         });
 
         Route::prefix('profiles')->group(function () {

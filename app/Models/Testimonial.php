@@ -19,6 +19,7 @@ class Testimonial extends Model
         'user_id',
         'name',
         'message',
+        'status',
     ];
 
     public static function booted() {
