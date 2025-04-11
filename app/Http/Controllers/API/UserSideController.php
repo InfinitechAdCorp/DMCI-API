@@ -213,7 +213,7 @@ class UserSideController extends Controller
         }
 
         $relations = ['user', 'property.buildings', 'property.features'];
-        $records = PropertyListings::with($relations)->where($where)->whereIn('id', $parking);
+        $records = PropertyListings::with($relations)->where($where)->whereIn('property_parking', $parking);
 
         $records = $records->get();
         $code = 200;
