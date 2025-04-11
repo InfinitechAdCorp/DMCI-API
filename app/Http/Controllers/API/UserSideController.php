@@ -180,6 +180,7 @@ class UserSideController extends Controller
         $user_id = $request->header('user-id');
 
         $where = [['user_id', $user_id]];
+        $parking = [];
 
         $location = $request->query('location');
         if ($location) {
@@ -197,8 +198,8 @@ class UserSideController extends Controller
             ];
 
             $type = $unitOptions[$unit_type >= 5 ? $unit_type - 5 : $unit_type];
-            $parking = $unit_type >= 5 ? "With Parking" : "Without Parking";
-            array_push($where, ['property_type', $type], ['property_parking', $parking]);
+            $parking = $unit_type >= 5 ? ["With Parking", "With Tandem Parking"] : ["Without Parking"];
+            array_push($where, ['property_type', $type]);
         }
 
         $min_price = $request->query('min_price');
@@ -212,7 +213,7 @@ class UserSideController extends Controller
         }
 
         $relations = ['user', 'property.buildings', 'property.features'];
-        $records = PropertyListings::with($relations)->where($where);
+        $records = PropertyListings::with($relations)->where($where)->whereIn('id', $parking);
 
         $records = $records->get();
         $code = 200;
