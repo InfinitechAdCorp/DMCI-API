@@ -323,7 +323,7 @@ class UserSideController extends Controller
         $user_id = $request->header('user-id');
 
         $validated = $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|unique:subscribers,email',
         ]);
 
         $validated['user_id'] = $user_id;
