@@ -197,7 +197,7 @@ class UserSideController extends Controller
             ];
 
             $type = $unitOptions[$unit_type >= 5 ? $unit_type - 5 : $unit_type];
-            $parking = $unit_type >= 5 ? 1 : 0;
+            $parking = $unit_type >= 5 ? "With Parking" : "Without Parking";
             array_push($where, ['property_type', $type], ['property_parking', $parking]);
         }
 
