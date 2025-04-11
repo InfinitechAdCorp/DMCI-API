@@ -20,7 +20,7 @@ return new class extends Migration
             $table->double('min_price', 10, 2);
             $table->double('max_price', 10, 2);
             $table->string('status');
-            $table->integer('percent');
+            $table->double('percent', 15, 2);
             $table->text('description');
             $table->string('logo');
             $table->boolean('featured');
