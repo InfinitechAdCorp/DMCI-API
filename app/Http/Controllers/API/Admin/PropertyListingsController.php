@@ -66,7 +66,6 @@ class PropertyListingsController extends Controller
             'property_plan_image' => 'required',
         ]);
 
-        $record = Model::create($validated);
         $validated['property_featured'] = false;
 
         $key = 'images';
@@ -77,14 +76,10 @@ class PropertyListingsController extends Controller
             }
             $validated[$key] = json_encode($images);
         }
+        
 
-        $keys = 'property_plan_image';
-        if ($request->hasFile($keys)) {
-            Storage::disk('s3')->delete("properties/images/$record");
-            $validated[$keys] = $this->upload($request->file($keys), "properties/images");
-        }
+        $record = Model::create($validated);
 
-    
         $relations = ['user', 'property.buildings', 'property.features'];
         $record = Model::with($relations)->where('id', $record->id)->first();
 
