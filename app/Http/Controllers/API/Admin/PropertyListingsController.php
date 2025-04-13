@@ -76,6 +76,11 @@ class PropertyListingsController extends Controller
             }
             $validated[$key] = json_encode($images);
         }
+
+        $key = 'property_plan_image';
+        if ($request->hasFile($key)) {
+            $validated[$key] = $this->upload($request->file($key), "properties/images");
+        }
         
 
         $record = Model::create($validated);
