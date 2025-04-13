@@ -78,10 +78,10 @@ class PropertyListingsController extends Controller
             $validated[$key] = json_encode($images);
         }
 
-        $key = 'property_plan_image';
-        if ($request->hasFile($key)) {
+        $keys = 'property_plan_image';
+        if ($request->hasFile($keys)) {
             Storage::disk('s3')->delete("properties/images/$record");
-            $validated[$key] = $this->upload($request->file($key), "properties/images");
+            $validated[$keys] = $this->upload($request->file($keys), "properties/images");
         }
 
     
