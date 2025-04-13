@@ -80,12 +80,11 @@ class PropertyListingsController extends Controller
 
         $key = 'property_plan_image';
         if ($request->hasFile($key)) {
-            Storage::disk('s3')->delete("properties/images/$record[$key]");
+            Storage::disk('s3')->delete("properties/images/$record");
             $validated[$key] = $this->upload($request->file($key), "properties/images");
         }
 
-      
-
+    
         $relations = ['user', 'property.buildings', 'property.features'];
         $record = Model::with($relations)->where('id', $record->id)->first();
 
