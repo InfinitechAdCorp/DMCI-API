@@ -60,6 +60,10 @@ class PropertyListingsController extends Controller
             'property_level' => 'required|max:255',
             'property_amenities' => 'required',
             'images' => 'required',
+            'property_plan_type' => 'required|max:255',
+            'property_plan_cut' => 'required|max:255',
+            'property_plan_status' => 'required|max:255',
+            'property_plan_image' => 'required',
         ]);
 
         $validated['property_featured'] = false;

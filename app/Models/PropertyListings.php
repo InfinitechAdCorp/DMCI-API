@@ -28,6 +28,10 @@ class PropertyListings extends Model
         'property_amenities',
         'property_featured',
         'images',
+        'property_plan_type',
+        'property_plan_cut',
+        'property_plan_status',
+        'property_plan_image',
     ];
 
     public static function booted()
