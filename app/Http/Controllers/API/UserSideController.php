@@ -200,13 +200,13 @@ class UserSideController extends Controller
 
             if ($index < 17) {
                 $parkingTypes = $index == 15 ? ["With Parking"] : ["With Tandem Parking"];
-            } else if ($index < 15 && $index > 4) {
-                if ($index < 15 && $index > 9) {
-                    $unitTypeIndex = $index - 10;
-                } else if ($index < 10 && $index > 4) {
-                    $unitTypeIndex = $index - 5;
-                }
-                $parkingTypes = ["With Parking", "With Tandem Parking"];
+            }
+            if ($index < 15 && $index > 9) {
+                $unitTypeIndex = $index - 10;
+                $parkingTypes = ["With Tandem Parking"];
+            } else if ($index < 10 && $index > 4) {
+                $unitTypeIndex = $index - 5;
+                $parkingTypes = ["With Parking"];
             } else {
                 $unitTypeIndex = $index;
                 $parkingTypes = ["N/A"];
