@@ -26,6 +26,10 @@ return new class extends Migration
             $table->boolean('property_featured');
             $table->json('property_amenities');
             $table->json('images');
+            $table->string('property_plan_type');
+            $table->string('property_plan_cut');
+            $table->string('property_plan_status');
+            $table->string('property_plan_status');
             $table->timestamps();
         });
     }

@@ -77,7 +77,7 @@ class UserSideController extends Controller
     public function propertyGet(Request $request)
     {
         $user_id = $request->header('user-id');
-        $relations = ['user', 'property.buildings', 'property.features', 'property.facilities'];
+        $relations = ['user', 'property.buildings', 'property.features', 'property.facilities', 'property.plan'];
         $where = [['id', $request->id], ['user_id', $user_id]];
 
         $record = PropertyListings::with($relations)->where($where)->first();
