@@ -228,15 +228,6 @@ class UserSideController extends Controller
             $records->whereIn('property_parking', $parkingTypes);
         }
 
-        return response()->json([
-            'user_id' => $user_id,
-            'location' => $location,
-            'unitType' => $unitOptions[$unitTypeIndex],
-            'parkingTypes' => $parkingTypes,
-            'minPrice' => $min_price,
-            'maxPrice' => $max_price,
-        ]);
-
         $records = $records->get();
         $code = 200;
         $response = ['message' => "Filtered Properties", 'records' => $records];
