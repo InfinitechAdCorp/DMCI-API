@@ -178,8 +178,6 @@ class UserSideController extends Controller
     public function filterProperties(Request $request)
     {
         $user_id = $request->header('user-id');
-        $unitTypeIndex = null;
-        $parkingTypes = null;
 
         $where = [['user_id', $user_id]];
 
@@ -212,9 +210,9 @@ class UserSideController extends Controller
                 $parkingTypes = ["N/A"];
             }
 
-            // if ($index < 15) {
-            //     array_push($where, ['property_type', $unitOptions[$unitTypeIndex]]);
-            // }
+            if ($index < 15) {
+                array_push($where, ['property_type', $unitOptions[$unitTypeIndex]]);
+            }
         }
 
         $min_price = $request->query('min_price');
@@ -233,7 +231,7 @@ class UserSideController extends Controller
         return response()->json([
             'user_id' => $user_id,
             'location' => $location,
-            'unitType' => $unitTypeIndex,
+            'unitType' => $unitOptions[$unitTypeIndex],
             'parkingTypes' => $parkingTypes,
             'minPrice' => $min_price,
             'maxPrice' => $max_price,
