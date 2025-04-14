@@ -114,6 +114,10 @@ class PropertyListingsController extends Controller
             'property_level' => 'required|max:255',
             'property_amenities' => 'required',
             'images' => 'nullable',
+            'property_plan_type' => 'required|max:255',
+            'property_plan_cut' => 'required|max:255',
+            'property_plan_status' => 'required|max:255',
+            'property_plan_image' => 'required',
         ]);
 
         $key = 'images';
@@ -127,6 +131,12 @@ class PropertyListingsController extends Controller
 
         $record = Model::find($validated['id']);
         $record->update($validated);
+
+        $key = 'property_plan_image';
+        if ($request->hasFile($key)) {
+            Storage::disk('s3')->delete("properties/images/$record[$key]");
+            $validated[$key] = $this->upload($request->file($key), "properties/images");
+        }
 
         $relations = ['user', 'property.buildings', 'property.features'];
         $record = Model::with($relations)->where('id', $record->id)->first();
