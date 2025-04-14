@@ -178,6 +178,8 @@ class UserSideController extends Controller
     public function filterProperties(Request $request)
     {
         $user_id = $request->header('user-id');
+        $unitTypeIndex = null;
+        $parkingTypes = null;
 
         $where = [['user_id', $user_id]];
 
