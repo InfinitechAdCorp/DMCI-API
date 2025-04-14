@@ -186,7 +186,7 @@ class UserSideController extends Controller
             array_push($where, ['property_location', 'LIKE', "%$location%"]);
         }
 
-        $index = $request->query('unit_type');
+        $index = $request->query('types');
         if ($index != "") {
             $unitOptions = [
                 "Studio",
@@ -198,8 +198,7 @@ class UserSideController extends Controller
 
             if ($index < 17 && $index > 14) {
                 $parkingTypes = $index == 15 ? ["With Parking"] : ["With Tandem Parking"];
-            }
-            else if ($index < 15 && $index > 9) {
+            } else if ($index < 15 && $index > 9) {
                 $unitTypeIndex = $index - 10;
                 $parkingTypes = ["With Tandem Parking"];
             } else if ($index < 10 && $index > 4) {
