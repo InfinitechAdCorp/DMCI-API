@@ -180,15 +180,14 @@ class UserSideController extends Controller
         $user_id = $request->header('user-id');
 
         $where = [['user_id', $user_id]];
-        $whereIn = [];
 
         $location = $request->query('location');
         if ($location) {
             array_push($where, ['property_location', 'LIKE', "%$location%"]);
         }
 
-        $unit_type = $request->query('unit_type');
-        if ($unit_type != "") {
+        $index = $request->query('unit_type');
+        if ($index != "") {
             $unitOptions = [
                 "Studio",
                 "1BR",
@@ -197,27 +196,44 @@ class UserSideController extends Controller
                 "Tandem",
             ];
 
-            $type = $unitOptions[$unit_type >= 5 ? $unit_type - 5 : $unit_type];
-            array_push($where, ['property_type', $type]);
+            if ($index < 17) {
+                $parkingTypes = $index == 15 ? ["With Parking"] : ["With Tandem Parking"];
+            } else if ($index < 15 && $index > 4) {
+                if ($index < 15 && $index > 9) {
+                    $unitTypeIndex = $index - 10;
+                } else if ($index < 10 && $index > 4) {
+                    $unitTypeIndex = $index - 5;
+                }
+                $parkingTypes = ["With Parking", "With Tandem Parking"];
+            } else {
+                $unitTypeIndex = $index;
+                $parkingTypes = ["N/A"];
+            }
+
+            if ($index < 15) {
+                array_push($where, ['property_type', $unitOptions[$unitTypeIndex]]);
+            }
         }
 
         $min_price = $request->query('min_price');
-        if ($min_price) {
-            array_push($where, ['property_price', '>=', $min_price]);
-        }
-
         $max_price = $request->query('max_price');
-        if ($max_price) {
-            array_push($where, ['property_price', '<=', $max_price]);
+        if ($min_price && $max_price) {
+            array_push($where, ['property_price', '>=', $min_price], ['property_price', '<=', $max_price]);
         }
 
         $relations = ['user', 'property.buildings', 'property.features'];
         $records = PropertyListings::with($relations)->where($where);
 
-        if ($unit_type != "") {
-            $parking = $unit_type >= 5 ? ["With Parking", "With Tandem Parking"] : ["N/A"];
-            $records->whereIn('property_parking', $parking);
+        if ($index != "") {
+            $records->whereIn('property_parking', $parkingTypes);
         }
+        
+        return response()->json([
+            'user_id' => $user_id,
+            'location' => $location,
+            'unitType' => $unitOptions[$unitTypeIndex],
+            'parkingTypes' => $parkingTypes,
+        ]);
 
         $records = $records->get();
         $code = 200;
