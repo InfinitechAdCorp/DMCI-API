@@ -231,7 +231,7 @@ class UserSideController extends Controller
         return response()->json([
             'user_id' => $user_id,
             'location' => $location,
-            // 'unitType' => $unitOptions[$unitTypeIndex],
+            'unitType' => $unitOptions[$unitTypeIndex],
             'parkingTypes' => $parkingTypes,
             'minPrice' => $min_price,
             'maxPrice' => $max_price,
